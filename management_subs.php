@@ -40,9 +40,6 @@ use Galette\Filters\MembersList as MembersList;//#evol 55
 use Galette\Repository\Members as Members;//evol #55
 use Galette\Entity\Group as Group;
 use Galette\Repository\Groups as Groups;
-use Galette\Entity\DynamicFields as DynamicFields;
-use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
-
 
 if (!$login->isLogged()) {
     header('location: ' . GALETTE_BASE_PATH . 'index.php');

@@ -37,9 +37,6 @@ define('GALETTE_BASE_PATH', '../../');
 require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
 use Galette\Entity\Adherent as Adherent;
 use Galette\Entity\Group as Group;
-use Galette\Repository\Groups as Groups;
-use Galette\Entity\DynamicFields as DynamicFields;
-use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
 use Galette\Core\GaletteMail as GaletteMail;
 
 if (!$login->isLogged()) {
