@@ -32,7 +32,8 @@
  * @link      http://galette.tuxfamily.org
  * @since     Available since 0.7.8
  */
- 
+namespace GaletteSubscription;//for automated doc
+
 class File {
 
     const TABLE = 'files';
