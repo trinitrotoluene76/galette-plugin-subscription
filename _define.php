@@ -39,7 +39,7 @@ $this->register(
     'Validation cycle',  //Short description
     'Amaury FROMENT',         //Author
     '1.4',                      //Version
-    '0.7.8',                    //Galette compatible version
+    '0.8.3.3-amaury',           //Galette compatible version
     null                        //Permissions needed - not yet implemented
 );
 
