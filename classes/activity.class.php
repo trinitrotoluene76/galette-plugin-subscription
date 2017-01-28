@@ -35,7 +35,8 @@
 namespace GaletteSubscription;//for automated doc
 
 use Galette\Entity\Group as Group;
- 
+use Zend\Db\Sql\Expression;
+
 class Activity {
 
     const TABLE = 'activities';
@@ -84,11 +85,11 @@ class Activity {
 
         if (is_int($args)) {
             try {
-                $select = new Zend_Db_Select($zdb->db);
-                $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                        ->where(self::PK . ' = ' . $args);
-                if ($select->query()->rowCount() == 1) {
-                    $this->_loadFromRS($select->query()->fetch());
+                $select = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+                $select->where(self::PK . ' = ' . $args);
+                $results=$zdb->execute($select);
+				if ($results->count() == 1) {
+                    $this->_loadFromRS($results->current());
                 }
                 
             } catch (Exception $e) {
@@ -130,19 +131,18 @@ class Activity {
 		global $zdb;
 		$result=0;
 		// Statut
-		$req1 = new Zend_Db_Select($zdb->db);
-		$req1->from(PREFIX_DB . Galette\Entity\Group::TABLE)
-				->where('id_group = ?', $object->id_group)
-				->limit(1, 0);
-				
-		if ($req1->query()->rowCount() == 1) 
+		$req1 = $zdb->select(PREFIX_DB . Galette\Entity\Group::TABLE);
+		$req1->where(array('id_group'=>$object->id_group))
+			 ->limit(1, 0);
+		$results=$zdb->execute($req1);		
+		if ($results->count() == 1) 
 			{
 			$result=2;
-			$req2 = new Zend_Db_Select($zdb->db);
-			$req2->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-				->where('id_group = ?', $object->id_group)
+			$req2 = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+			$req2->where(array('id_group'=> $object->id_group))
 				->limit(1, 0);
-			if ($req2->query()->rowCount() == 1) 
+			$results2=$zdb->execute($req2);
+			if ($results2->count() == 1) 
 				{
 				$result=1;
 				}//fin du 2eme if
@@ -163,12 +163,13 @@ class Activity {
 		global $zdb;
 		$result=0;
 			
-		$req2 = new Zend_Db_Select($zdb->db);
-		$req2->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-			->where('id_group = ?', $this->_id_group)
-			->where('complet = ?', '1')
+		$req2 = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+		$req2->where(array('id_group'=> $this->_id_group,
+						   'complet'=> '1'
+						   ))
 			->limit(1, 0);
-		if ($req2->query()->rowCount() == 1) 
+		$results2=$zdb->execute($req2);
+		if ($results2->count() == 1) 
 			{
 			$result=1;
 			}//fin du 2eme if
@@ -187,15 +188,13 @@ class Activity {
 		global $zdb;
 		$result=0;
 			
-		$select = new Zend_Db_Select($zdb->db);
-		$select->from(PREFIX_DB . Group::TABLE)
-			->where('parent_group IS NULL');
-		if ($select->query()->rowCount() > 0) 
+		$select = $zdb->select(PREFIX_DB . Group::TABLE);
+		$select->where('parent_group IS NULL');
+		$results=$zdb->execute($select);
+		if ($results->count() > 0) 
 			{
-			//echo('res>0');
 			$groups = array();
-            $res = $select->query()->fetchAll();
-            foreach ( $res as $row ) 
+            foreach ( $results as $row ) 
 				{
 					$groups[] = new Group($row);
 				}
@@ -217,13 +216,14 @@ class Activity {
 		global $zdb;
 		$result=0;
 			
-		$select = new Zend_Db_Select($zdb->db);
-		$select->from(PREFIX_DB . Group::TABLE)
-			->where('parent_group IS NULL')
-			->where('id_group = ?', $this->_id_group);
-		if ($select->query()->rowCount() > 0) 
+		$select = $zdb->select(PREFIX_DB . Group::TABLE);
+		$select->where(array(
+							'parent_group IS NULL',
+							'id_group'=> $this->_id_group
+							));
+		$results=$zdb->execute($select);
+		if ($results->count() > 0) 
 			{
-			//echo('res>0');
 			$result=1;
 			}//fin du if
 			
@@ -246,29 +246,29 @@ class Activity {
                 $values[substr($k, 1)] = $this->$k;
             }
 			$res=$this->is_id_group($this);
-			//echo ('res');
-			//var_dump ($res);
-            
+			
 			if ($res=='2') 
 				{
-				$add = $zdb->db->insert(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values);
+				$insert = $zdb->insert(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values);
+				$insert->values($values);
+				$add = $zdb->execute($insert);
 				//Analog\Analog::log('insert activity');
 				if ($add > 0) 
 					{
-						$this->_id_group = $zdb->db->lastInsertId();
-						//echo ('insertion réussie');
-						
+						$this->_id_group = $zdb->driver->getLastGeneratedValue();
 					} else {
 							throw new Exception(_T("ACTIVITY.AJOUT ECHEC res=2"));
-							//echo ('insertion non réussie');
 							}
 				}//fin du if res==2 
 			if ($res=='1') 
 				{
 				//Analog\Analog::log('update activity');
-				$edit = $zdb->db->update(
-				PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values, self::PK . '=' . $this->_id_group
-										);
+				$update = $zdb->update(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+                $update->set($values);
+                $update->where(
+                    self::PK . '=' . $this->_id_group
+                );
+                $edit = $zdb->execute($update);
 				}//fin du if res==1
 			else {
 					//echo ('res=0');
@@ -298,9 +298,9 @@ class Activity {
 		$where=array(
 					"id_group=".$id_group
 					);
-					
-        $rem=$zdb->db->delete(PREFIX_DB . Group::GROUPSUSERS_TABLE, $where);
-        
+		$delete = $zdb->delete(PREFIX_DB . Group::GROUPSUSERS_TABLE);
+        $delete->where($where);
+        $rem=$zdb->execute($delete);
 		return $rem;
     }
 	
@@ -315,23 +315,13 @@ class Activity {
     {
         global $zdb, $login;
         try {
-            $select = new \Zend_Db_Select($zdb->db);
-            $select->from(
-                array('a' => PREFIX_DB . Group::TABLE)
-            )->joinLeft(
+            $select = $zdb->select(PREFIX_DB . Group::TABLE, 'a');
+            $select->join(
                 array('b' => PREFIX_DB . Group::GROUPSUSERS_TABLE),
                 'a.' . Group::PK . '=b.' . Group::PK,
-                array('members' => new \Zend_Db_Expr('count(b.' . Group::PK . ')'))
-            );
-
-            /* if ( !$login->isAdmin() && !$login->isStaff() && $full === true ) {
-                $select->join(
-                    array('c' => PREFIX_DB . Group::GROUPSMANAGERS_TABLE),
-                    'a.' . Group::PK . '=c.' . Group::PK,
-                    array()
-                )->where('c.' . Adherent::PK . ' = ?', $login->id);
-            } */
-
+                array('members' => new Expression(('count(b.' . Group::PK . ')'))
+            ));
+			
             if ( $full !== true ) {
                 $select->where('parent_group IS NULL');
             }
@@ -341,10 +331,10 @@ class Activity {
                 ->group('a.creation_date')
                 ->group('a.parent_group')
                 ->order('a.group_name ASC');
-
-            $groups = array();
-            $res = $select->query()->fetchAll();
-            foreach ( $res as $row ) {
+			$results = $zdb->execute($select);
+			$groups = array();
+            $results->current();
+            foreach ( $results as $row ) {
                 $groups[] = new Group($row);
             }
             return $groups;
@@ -372,16 +362,15 @@ class Activity {
         global $zdb;
 
         // Statut
-        $select_id_grp = new Zend_Db_Select($zdb->db);
-        $select_id_grp->from(PREFIX_DB . SUBSCRIPTION_PREFIX . Activity::TABLE)
-                ->join(PREFIX_DB . Galette\Entity\Group::TABLE, PREFIX_DB . Galette\Entity\Group::TABLE . '.id_group = ' . PREFIX_DB . SUBSCRIPTION_PREFIX . Activity::TABLE . '.id_group')
-                ->where(PREFIX_DB . Galette\Entity\Group::TABLE.'.id_group = ?', $object->id_group)
+        $select_id_grp = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . Activity::TABLE);
+        $select_id_grp->join(PREFIX_DB . Galette\Entity\Group::TABLE, PREFIX_DB . Galette\Entity\Group::TABLE . '.id_group = ' . PREFIX_DB . SUBSCRIPTION_PREFIX . Activity::TABLE . '.id_group')
+                ->where(array(PREFIX_DB . Galette\Entity\Group::TABLE.'.id_group'=> $object->id_group))
                 ->limit(1, 0);
-                
+        $results = $zdb->execute($select_id_grp);        
         //Analog\Analog::log('test de load activity');
 
-        if ($select_id_grp->query()->rowCount() == 1) {
-            $activity = $select_id_grp->query()->fetch();
+        if ($results->count() == 1) {
+            $activity = $results->current();
             $object->_id_group = $activity->id_group;
             $object->_group_name = $activity->group_name;
             $object->_price1 = $activity->price1;
@@ -398,7 +387,7 @@ class Activity {
         }
     }
 
-	    /**
+	    /** Copy past of function getDbFields() of Adherent with another table
      * Retrieve fields from database
      *
      * @return array
@@ -406,12 +395,17 @@ class Activity {
     public static function getDbFields()
     {
         global $zdb;
-        return array_keys($zdb->db->describeTable(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE));
+        $columns = $zdb->getColumns(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+        $fields = array();
+        foreach ( $columns as $col ) {
+            $fields[] = $col->getName();
+        }
+        return $fields;
     }
 	
 	
 	 /**
-	 * modifi le type des prix de string à float
+	 * modifies le type des prix de string à float
 	 *
 	 * @param Price
 	 *
