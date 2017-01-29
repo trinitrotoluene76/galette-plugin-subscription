@@ -77,11 +77,11 @@ class File {
 
         if (is_int($args)) {
             try {
-                $select = new Zend_Db_Select($zdb->db);
-                $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                        ->where(self::PK . ' = ' . $args);
-                if ($select->query()->rowCount() == 1) {
-                    $this->_loadFromRS($select->query()->fetch());
+                $select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+                $select->where(self::PK . ' = ' . $args);
+				$results = $zdb->execute($select);
+                if ($results->count() == 1) {
+                    $this->_loadFromRS($results->current());
                 }
                 
             } catch (Exception $e) {
@@ -143,13 +143,11 @@ class File {
 		$result=0;
 		if($this->_id_doc!=NULL)
 			{
-			//var_dump($this->_id_doc);
-			$req1 = new Zend_Db_Select($zdb->db);
-			$req1->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-					->where('id_doc = ?', $this->_id_doc)
-					->limit(1, 0);
-					
-			if ($req1->query()->rowCount() == 1) 
+			$req1 = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+			$req1->where(array('id_doc'=> $this->_id_doc))
+					->limit(1);
+			$results = $zdb->execute($req1);		
+			if ($results->count() == 1) 
 				{
 				$result=1;
 				}//fin du 1er if
@@ -176,22 +174,24 @@ class File {
 			$res=$this->is_id_doc();
             if ($res=='0') 
 				{
-				$add = $zdb->db->insert(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values);
-				//Analog\Analog::log('insert file');
-				if ($add > 0) 
+				$insert = $zdb->insert(SUBSCRIPTION_PREFIX . self::TABLE);
+				$insert->values($values);
+                $add = $zdb->execute($insert);
+                if ($add->count() > 0) 
 					{
-						$this->_id_doc = $zdb->db->lastInsertId();
+						$this->_id_doc = $zdb->driver->getLastGeneratedValue();
 					} else {
 							throw new Exception(_T("file.AJOUT ECHEC"));
 							}
 				} 
 			if ($res=='1') 
 				{
-				
-				//Analog\Analog::log('update file');
-				$edit = $zdb->db->update(
-				PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values, self::PK . '=' . $this->_id_doc
-										);
+				$update = $zdb->update(SUBSCRIPTION_PREFIX . self::TABLE);
+                $update->set($values);
+                $update->where(
+                    self::PK . '=' . $this->_id_doc
+                );
+                $edit = $zdb->execute($update);
 				}else {
 								throw new Exception(_T("file.AJOUT ECHEC"));
 								}
@@ -221,9 +221,9 @@ class File {
 		 $where=array(
 					"emplacement='".$nom."'"
 					); 
-					
-        $res2=$zdb->db->delete(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $where);
-        
+		$delete = $zdb->delete(SUBSCRIPTION_PREFIX . self::TABLE);
+        $delete->where($where);
+        $res2=$zdb->execute($delete);
 		if(file_exists($path))
 			{
 			$res1=unlink($path);
@@ -231,7 +231,6 @@ class File {
 			if($res1==1 && $res2==1)
 				{
 				$res=1;
-				//echo("&res=".$res."&");
 				}
 			
 			}
@@ -258,9 +257,9 @@ class File {
 		 $where=array(
 					"emplacement='".$nom."'"
 					); 
-					
-        $res2=$zdb->db->delete(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $where);
-        
+		$delete = $zdb->delete(SUBSCRIPTION_PREFIX . self::TABLE);
+        $delete->where($where);
+        $res2=$zdb->execute($delete);
 		if(file_exists($path))
 			{
 			$res1=unlink($path);
@@ -268,7 +267,6 @@ class File {
 			if($res1==1 && $res2==1)
 				{
 				$res=1;
-				//echo("&res=".$res."&");
 				}
 			
 			}
@@ -286,8 +284,6 @@ class File {
 
  static function listrep($pathrep)
 {
-//var_dump($pathrep);
-//$pathrep = './upload/files';
 global $zdb;
 
 	//si le répertoire existe, on l'ouvre
@@ -302,12 +298,11 @@ global $zdb;
 			{
 			
 			//on execute une requete SQL pour savoir s'il est ds la bdd sinon on le supprime
-			 $select_empl = new Zend_Db_Select($zdb->db);
-			 $select_empl->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-					->where('emplacement = ?', $element)
-					->limit(1, 0);
-					
-				if ($select_empl->query()->rowCount() < 1) 
+			 $select_empl = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+			 $select_empl->where(array('emplacement'=> $element))
+					->limit(1);
+			 $results = $zdb->execute($select_empl);		
+				if ($results->count() < 1) 
 					{
 					$file1=new File();
 					$file1->remove2($pathrep."/".$element,"");
@@ -335,8 +330,6 @@ global $zdb;
 		{
 		var_dump("Répertoire non accessible !");
 		}
-
-//var_dump($res);
 return $res;
 }
 
@@ -356,25 +349,19 @@ return $res;
 		$duree1=2;//en année
 				
 		global $zdb;
-		
-		$select = new Zend_Db_Select($zdb->db);
-        $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where('vierge = ?', '0')
-				->where('YEAR(date_record) <= ?', date('Y', strtotime('-'.$duree1.' years')));
-            //exemple de requete: ->where('MONTH(date) = ?', date('n', strtotime('last month')))
-							   // ->where('YEAR(date) = ?', date('Y'))
-							   // ->where('DAY(date_record) < ?', date('d', strtotime('-11 days')));
-       
-        if ($select->query()->rowCount() > 0) 
+		$select =  $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+		$left='date_record';
+		$right=date("Y-m-d", strtotime('-'.$duree1.' years'));
+		$select->where('vierge=0')
+			   ->where->lessThanOrEqualTo($left,$right);
+		$results = $zdb->execute($select);
+        if ($results->count() > 0) 
 			{
-			//echo('res>0');
-			 $res = $select->query()->fetchAll();
-            foreach ( $res as $row ) 
+			foreach ( $results as $row ) 
 				{
 					$file = new File($row);
 					$path="./upload/files/".$file->emplacement;
 					$file->remove2($path,$file->emplacement);
-					//var_dump($file->emplacement);
 				}
            
 			}//fin du if
@@ -386,7 +373,6 @@ return $res;
 		
 		//supprime tous les fichiers de la bdd qui sont inexistant dans le répertoire
 		$file2->clean_file_bdd();
-		
     }
 	
 	/**
@@ -402,13 +388,11 @@ return $res;
 	 static function clean_file_bdd() {
        	global $zdb;
 		
-		$select = new Zend_Db_Select($zdb->db);
-        $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
-       
-        if ($select->query()->rowCount() > 0) 
+		$select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $results = $zdb->execute($select);
+        if ($results->count() > 0) 
 			{
-			$res = $select->query()->fetchAll();
-            foreach ( $res as $row ) 
+			foreach ( $results as $row ) 
 				{
 					$file = new File($row);
 					$path="./upload/files/".$file->emplacement;
@@ -419,11 +403,8 @@ return $res;
 							//var_dump ("Le fichier $file->emplacement n'existe pas.");
 							$file->remove2("",$file->emplacement);
 						}
-					//var_dump($file->emplacement);
 				}
-           
 			}//fin du if
-		
     }
 	
     /**
@@ -438,13 +419,12 @@ return $res;
         global $zdb;
 
         // Statut
-        $select_id_doc = new Zend_Db_Select($zdb->db);
-        $select_id_doc->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where('id_doc = ?', $object->id_doc)
-                ->limit(1, 0);
-                
-        if ($select_id_doc->query()->rowCount() == 1) {
-            $file = $select_id_doc->query()->fetch();
+        $select_id_doc = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_id_doc->where(array('id_doc'=> $object->id_doc))
+                ->limit(1);
+        $results = $zdb->execute($select_id_doc);        
+        if ($results->count() == 1) {
+            $file = $results->current();
             $object->_id_act = $file->id_act;
             $object->_id_adh = $file->id_adh;
             $object->_id_abn = $file->id_abn;
@@ -472,37 +452,28 @@ return $res;
 		
 		if($this->id_adh != NULL)
 			{
-			$id_adh1='id_adh = ?';
-			$id_adh2=$this->id_adh;
+			$where_id_adh=array('id_adh'=>$this->id_adh);
 			}
 		else
 			{
-			$id_adh1='id_adh IS NULL';
-			$id_adh2='';
+			$where_id_adh='id_adh IS NULL';
 			}
 		
-			$vierge1='vierge = ?';
-			$vierge2=0;
-		
-        $select = new Zend_Db_Select($zdb->db);
-        $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where($vierge1, $vierge2)
-				->where($id_adh1, $id_adh2)
+			$where_vierge=array('vierge'=>0);
+			
+        $select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select->where($where_vierge)
+				->where($where_id_adh)
 				->order('id_act');
-                
-        if ($select->query()->rowCount() > 0) 
+        $results = $zdb->execute($select);        
+        if ($results->count() > 0) 
 			{
-			//echo('res>0');
 			$files = array();
-            $res = $select->query()->fetchAll();
-            foreach ( $res as $row ) 
+            foreach ( $results as $row ) 
 				{
-					$files[] = new File($row);
-					//var_dump($row);
-					
+				$files[] = new File($row);
 				}
             $result=$files;
-			
 			}//fin du if
 			
 		return $result;
@@ -522,53 +493,36 @@ return $res;
         
 		if($this->id_act != NULL)
 			{
-			$id_act1='id_act = ?';
-			$id_act2=$this->id_act;
+			$where_id_act=array('id_act'=>$this->id_act);
 			}
 		else
 			{
-			$id_act1='id_act IS NULL';
-			$id_act2='';
+			$where_id_act='id_act IS NULL';
 			}
 		
 		if($this->id_adh != NULL)
 			{
-			$id_adh1='id_adh = ?';
-			$id_adh2=$this->id_adh;
+			$where_id_adh=array('id_adh'=>$this->id_adh);
 			}
 		else
 			{
-			$id_adh1='id_adh IS NULL';
-			$id_adh2='';
+			$where_id_adh='id_adh IS NULL';
 			}
 		
-			$vierge1='vierge = ?';
-			$vierge2=0;
-		
-		//var_dump("vierge=");
-		//var_dump($vierge2);
-		// var_dump("id_act=");
-		// var_dump($id_act2);
-		// var_dump("id_adh=");
-		// var_dump($id_adh2);
-		
-        $select = new Zend_Db_Select($zdb->db);
-        $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where($vierge1, $vierge2)
-				->where($id_act1, $id_act2)
-				->where($id_adh1, $id_adh2)
+			$where_vierge=array('vierge'=>0);
+			
+		$select =$zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select->where($where_vierge)
+				->where($where_id_act)
+				->where($where_id_adh)
 				->order('id_doc');
-                
-        if ($select->query()->rowCount() > 0) 
+        $results = $zdb->execute($select);  
+        if ($results->count() > 0) 
 			{
-			//echo('res>0');
 			$files = array();
-            $res = $select->query()->fetchAll();
-            foreach ( $res as $row ) 
+            foreach ( $results as $row ) 
 				{
 					$files[] = new File($row);
-					//var_dump($row);
-					
 				}
             $result=$files;
 			
@@ -591,47 +545,28 @@ return $res;
         
 		if($this->id_act != NULL)
 			{
-			$id_act1='id_act = ?';
-			$id_act2=$this->id_act;
+			$where_id_act=array('id_act'=>$this->id_act);
 			}
 		else
 			{
-			$id_act1='id_act IS NULL';
-			$id_act2='';
+			$where_id_act='id_act IS NULL';
 			}
+			$where_vierge=array('vierge'=>1);
 			
-			
-		
-			$vierge1='vierge = ?';
-			$vierge2=1;
-			
-		
-		 //var_dump("vierge=");
-		 //var_dump($vierge2);
-		// var_dump("id_act=");
-		// var_dump($id_act2);
-		
-        $select = new Zend_Db_Select($zdb->db);
-        $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where($vierge1, $vierge2)
-				->where($id_act1, $id_act2)
+		$select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select->where($where_vierge)
+				->where($where_id_act)
 				->order('id_doc');
-                
-        if ($select->query()->rowCount() > 0) 
+        $results = $zdb->execute($select);  
+        if ($results->count() > 0) 
 			{
-			//echo('res>0');
 			$files = array();
-            $res = $select->query()->fetchAll();
-            foreach ( $res as $row ) 
+            foreach ( $results as $row ) 
 				{
 					$files[] = new File($row);
-					//var_dump($row);
-					
 				}
             $result=$files;
-			
 			}//fin du if
-			
 		return $result;
     }
 	
@@ -647,16 +582,12 @@ return $res;
     static function getFileDesc($object) {
         global $zdb;
 		$result=0;
-		//var_dump("emplacement");
-        //var_dump($object->emplacement);
-        $select_timestamp = new Zend_Db_Select($zdb->db);
-        $select_timestamp->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-				//emplacement timestamp_idact_idfile.extension
-                ->where('emplacement LIKE ?', $object->emplacement.'%.%')
-				->limit(1, 0);
-                
-        if ($select_timestamp->query()->rowCount() == 1) {
-            $file = $select_timestamp->query()->fetch();
+		$select_timestamp = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_timestamp->where->Like('emplacement', $object->emplacement.'%.%');
+		$select_timestamp->limit(1);
+        $results = $zdb->execute($select_timestamp);  
+        if ($results->count() == 1) {
+            $file = $results->current();
             $object->_id_doc = $file->id_doc;
             $object->_id_act = $file->id_act;
             $object->_id_adh = $file->id_adh;
@@ -675,7 +606,12 @@ return $res;
     public static function getDbFields()
     {
         global $zdb;
-        return array_keys($zdb->db->describeTable(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE));
+        $columns = $zdb->getColumns(SUBSCRIPTION_PREFIX . self::TABLE);
+        $fields = array();
+        foreach ( $columns as $col ) {
+            $fields[] = $col->getName();
+        }
+        return $fields;
     }
 	
 	
@@ -692,7 +628,6 @@ return $res;
 		global $zdb;
 		$valid = '1';
 		$fields = self::getDbFields();
-		//var_dump ($fields);
 	 foreach ( $fields as $key ) {
 				//first of all, let's sanitize values
 				$key = strtolower($key);
@@ -700,10 +635,7 @@ return $res;
 					$value = stripslashes(trim($values[$key]));
 					$this->$key=$value;
 					
-				} 
-					//echo ('affichage de $key et $value');
-					//echo ($key);
-					//var_dump ($value);			
+				}			
 			}
 			
 			return $valid;
