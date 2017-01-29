@@ -40,6 +40,7 @@ $this->register(
     'Amaury FROMENT',         //Author
     '1.4',                      //Version
     '0.8.3.3-amaury',           //Galette compatible version
+	'2017-01-29', 				//Date de modification du plugin
     null                        //Permissions needed - not yet implemented
 );
 
