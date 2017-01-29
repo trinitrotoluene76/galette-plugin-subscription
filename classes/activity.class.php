@@ -32,8 +32,7 @@
  * @link      http://galette.tuxfamily.org
  * @since     Available since 0.7.8
  */
-namespace GaletteSubscription;//for automated doc
-
+ 
 use Galette\Entity\Group as Group;
 use Zend\Db\Sql\Expression;
 
