@@ -35,6 +35,7 @@
  
 use Galette\Entity\Group as Group;
 use Zend\Db\Sql\Expression;
+use Analog\Analog;
 
 class Activity {
 
@@ -84,7 +85,7 @@ class Activity {
 
         if (is_int($args)) {
             try {
-                $select = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+                $select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
                 $select->where(self::PK . ' = ' . $args);
                 $results=$zdb->execute($select);
 				if ($results->count() == 1) {
@@ -130,16 +131,16 @@ class Activity {
 		global $zdb;
 		$result=0;
 		// Statut
-		$req1 = $zdb->select(PREFIX_DB . Galette\Entity\Group::TABLE);
+		$req1 = $zdb->select(Galette\Entity\Group::TABLE);
 		$req1->where(array('id_group'=>$object->id_group))
-			 ->limit(1, 0);
+			 ->limit(1);
 		$results=$zdb->execute($req1);		
 		if ($results->count() == 1) 
 			{
 			$result=2;
-			$req2 = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+			$req2 = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
 			$req2->where(array('id_group'=> $object->id_group))
-				->limit(1, 0);
+				->limit(1);
 			$results2=$zdb->execute($req2);
 			if ($results2->count() == 1) 
 				{
@@ -162,11 +163,11 @@ class Activity {
 		global $zdb;
 		$result=0;
 			
-		$req2 = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+		$req2 = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
 		$req2->where(array('id_group'=> $this->_id_group,
 						   'complet'=> '1'
 						   ))
-			->limit(1, 0);
+			->limit(1);
 		$results2=$zdb->execute($req2);
 		if ($results2->count() == 1) 
 			{
@@ -187,7 +188,7 @@ class Activity {
 		global $zdb;
 		$result=0;
 			
-		$select = $zdb->select(PREFIX_DB . Group::TABLE);
+		$select = $zdb->select(Group::TABLE);
 		$select->where('parent_group IS NULL');
 		$results=$zdb->execute($select);
 		if ($results->count() > 0) 
@@ -198,7 +199,6 @@ class Activity {
 					$groups[] = new Group($row);
 				}
             $result=$groups;
-			
 			}//fin du if
 			
 		return $result;
@@ -215,7 +215,7 @@ class Activity {
 		global $zdb;
 		$result=0;
 			
-		$select = $zdb->select(PREFIX_DB . Group::TABLE);
+		$select = $zdb->select(Group::TABLE);
 		$select->where(array(
 							'parent_group IS NULL',
 							'id_group'=> $this->_id_group
@@ -248,10 +248,9 @@ class Activity {
 			
 			if ($res=='2') 
 				{
-				$insert = $zdb->insert(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values);
+				$insert = $zdb->insert(SUBSCRIPTION_PREFIX . self::TABLE, $values);
 				$insert->values($values);
 				$add = $zdb->execute($insert);
-				//Analog\Analog::log('insert activity');
 				if ($add > 0) 
 					{
 						$this->_id_group = $zdb->driver->getLastGeneratedValue();
@@ -261,8 +260,7 @@ class Activity {
 				}//fin du if res==2 
 			if ($res=='1') 
 				{
-				//Analog\Analog::log('update activity');
-				$update = $zdb->update(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+				$update = $zdb->update(SUBSCRIPTION_PREFIX . self::TABLE);
                 $update->set($values);
                 $update->where(
                     self::PK . '=' . $this->_id_group
@@ -280,7 +278,6 @@ class Activity {
                     'Something went wrong :\'( | ' . $e->getMessage() . "\n" .
                     $e->getTraceAsString(), Analog\Analog::ERROR
 					);
-					echo ('catch exeption');
 					return false;
 				}	
     }//fin de la fonction
@@ -297,7 +294,7 @@ class Activity {
 		$where=array(
 					"id_group=".$id_group
 					);
-		$delete = $zdb->delete(PREFIX_DB . Group::GROUPSUSERS_TABLE);
+		$delete = $zdb->delete(Group::GROUPSUSERS_TABLE);
         $delete->where($where);
         $rem=$zdb->execute($delete);
 		return $rem;
@@ -314,12 +311,11 @@ class Activity {
     {
         global $zdb, $login;
         try {
-            $select = $zdb->select(PREFIX_DB . Group::TABLE, 'a');
+            $select = $zdb->select(Group::TABLE, 'a');
             $select->join(
                 array('b' => PREFIX_DB . Group::GROUPSUSERS_TABLE),
                 'a.' . Group::PK . '=b.' . Group::PK,
-                array('members' => new Expression(('count(b.' . Group::PK . ')'))
-            ));
+                array('members' => new Expression(('count(b.' . Group::PK . ')'))), 'left');
 			
             if ( $full !== true ) {
                 $select->where('parent_group IS NULL');
@@ -332,19 +328,14 @@ class Activity {
                 ->order('a.group_name ASC');
 			$results = $zdb->execute($select);
 			$groups = array();
-            $results->current();
-            foreach ( $results as $row ) {
-                $groups[] = new Group($row);
+           foreach ( $results as $row ) {
+				 $groups[] = new Group($row);
             }
             return $groups;
         } catch (\Exception $e) {
             Analog::log(
                 'Cannot list groups | ' . $e->getMessage(),
                 Analog::WARNING
-            );
-            Analog::log(
-                'Query was: ' . $select->__toString() . ' ' . $e->getTraceAsString(),
-                Analog::ERROR
             );
         }
     }//fin de la fonction
@@ -361,14 +352,12 @@ class Activity {
         global $zdb;
 
         // Statut
-        $select_id_grp = $zdb->select(PREFIX_DB . SUBSCRIPTION_PREFIX . Activity::TABLE);
+        $select_id_grp = $zdb->select( SUBSCRIPTION_PREFIX . Activity::TABLE);
         $select_id_grp->join(PREFIX_DB . Galette\Entity\Group::TABLE, PREFIX_DB . Galette\Entity\Group::TABLE . '.id_group = ' . PREFIX_DB . SUBSCRIPTION_PREFIX . Activity::TABLE . '.id_group')
                 ->where(array(PREFIX_DB . Galette\Entity\Group::TABLE.'.id_group'=> $object->id_group))
-                ->limit(1, 0);
-        $results = $zdb->execute($select_id_grp);        
-        //Analog\Analog::log('test de load activity');
-
-        if ($results->count() == 1) {
+                ->limit(1);
+        $results = $zdb->execute($select_id_grp);
+		if ($results->count() == 1) {
             $activity = $results->current();
             $object->_id_group = $activity->id_group;
             $object->_group_name = $activity->group_name;
@@ -394,7 +383,7 @@ class Activity {
     public static function getDbFields()
     {
         global $zdb;
-        $columns = $zdb->getColumns(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE);
+        $columns = $zdb->getColumns(SUBSCRIPTION_PREFIX . self::TABLE);
         $fields = array();
         foreach ( $columns as $col ) {
             $fields[] = $col->getName();
@@ -433,8 +422,7 @@ class Activity {
 		global $zdb;
 		$valid = '1';
 		$fields = self::getDbFields();
-		//var_dump ($fields);
-	 foreach ( $fields as $key ) {
+		foreach ( $fields as $key ) {
 				//first of all, let's sanitize values
 				$key = strtolower($key);
 				if ( isset($values[$key]) ) {
@@ -457,15 +445,9 @@ class Activity {
 						$number=floatval ($number);
 						$number=number_format($number, 2, '.', '');
 						$this->$key=round($number,2);
-					
 						}
-			
-				} 
-					//echo ('affichage de $key et $value');
-					//echo ($key);
-					//var_dump ($value);			
+				}				
 			}
-			
 			return $valid;
 	}			
  
