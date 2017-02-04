@@ -75,13 +75,13 @@ class Followup {
 
         if (is_int($args[0]) && is_int($args[1]) && is_int($args[2])) {
             try {
-                $select = new Zend_Db_Select($zdb->db);
-                $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                        ->where('id_act = ' . $args[0])
-						->where('id_adh = ' . $args[1])
-						->where('id_abn = ' . $args[2]);
-                if ($select->query()->rowCount() == 1) {
-                    $this->_loadFromRS($select->query()->fetch());
+                $select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+                $select->where(array('id_act'=>$args[0],
+									 'id_adh' => $args[1],
+									 'id_abn' =>$args[2]));
+                $results=$zdb->execute($select);
+				if ($results->count() == 1) {
+                    $this->_loadFromRS($results->current());
                 }
                 
             } catch (Exception $e) {
@@ -121,14 +121,13 @@ class Followup {
 		global $zdb;
 		$result=0;
 		// Statut
-		$req1 = new Zend_Db_Select($zdb->db);
-		$req1->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-				->where('id_act = ?', $object->id_act)
-				->where('id_adh = ?', $object->id_adh)
-				->where('id_abn = ?', $object->id_abn)
-				->limit(1, 0);
-				
-		if ($req1->query()->rowCount() == 1) 
+		$req1 = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+		$req1->where(array('id_act'=> $object->id_act,
+						   'id_adh'=> $object->id_adh,
+						   'id_abn'=> $object->id_abn))
+				->limit(1);
+		$results=$zdb->execute($req1);				
+		if ($results->count() == 1) 
 			{
 			$result=1;
 			}//fin du 1er if
@@ -148,13 +147,12 @@ class Followup {
 		global $zdb;
 		$result=0;
 		// Statut
-		$req2 = new Zend_Db_Select($zdb->db);
-		$req2->from(PREFIX_DB . Group::GROUPSUSERS_TABLE)
-				->where('id_group = ?', $object->id_act)
-				->where('id_adh = ?', $object->id_adh)
-				->limit(1, 0);
-				
-		if ($req2->query()->rowCount() == 1) 
+		$req2 = $zdb->select(Group::GROUPSUSERS_TABLE);
+		$req2->where(array('id_group'=> $object->id_act,
+							'id_adh '=> $object->id_adh))
+				->limit(1);
+		$results=$zdb->execute($req2);		
+		if ($results->count() == 1) 
 			{
 			$result=0;
 			}//fin du 1er if
@@ -164,8 +162,10 @@ class Followup {
 				Group::PK => $object->id_act,
 				Adherent::PK => $object->id_adh
 				);
-				$add = $zdb->db->insert(PREFIX_DB .Group::GROUPSUSERS_TABLE, $values);
-				//Analog\Analog::log('insert followup');
+				$insert = $zdb->insert(Group::GROUPSUSERS_TABLE);
+				$insert->values($values);
+                $add = $zdb->execute($insert);
+                //Analog\Analog::log('insert followup');
 				if ($add > 0) 
 					{	//lastInsertId n'est valable que pour les clés autoincrémentés
 						//$object->_id_abn = $zdb->db->lastInsertId();
@@ -190,25 +190,24 @@ class Followup {
 		global $zdb;
 		$result=0;
 		// Statut
-		$req2 = new Zend_Db_Select($zdb->db);
-		$req2->from(PREFIX_DB . Group::GROUPSUSERS_TABLE)
-				->where('id_group = ?', $object->id_act)
-				->where('id_adh = ?', $object->id_adh)
-				->limit(1, 0);
-				
-		if ($req2->query()->rowCount() == 1) 
+		$req2 = $zdb->select(Group::GROUPSUSERS_TABLE);
+		$req2->where(array('id_group'=> $object->id_act,
+							'id_adh'=> $object->id_adh))
+				->limit(1);
+		$results=$zdb->execute($req2);		
+		if ($results->count() == 1) 
 			{
-			$values= array(
-				'id_group = ?' => $object->id_act,
-				'id_adh = ?' => $object->id_adh
+			$where= array(
+				'id_group' => $object->id_act,
+				'id_adh' => $object->id_adh
 				);
-				$del = $zdb->db->delete(PREFIX_DB .Group::GROUPSUSERS_TABLE, $values);
-				
+				$delete = $zdb->delete(Group::GROUPSUSERS_TABLE);
+                $delete->where($where);
+                $del=$zdb->execute($delete);
 			$result=$del;
 			}//fin du 1er if
 		else
 			{
-				
 				$result=0;
 			}
 		return $result;
@@ -231,8 +230,10 @@ class Followup {
 			$res=$this->is_id($this);
             if ($res=='0') 
 				{
-				$add = $zdb->db->insert(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values);
-				//Analog\Analog::log('insert followup');
+				$insert = $zdb->insert(SUBSCRIPTION_PREFIX . self::TABLE);
+				$insert->values($values);
+                $add = $zdb->execute($insert);
+                //Analog\Analog::log('insert followup');
 				if ($add > 0) 
 					{	//lastInsertId n'est valable que pour les clés autoincrémentés
 						//$this->_id_abn = $zdb->db->lastInsertId();
@@ -242,13 +243,14 @@ class Followup {
 				} 
 			if ($res=='1') 
 				{
-				//Analog\Analog::log('update followup');
-				$where['id_act = ?'] = $this->_id_act;
-				$where['id_adh = ?'] = $this->_id_adh;
-				$where['id_abn = ?'] = $this->_id_abn;
-				$edit = $zdb->db->update(
-				PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values, $where
-										);
+				$update = $zdb->update(SUBSCRIPTION_PREFIX . self::TABLE);
+                $update->set($values);
+                $update->where(array(
+									'id_act'=>$this->_id_act,
+									'id_adh'=>$this->_id_adh,
+									'id_abn'=> $this->_id_abn
+									));
+				$edit = $zdb->execute($update);
 				}else {
 								throw new Exception(_T("followup.update ECHEC"));
 								}
@@ -280,9 +282,10 @@ class Followup {
 		$where=array(
 					"id_act=".$object->id_act
 					);
-					//var_dump($where);
-        $rem=$zdb->db->delete(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $where);
-        
+        $delete = $zdb->delete(SUBSCRIPTION_PREFIX . self::TABLE);
+        $delete->where($where);
+        $rem=$zdb->execute($delete);
+		
 		return $rem;
     }
 	
@@ -297,17 +300,17 @@ class Followup {
         global $zdb;
 
         // Statut
-        $select_id = new Zend_Db_Select($zdb->db);
-        $select_id->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where('id_act = ?', $object->id_act)
-                ->where('id_adh = ?', $object->id_adh)
-                ->where('id_abn = ?', $object->id_abn)
-                ->limit(1, 0);
-                
+        $select_id = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_id->where(array('id_act'=> $object->id_act,
+								'id_adh'=> $object->id_adh,
+								'id_abn'=> $object->id_abn
+								))
+                ->limit(1);
+        $results=$zdb->execute($select_id);        
         //Analog\Analog::log('test de load followup');
 
-        if ($select_id->query()->rowCount() == 1) {
-            $followup = $select_id->query()->fetch();
+        if ($results->count() == 1) {
+            $followup = $results->current();
             $object->_statut_act = $followup->statut_act;
             $object->_feedback_act = $followup->feedback_act;
             $object->_message_adh_act = $followup->message_adh_act;
@@ -327,15 +330,14 @@ class Followup {
         global $zdb;
 
         // Statut
-        $select_id = new Zend_Db_Select($zdb->db);
-        $select_id->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where('id_abn = ?', $object->id_abn)
-                ->limit(1, 0);
-                
+        $select_id = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_id->where(array('id_abn'=> $object->id_abn))
+                ->limit(1);
+        $results=$zdb->execute($select_id);       
         //Analog\Analog::log('test de load followup');
 
-        if ($select_id->query()->rowCount() == 1) {
-            $followup = $select_id->query()->fetch();
+        if ($results->count() == 1) {
+            $followup = $results->current();
             $object->_id_adh = $followup->id_adh;
         }
     }
@@ -349,21 +351,18 @@ class Followup {
      */
 	 static function getFollowupTotSub($object, $resparpage) {
         global $zdb;
-        $select_nb = new Zend_Db_Select($zdb->db);
-        $select_nb->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-				->where('id_act = ?', $object->id_act);
-		
+        $select_nb = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_nb->where(array('id_act'=> $object->id_act));
+		$results=$zdb->execute($select_nb);
 		$result=array();
-		if ($select_nb->query()->rowCount() > 0) 
+		if ($results->count() > 0) 
 				{
-				$result[1]=$select_nb->query()->rowCount();
+				$result[1]=$results->count();
 				$nblignestot=$result[1];
 				//arrondi au nombre de page supérieur
 				$result[0]=ceil($nblignestot/$resparpage);
 				}
 		else $result=0;
-		//var_dump($select_nb->query()->rowCount());
-		//var_dump($result);
 		
 		return $result;
 	 }
@@ -422,31 +421,24 @@ class Followup {
 			}
 		
         //requete pour avoir les résultats
-		$select_id = new Zend_Db_Select($zdb->db);
-        $select_id->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-				->join(PREFIX_DB . Galette\Entity\Adherent::TABLE, PREFIX_DB . Galette\Entity\Adherent::TABLE . '.id_adh = ' . PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE . '.id_adh')
-                ->where('id_act = ?', $object->id_act)
+		$select_id = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_id->join(PREFIX_DB . Galette\Entity\Adherent::TABLE, PREFIX_DB . Galette\Entity\Adherent::TABLE . '.id_adh = ' . PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE . '.id_adh')
+                ->where(array('id_act'=> $object->id_act))
 				//correction pour evol #37
 				->order($order)
-				->limitPage($numpage, $nblignes);
+				->limit($nblignes)
+				->offset($nblignes*($numpage-1));
 				//fin correction
 				//fin évol 42
-		
-        //var_dump($select_id->query()->rowCount());
-			        
-        //Analog\Analog::log('test de load followup');
-		$result=array();
-        if ($select_id->query()->rowCount() > 0) {
-			$followups = $select_id->query()->fetchAll();
-            //var_dump($followups);
+		$followups = $zdb->execute($select_id);
+        $result=array();
+        if ($followups->count() > 0) {
 			foreach ( $followups as  $key => $value ) 
 				{
-				//var_dump($key);
-				$result[]=$followups[$key]->id_abn;
+				$result[]=$value->id_abn;
 				}
             
         }//fin du if
-		//var_dump($result);
 		return $result;
     }
 	
@@ -461,24 +453,17 @@ class Followup {
         global $zdb;
 
         // Statut
-        $select_acts = new Zend_Db_Select($zdb->db);
-        $select_acts->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where('id_abn = ?', $object->id_abn);
-        //var_dump($select_acts->query()->rowCount());
-			        
-        //Analog\Analog::log('test de load followup');
-		$result2=array();
-        if ($select_acts->query()->rowCount() > 0) {
-			$followups2 = $select_acts->query()->fetchAll();
-            //var_dump($followups2);
+        $select_acts = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_acts->where(array('id_abn'=> $object->id_abn));
+        $followups2 = $zdb->execute($select_acts);
+        $result2=array();
+        if ($followups2->count() > 0) {
 			foreach ( $followups2 as  $key2 => $value2 ) 
 				{
-				//var_dump($key2);
-				$result2[]=$followups2[$key2]->id_act;
+				$result2[]=$value2->id_act;
 				}
             
         }//fin du if
-		//var_dump($select_acts->query()->rowCount());
 		return $result2;
     }
 	
@@ -506,8 +491,6 @@ class Followup {
 		
 		//retourner la liste des activités d'un abn (pour peu qu'il soit enregistré dans la bdd)
 		$activities=$followup->getFollowupAct($followup);
-		//var_dump($activities);
-		//var_dump($followup);
 		
 		//pour chaque suivi d'activité
 		foreach ( $activities as  $key => $id_act ) 
@@ -516,7 +499,6 @@ class Followup {
 			$followup2->id_act=$id_act;
 			$followup2->id_abn=$id_abn;
 			$followup2->getAdh($followup2);
-			//var_dump($followup2);
 			$followup2->getFollowup($followup2);
 			$followups[]=$followup2;
 			}//fin du foreach act
@@ -533,17 +515,12 @@ class Followup {
 		//0 orange, 1 vert, 2 rouge
 		$total_statut=0;
 		unset($total_statut_ref);
-		//var_dump($followups);
 		//pour chaque suivi d'activité, on additionne les statuts de chaque activité
 		foreach ( $followups as  $key => $followup3 ) 
 			{
 			$total_statut=$total_statut+$followup3->statut_act;
-			//var_dump($total_statut);
 			$total_statut_ref[]=$followup3->statut_act;
 			}
-		//var_dump(2*count($followups));
-		//var_dump($followup3->statut_act);
-		//var_dump($total_statut);
 		
 		//si toutes les activités sont payées (alors la somme des statuts= 2x nb d'activités dans l'abn)
 		if($total_statut==2*count($followups))
@@ -568,15 +545,20 @@ class Followup {
 	
 
 	    /**
-     * Retrieve fields from database
+     * Retrieve fields from database. Copy/past from adherent
      *
      * @return array
      */
     public static function getDbFields()
     {
-        global $zdb;
-        return array_keys($zdb->db->describeTable(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE));
-    }
+    global $zdb;
+	$columns = $zdb->getColumns(SUBSCRIPTION_PREFIX . self::TABLE);
+	$fields = array();
+	foreach ( $columns as $col ) {
+		$fields[] = $col->getName();
+		}
+	return $fields;
+	}
 	
 	
 	 /**
@@ -592,18 +574,14 @@ class Followup {
 		global $zdb;
 		$valid = '1';
 		$fields = self::getDbFields();
-		//var_dump ($fields);
-	 foreach ( $fields as $key ) {
+	foreach ( $fields as $key ) {
 				//first of all, let's sanitize values
 				$key = strtolower($key);
 				if ( isset($values[$key]) ) {
 					$value = stripslashes(trim($values[$key]));
 					$this->$key=$value;
 					
-				} 
-					//echo ('affichage de $key et $value');
-					//echo ($key);
-					//var_dump ($value);			
+				} 			
 			}
 			
 			return $valid;
