@@ -48,7 +48,7 @@
 									<a href="{$galette_base_path}{$subscription_dir}management_subs.php?order=2{if $nbligne>0}&nbligne={$nbligne}&id_act={$id_act}{/if}">#</a>
 								{/if}
 							</th>
-							<th width=10%>
+							<th width=90px>
 								{if $order==1}
 									<a href="{$galette_base_path}{$subscription_dir}management_subs.php?order=2{if $nbligne>0}&nbligne={$nbligne}&id_act={$id_act}{/if}">{_T string="Date"} <img src="{$template_subdir}/images/up.png"></a>
 								{/if}
@@ -60,7 +60,7 @@
 								{/if}
 							</th>
 							
-							<th width=20%>
+							<th>
 								{if $order==3}
 									<a href="{$galette_base_path}{$subscription_dir}management_subs.php?order=4{if $nbligne>0}&nbligne={$nbligne}&id_act={$id_act}{/if}">{_T string="Name"} <img src="{$template_subdir}/images/up.png"></a>
 								{/if}
@@ -73,7 +73,7 @@
 								
 							</th>
 							
-							<th>
+							<th width=380px>
 								{_T string="Sub. status"}
 							</th>
 							 <th width=10%>
@@ -88,7 +88,7 @@
 								{/if}
 														
 							</th>
-							<th width=17%>
+							<th width=170px>
 								{_T string="Details"}
 							</th>
 						</tr>
@@ -100,7 +100,7 @@
 							<td>
 								{$subscription->id_abn}						
 							</td>
-							<td width=90px>
+							<td >
 								{$subscription->date_demande}
 							</td>
 							<td>
