@@ -52,7 +52,6 @@ if (isset($_FILES['Filedata']))
                 } 
                 else  return false ; 
     }  
-      //else return false ; 
 	  
 //supression du fichier après avoir cliqué sur "supprimer"	dans l'animation flash  
 if(isset($_POST['supp']))
@@ -93,23 +92,10 @@ if(isset($_POST['store']))
 		$file->id_act=$_POST['id_act'];
 		$file->id_adh=$_POST['id_adh'];
 		$today= new DateTime("now");
-		//var_dump($today->format('d-m-Y'));
 		$file->date_record=$today->format('Y-m-d');
 		$file->store();
 		echo("&monStore=".utf8_encode(1)."&");
 		}
 		
 	}
-	// $file= new File();
-	//var_dump($file);
-	//$file->doc_name="doc.txt";
-	//$file->emplacement="187162.txt";
-	/* $today= new DateTime("now");
-		//var_dump($today->format('d-m-Y'));
-	$file->date_record=$today->format('Y-m-d');
-	$file->store();  */
-	//$file->remove(utf8_encode('186202'));
-	
-//var_dump($file);	
-
 ?> 
