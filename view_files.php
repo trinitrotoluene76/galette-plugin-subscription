@@ -57,15 +57,12 @@ require_once '_config.inc.php';
 // enregistrement de la description
 $file= new File();
 $file->id_adh=$id_adh;
-//var_dump($_GET);
 
 if(isset($_GET['id_adh']))
 		{
 		$file->id_adh=$_GET['id_adh'];
 		}
 
-
-		
 //supprimer un fichier à partir de son emplacement et de son nom
 //------------------------------------------------------------------------------------>
 $deleteok=2;
@@ -77,8 +74,6 @@ if(isset($_GET['delete']))
 			$file_del->id_doc=$_GET['id_doc'];
 			$file_del->getFile($file_del);
 			$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement,$login->isStaff());
-			//var_dump("suppression=");
-			//var_dump($res);
 			$deleteok=$res;
 			}
 		}
@@ -91,7 +86,6 @@ if(isset($_GET['delete']))
 	
 		$personnal_files=array();
 		$personnal_files=$file->getFileList();
-		//var_dump($personnal_files);
 		
 		$activities=array();
 		foreach ($personnal_files as $key => $file) 
@@ -115,7 +109,6 @@ $tpl->template_dir = 'templates/' . $preferences->pref_theme;
 
 //liste des fichiers de l'adhérent pour l'activité
 $tpl->assign('files',$personnal_files);
-//var_dump($personnal_files);
 //confirmation de suppression d'un fichier
 $tpl->assign('deleteok',$deleteok);
 $tpl->assign('activities',$activities);
