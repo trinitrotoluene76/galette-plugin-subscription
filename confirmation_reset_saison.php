@@ -57,7 +57,6 @@ if(isset($_GET["remove_id_act"]))
 	{
 	$remove_id_act=$_GET["remove_id_act"];
 	$tpl->assign('remove_id_act',$remove_id_act);
-	//var_dump($remove_id_act);
 	}
 	
 $tpl->assign('page_title', _T("Confirmation for a new saison"));
