@@ -54,15 +54,10 @@ if ( !$login->isSuperAdmin() ) {
     }
 }
 require_once '_config.inc.php';
-//var_dump($login->isGroupManager());//Si manager de group ou staff ou admin
-//var_dump ($login);
 // Si l'adhérent est un groupmanager, on charge l'activité correspondante (on a donc besoin de id_group)
 $member = new Adherent();
 //on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 $member->load($id_adh);
-//var_dump($member);
-
-//var_dump($member->picture->hasPicture());
 $picture=$member->picture->hasPicture();
 
 
@@ -77,17 +72,13 @@ $picture=$member->picture->hasPicture();
 		$activity = new Activity();
 		//récupération de l'id_group ainsi que le nom du groupe managé
 		$activity->id_group = $_GET['id_group'];
-		//var_dump($activity->id_group);
 		 
 		//hydrate l'activité avec les données de la bdd. L'objet passé en paramètre doit être une activité avec un id_group valide
 		$activity->getActivity($activity);
-		//var_dump ($activity);
-
 		$group = new Group();
 		$group->load($activity->id_group);
 		//affiche le nom,tel,mail du manager de group + pour changer la manager de group, allez dans la page gestion group
 		$managers=$group->getManagers();
-		//var_dump($managers);
 		
 		//récupération de la liste des fichiers vierges
 		$file= new File();
@@ -97,14 +88,10 @@ $picture=$member->picture->hasPicture();
 		$files_vierges=$file->getFileListVierge();
 		
 		$tpl->assign('activity',$activity);
-		//var_dump ($activity);
 		$tpl->assign('managers',$managers);
-		//var_dump ($managers);
 		$tpl->assign('picture',$picture);
 		$tpl->assign('files_vierges',$files_vierges);
-		//var_dump($file);
 		
-
 $content = $tpl->fetch('view_activity.tpl', SUBSCRIPTION_SMARTY_PREFIX);
 $tpl->assign('content', $content);
 //Set path to main Galette's template
