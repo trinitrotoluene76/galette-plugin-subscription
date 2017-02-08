@@ -4,7 +4,7 @@
  *
  * PHP version 5
  *
- * Copyright © 2009-2016 The Galette Team
+ * Copyright Â© 2009-2016 The Galette Team
  *
  * This file is part of Galette (http://galette.tuxfamily.org).
  *
@@ -128,22 +128,20 @@ function getBrowser()
 // now try it
 $ua=getBrowser();
 $yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
-//print_r($yourbrowser);
-//var_dump($ua);
 $error_nav=0;
-//si la version du navigateur est inférieure à IE 11 on émet une alerte
+//si la version du navigateur est infÃ©rieure Ã  IE 11 on Ã©met une alerte
 if ( $ua['name']=='Internet Explorer' && $ua['version']<11)
 	{
 	$error_nav=1;
 	}
-//si la version du navigateur est inférieure à Firefox 15 on émet une alerte
+//si la version du navigateur est infÃ©rieure Ã  Firefox 15 on Ã©met une alerte
 if ( $ua['name']=='Mozilla Firefox' && $ua['version']<15)
 	{
 	$error_nav=1;
 	}
 	$tpl->assign('error_nav', $error_nav);
 
-//palliatif au bug #1 avec flash player à 99% au travail ->utiliser chrome
+//palliatif au bug #1 avec flash player Ã  99% au travail ->utiliser chrome
 $error_flash=0;
 if ( $ua['name']=='Google Chrome')
 	{
