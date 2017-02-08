@@ -64,21 +64,16 @@ require_once '_config.inc.php';
 		 $members0 = new Members($filters);
 		 $adherent_del=new Adherent();
 		 $members_list = $members0->getMembersList(1,null,0,0,0,0,0);
-		//var_dump($members_list);
-		 //creation d'une boucle
+		//creation d'une boucle
 		 foreach ( $members_list as  $keydel => $valuedel ) 
 			{
 			 $adherent_del=$members_list[$keydel];
 				 
 			if($adherent_del->isStaff2()==false)
 				{
-				//var_dump($adherent_del->modification_date);
-				 
 				$lastsubsdate= \DateTime::createFromFormat('j/m/Y',$adherent_del->modification_date);
 				$today= new \DateTime("now");
-				//echo('diff:');
 				$elapse=$lastsubsdate->diff($today);
-				//var_dump($elapse->format('%R%Y'));
 				$elapse=$elapse->format('%Y');
 				//if( $elapse>=1)
 				if( $elapse>=2)
@@ -92,7 +87,6 @@ require_once '_config.inc.php';
 $tpl->assign('page_title', _T("Confirmation to clean members"));
 $tpl->assign('members', $members);
 $tpl->assign('countmb', $countmb);
-//var_dump($members);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before

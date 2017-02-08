@@ -61,7 +61,6 @@ require_once '_config.inc.php';
 $member = new Adherent();
 //on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 $member->load($id_adh);
-//var_dump($member);
 
 // management group pour avoir les groupes managés
 //------------------------------------------------------------------------------------------------->
@@ -74,7 +73,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 	$groups=array();
 	//on charge les groupes pour lesquels il est manager
 	$groups=Groups::loadManagedGroups($id_adh);
-	//var_dump($groups);
 	$activities=array();
 	$nbinscr=array();
 	$followups=array();
@@ -92,13 +90,10 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 		$followup= new Followup;
 		$id_act2=$groups[$key2]->getId();
 		$followup->id_act=$id_act2;
-		//var_dump($id_act2);
 		
 		//si c'est une nouvelle saison pour l'activité on supprime suivi, doc et on retire le membre du group. 
 		//Si l'abonnement ne contient plus d'activité, on le supprime
 		
-			//var_dump($_GET['remove_id_act']==$id_act2);
-			//var_dump($id_act2);
 			if(isset($_GET['remove_id_act']))
 				{
 				if($_GET['remove_id_act']==$id_act2)
@@ -110,7 +105,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 						//suppression des abonnements mono activité .
 						//l'abonnement n'est pas supprimé s'il reste plus d'une activité dans l'abonnement avec une saison en cours
 						$id_anbs2=$followup2->getFollowupSub($followup2);
-						//var_dump($id_anbs2);
 						//pour chaque abn compter le nb d'activité (getFollowupAct)
 						foreach ( $id_anbs2 as $key5 => $id_abn2)
 							{
@@ -121,7 +115,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 								{
 								//supprime le suivi sur le paramètre id_act	
 								$followup2->remove($followup2);
-								//var_dump('suppression du suivi de l_abn:'.$id_abn2);
 								}//fin du if
 							//si il ne reste plus qu'une acitvité, on supprime l'abonnement qui supprime le reste en cascade	
 							else
@@ -129,7 +122,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 								$subscription2= new Subscription;
 								$subscription2->id_abn=$id_abn2;
 								$subscription2->remove($subscription2);
-								//var_dump('suppression de la subscription: '.$id_abn2);
 								}
 							}//fin du foreach
 					
@@ -206,8 +198,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 			//$numpages=1;
 			$respage=$followup->getFollowupTotSub($followup, $nblignesmax);
 			$nbpages[$followup->id_act]=$respage[0];
-			//var_dump($respage[1]);
-			//var_dump($nbpages);
 			$currentpages[$followup->id_act]=$numpages;
 			
 		//retourne les abonnements triés correspondant au suivi d'une activité
@@ -241,18 +231,10 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 			//récupération du nombre d'inscrits
 			$group2=new Group();
 			$group2->load($followup->id_act);
-			//var_dump($group2);
 			$nbinscr[$followup->id_act]=$group2->getMemberCount(true);
 			 
 			//hydrate l'activité avec les données de la bdd. L'objet passé en paramètre doit être une activité avec un id_group valide
 			$activity->getActivity($activity);
-			//var_dump ($activity);
-			
-			//var_dump($activity->group_name);
-			//var_dump($id_abns);
-			//var_dump($followup->id_act);
-		
-		
 			$activities[$followup->id_act]=$activity;
 			
 		//pour chaque abonnement
@@ -264,7 +246,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 			$followup->getAdh($followup);//récupère l'id_adh
 			$followup->getFollowup($followup);
 			$followups[$id_act2][$value]=$followup;
-			//var_dump($followups);
 			//récupération de la date et du statut act
 			$subscription= new Subscription;
 			$subscription->id_abn=$value;
@@ -280,50 +261,7 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 			//on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 			$member->load($followup->id_adh);
 			$members[$id_act2][$value]=$member;
-			 /**
-			 * Exécute une requête SQL retournant le statut (champ dynamique) de l'adhérent (ne fonctionne pas pour le super admin)
-			 * Retourne $statut
-			 * 
-			 * $statut=0 si il y a une erreur
-			 *
-			 * @param id_adh: l'id de l'adhérent et field_name: le nom du champ recherché, ici "Statut"
-			 */
-			 
-				/* global $zdb;
-					$statut=0;
-					// dans un 1er temps on retourne le field_id et le field_val
-					$select = new Zend_Db_Select($zdb->db);
-					$select->from(PREFIX_DB . DynamicFields::TABLE)
-							->join(PREFIX_DB . DynamicFieldType::TABLE, PREFIX_DB . DynamicFieldType::TABLE . '.field_id = ' . PREFIX_DB . DynamicFields::TABLE . '.field_id')
-							->where(PREFIX_DB . DynamicFieldType::TABLE.'.field_name = ?', 'Statut')
-							->where(PREFIX_DB . DynamicFields::TABLE.'.item_id = ?', $followup->id_adh);
-					//var_dump($select);
-					if ($select->query()->rowCount() == 1) 
-						{
-						$resultat= $select->query()->fetch();
-						//var_dump($field_val=$resultat->field_val);
-						$field_val=$resultat->field_val;
-						$field_id=$resultat->field_id;
-						
-						//dans un 2eme temps on retourne la valeur du statut de l'adhérent
-						$select2 = new Zend_Db_Select($zdb->db);
-						$select2->from(PREFIX_DB . 'field_contents_'.$field_id)
-								->where('id = ?', $field_val);
-						if ($select2->query()->rowCount() == 1) 
-							{
-							$resultat2= $select2->query()->fetch();
-							//var_dump($resultat2->val);
-							
-							$statut=$resultat2->val;
-							//echo('statut de l adhérent: ');
-							//echo($statut);
-							
-							}//fin du 2eme if
-						
-						}//fin du 1er if
-			//---------------------------------------------------> */
-			
-			//ces 2 lignes remplace le commentaire au dessus
+			$members[$id_act2][$value]=$member;
 			$id_adh=$followup->id_adh;
 			require 'includes/tarif.php';
 			
@@ -347,7 +285,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 	$groups=array();
 	//on charge tous les groupes
 	$groups=Groups::getList();
-	//var_dump($groups);
 	$activities=array();
 	$nbinscr=array();
 	$followups=array();
@@ -373,19 +310,12 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 						 
 					if($adherent_del->isStaff2()==false)
 						{
-						//var_dump($adherent_del->modification_date);
-						 
 						$lastsubsdate= \DateTime::createFromFormat('j/m/Y',$adherent_del->modification_date);
 						$today= new \DateTime("now");
-						//echo('diff:');
 						$elapse=$lastsubsdate->diff($today);
-						//var_dump($elapse->format('%R%Y'));
 						$elapse=$elapse->format('%Y');
 						if( $elapse>=2)
 							{
-							//var_dump("delete adherent");
-							//var_dump($adherent_del->isStaff2());
-							//var_dump($adherent_del->id);
 							$members2->removeMembers($adherent_del->id);
 							}
 						}//fin if staff
@@ -405,8 +335,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 		//si c'est une nouvelle saison pour l'activité on supprime suivi, doc et on retire le membre du group. 
 		//Si l'abonnement ne contient plus d'activité, on le supprime
 		
-			//var_dump($_GET['remove_id_act']==$id_act2);
-			//var_dump($id_act2);
 			if(isset($_GET['remove_id_act']))
 				{
 				if($_GET['remove_id_act']==$id_act2)
@@ -418,7 +346,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 						//suppression des abonnements mono activité .
 						//l'abonnement n'est pas supprimé s'il reste plus d'une activité dans l'abonnement avec une saison en cours
 						$id_anbs2=$followup2->getFollowupSub($followup2);
-						//var_dump($id_anbs2);
 						//pour chaque abn compter le nb d'activité (getFollowupAct)
 						foreach ( $id_anbs2 as $key5 => $id_abn2)
 							{
@@ -429,7 +356,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 								{
 								//supprime le suivi sur le paramètre id_act	
 								$followup2->remove($followup2);
-								//var_dump('suppression du suivi de l_abn:'.$id_abn2);
 								}//fin du if
 							//si il ne reste plus qu'une activité, on supprime l'abonnement qui supprime le reste en cascade	
 							else
@@ -437,7 +363,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 								$subscription2= new Subscription;
 								$subscription2->id_abn=$id_abn2;
 								$subscription2->remove($subscription2);
-								//var_dump('suppression de la subscription: '.$id_abn2);
 								}
 							}//fin du foreach
 					
@@ -511,8 +436,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 			//$numpages=1;
 			$respage=$followup->getFollowupTotSub($followup, $nblignesmax);
 			$nbpages[$followup->id_act]=$respage[0];
-			//var_dump($respage[1]);
-			//var_dump($nbpages);
 			$currentpages[$followup->id_act]=$numpages;
 			
 		//retourne les abonnements triés correspondant au suivi d'une activité
@@ -546,18 +469,10 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 			//récupération du nombre d'inscrits
 			$group2=new Group();
 			$group2->load($followup->id_act);
-			//var_dump($group2);
 			$nbinscr[$followup->id_act]=$group2->getMemberCount(true);
 			 
 			//hydrate l'activité avec les données de la bdd. L'objet passé en paramètre doit être une activité avec un id_group valide
 			$activity->getActivity($activity);
-			//var_dump ($activity);
-			
-			//var_dump($activity->group_name);
-			//var_dump($id_abns);
-			//var_dump($followup->id_act);
-		
-		
 			$activities[$followup->id_act]=$activity;
 			
 		//pour chaque abonnement
@@ -569,7 +484,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 			$followup->getAdh($followup);//récupère l'id_adh
 			$followup->getFollowup($followup);
 			$followups[$id_act2][$value]=$followup;
-			//var_dump($followups);
 			//récupération de la date et du statut act
 			$subscription= new Subscription;
 			$subscription->id_abn=$value;
@@ -586,50 +500,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 			$member->load($followup->id_adh);
 			$members[$id_act2][$value]=$member;
 			
-			 /**
-			 * Exécute une requête SQL retournant le statut (champ dynamique) de l'adhérent (ne fonctionne pas pour le super admin)
-			 * Retourne $statut
-			 * 
-			 * $statut=0 si il y a une erreur
-			 *
-			 * @param id_adh: l'id de l'adhérent et field_name: le nom du champ recherché, ici "Statut"
-			 */
-			 
-				/* global $zdb;
-					$statut=0;
-					// dans un 1er temps on retourne le field_id et le field_val
-					$select = new Zend_Db_Select($zdb->db);
-					$select->from(PREFIX_DB . DynamicFields::TABLE)
-							->join(PREFIX_DB . DynamicFieldType::TABLE, PREFIX_DB . DynamicFieldType::TABLE . '.field_id = ' . PREFIX_DB . DynamicFields::TABLE . '.field_id')
-							->where(PREFIX_DB . DynamicFieldType::TABLE.'.field_name = ?', 'Statut')
-							->where(PREFIX_DB . DynamicFields::TABLE.'.item_id = ?', $followup->id_adh);
-					//var_dump($select);
-					if ($select->query()->rowCount() == 1) 
-						{
-						$resultat= $select->query()->fetch();
-						//var_dump($field_val=$resultat->field_val);
-						$field_val=$resultat->field_val;
-						$field_id=$resultat->field_id;
-						
-						//dans un 2eme temps on retourne la valeur du statut de l'adhérent
-						$select2 = new Zend_Db_Select($zdb->db);
-						$select2->from(PREFIX_DB . 'field_contents_'.$field_id)
-								->where('id = ?', $field_val);
-						if ($select2->query()->rowCount() == 1) 
-							{
-							$resultat2= $select2->query()->fetch();
-							//var_dump($resultat2->val);
-							
-							$statut=$resultat2->val;
-							//echo('statut de l adhérent: ');
-							//echo($statut);
-							
-							}//fin du 2eme if
-						
-						}//fin du 1er if
-			//---------------------------------------------------> */
-			
-			//ces 2 lignes remplace le commentaire au dessus
 			$id_adh=$followup->id_adh;
 			require 'includes/tarif.php';
 			
@@ -646,44 +516,23 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 
 	
 $tpl->assign('subscriptions',$subscriptions);
-//var_dump ($subscriptions);
-
 $tpl->assign('members',$members);
-//var_dump ($members);
-
 $tpl->assign('order',$order);
-//var_dump ($order);
-
 $tpl->assign('activities',$activities);
-//var_dump($activities);
-
 $tpl->assign('followups',$followups);
-//var_dump($followups);
-
 $tpl->assign('statuts',$statuts);
-//var_dump($statuts);
-
 $tpl->assign('nbinscr',$nbinscr);
-//var_dump($nbinscr);
-
 $tpl->assign('nbpages',$nbpages);
-//var_dump($nbpages);
-
 $tpl->assign('currentpages',$currentpages);
-//var_dump($currentpages);
-
 $tpl->assign('select_nbligne',$select_nbligne);
-//var_dump($select_nbligne);
-
 $tpl->assign('valid',$valid);
-//var_dump($valid);
 
 //traitement de la sélection de l'activité, evol#48
 if(isset($_GET["id_act"]))
 	{
 	$id_act_s=$_GET["id_act"];
 	$tpl->assign('id_act_s',$id_act_s);
-	//var_dump($id_act_s); //activté sélectionnée dans la liste déroulante
+	//activté sélectionnée dans la liste déroulante
 	}
 //fin de l'évol + voir assign
 

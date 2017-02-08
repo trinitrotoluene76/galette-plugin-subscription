@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Confirmation reset saison for galette Subscription plugin
+ * code call by About_group.php and new_subscription.php for galette Subscription plugin
  *
  * PHP version 5
  *
@@ -32,9 +31,9 @@
  * @link      http://galette.tuxfamily.org
  * @since     Available since 0.7.8
  */
- 
 define('GALETTE_BASE_PATH', '../../');
 require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
+use Galette\Entity\Adherent as Adherent;
 
 if (!$login->isLogged()) {
     header('location: ' . GALETTE_BASE_PATH . 'index.php');
@@ -53,23 +52,35 @@ if ( !$login->isSuperAdmin() ) {
 }
 require_once '_config.inc.php';
 
-if(isset($_GET["remove_id_act"]))
-	{
-	$remove_id_act=$_GET["remove_id_act"];
-	$tpl->assign('remove_id_act',$remove_id_act);
-	}
+$member = new Adherent();
+//on rempli l'Adhérent par ses caractéristiques à l'aide de son id
+$member->load($id_adh);
+
+require_once 'includes/tarif.php';
+
+//on charge tous les groupes. (j'ai une erreur qui n'empeche pas le fonctionnement mais qui apparait dans le log "Non-static method Activity::getList() should not be called statically"
+	$group=Activity::getList(true);
+	//recherche des groupes parents
+	$parent_groups=Activity::get_parentgrouplist();
+	$parent_group_name=$parent_groups[0]->getName();
+	$is_parent_member=$member->isGroupMember($parent_group_name);
 	
-$tpl->assign('page_title', _T("Confirmation for a new saison"));
+	$activities;//=$activity0, $activity1, $activity2...
+	foreach ($group as $key => $value) 
+		{
+			$group[$key];
+			//création de l'objet activité
+			$activity = new Activity();
+			//récupération de l'id_group ainsi que le nom du groupe managé
+			$activity->id_group = $group[$key]->getId();
+			$activity->group_name = $group[$key]->getName();
+			 
+			//recherche les groupes de l'adhérent
+			$members[$key]=$member->isGroupMember($group[$key]->getName());
+			
+			//hydrate l'activité avec les données de la bdd. L'objet passé en paramètre doit être une activité avec un id_group valide
+			$activity->getActivity($activity);
+			$activities[$key]=$activity;
+		}//fin du foreach
 
-
-//Set the path to the current plugin's templates,
-//but backup main Galette's template path before
-$orig_template_path = $tpl->template_dir;
-$tpl->template_dir = 'templates/' . $preferences->pref_theme;
-
-$content = $tpl->fetch('confirmation_reset_saison.tpl', SUBSCRIPTION_SMARTY_PREFIX);
-$tpl->assign('content', $content);
-//Set path to main Galette's template
-$tpl->template_dir = $orig_template_path;
-$tpl->display('page.tpl', SUBSCRIPTION_SMARTY_PREFIX);
 ?>

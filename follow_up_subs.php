@@ -57,7 +57,6 @@ require_once '_config.inc.php';
 $member = new Adherent();
 //on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 $member->load($id_adh);
-//var_dump($member);
 
 $subscription= new Subscription;
 $subscription->id_adh=$id_adh;
@@ -65,7 +64,6 @@ $subscription->id_adh=$id_adh;
 //recherche de la liste des abonnements de l'adhérent
 $result=array();
 $result=$subscription->getSubscriptionList($subscription);
-//var_dump($result);
 
 $subscriptions=array();
 $activities=array();
@@ -96,7 +94,6 @@ foreach ( $result as  $key => $value )
 		$activity->id_group=$value2;
 		$activity->getActivity($activity);
 		$activities[$subscription->id_abn][]=$activity;
-		//var_dump($activity);
 		
 		$followup=new Followup;
 		$followup->id_act=$activity->id_group;
@@ -124,9 +121,6 @@ foreach ( $result as  $key => $value )
 			$total_statut=$total_statut+$followup->statut_act;
 			$total_statut_ref[]=$followup->statut_act;
 			}
-		//var_dump(2*count($followups));
-		//var_dump($followup->statut_act);
-		//var_dump($total_statut);
 		
 		//si toutes les activités sont payées (alors la somme des statuts= 2x nb d'activités dans l'abn)
 		if($total_statut==2*count($followups[$subscription->id_abn]))
@@ -143,22 +137,13 @@ foreach ( $result as  $key => $value )
 			{
 			$statut_abns[$subscription->id_abn]=0;
 			}
-	//var_dump(count($followups));
 	$subscriptions[]=$subscription;
 	}//fin du foreach subscription
 
-//var_dump($statut_abns);
-
 $tpl->assign('page_title', _T("Follow up Subscriptions"));
-		
 $tpl->assign('subscriptions',$subscriptions);
-//var_dump ($subscriptions);
-
 $tpl->assign('activities',$activities);
-//var_dump($activities);
-
 $tpl->assign('statut_abns',$statut_abns);
-//var_dump($statut_abns[127]);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before

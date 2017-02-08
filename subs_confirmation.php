@@ -64,7 +64,6 @@ require_once '_config.inc.php';
 $member = new Adherent();
 //on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 $member->load($id_adh);
-//var_dump($member);
 //début evol #55 MAJ date dernière connexion
 $member->updateModificationDate();
 //fin evol #55
@@ -111,43 +110,30 @@ function strrevpos($instr, $needle)
     else return strlen($instr) - $rev_pos - strlen($needle);
 };
 //---------------------------------------------------------------------------------->Fin fonction traitement string
-//var_dump(between("_", "_", "timestamp_5_1")); //5=id_group
-//var_dump(after_last( "_", "timestamp_5_1"));//1=doc N°1
 
-//var_dump($_POST);
 //traitement des données envoyées en POST
 //---------------------------------------------------------------------------------->
 $total=$_POST['total_estimme'];
-//var_dump($_POST);
 $subscription= new Subscription;
 $today= new DateTime("now");
-//var_dump($today->format('d-m-Y'));
 $subscription->date_demande=$today->format('Y-m-d');
 $subscription->total_estimme=$total;
 $subscription->id_adh=$id_adh;
 $subscription->message_abn=$_POST['message_abn'];
 $valid = $subscription->check($_POST);
-
-	//var_dump ($valid);
 				
 //si les données sont valides on les enregistres -> continuer à bosser cette partie
 	if ( $valid == true )
 		{
 		$subscription->store();
-		//echo('$subscription->store():');	
-		//var_dump($subscription->store());	
-		//echo('$subscription->is_id_abn($subscription)');	
-		//var_dump($subscription->is_id_abn($subscription));
 		}
 $files=array ();
 // $file[id_group][$k]
 foreach ($_POST as $key => $value) 
 		{
-		//var_dump($key);
 		//si id_group(0, 1, 2)=id_group alors $value=id_group
 		if(substr($key,0,8)=='id_group')
 			{
-			//var_dump(substr($key,0,8));
 			$followups[$value]=new Followup;
 			$followups[$value]->id_act=$value;
 			$followups[$value]->id_adh=$id_adh;
@@ -161,8 +147,6 @@ foreach ($_POST as $key => $value)
 			$activity->getActivity($activity);
 			if($activity->autovalidation == 1)
 						{
-						//var_dump ($activity);
-			
 						//statut activity = Validé (1)
 						$followups[$value]->statut_act=1;
 						//enregistrement afin d'utiliser getStatusSub
@@ -170,7 +154,6 @@ foreach ($_POST as $key => $value)
 			
 						//recherche et calcul du statut abn
 						$statut_abn=$followups[$value]->getStatusSub($subscription->id_abn);
-						//var_dump ($statut_abn);
 						}
 					else
 						{//Statut abn = en cours
@@ -187,17 +170,13 @@ foreach ($_POST as $key => $value)
 				//affiche le nom,tel,mail du manager de group + pour changer la manager de group, allez dans la page gestion group
 				$managers=array();
 				$managers=$group->getManagers();
-				//var_dump($managers);
 				
 				//récupération des infos de l'adhérent à valider
 				$adherent=new Adherent();
 				$adherent->load($id_adh);
-				//var_dump($adherent->surname." ".$adherent->name);
 				
 				foreach ($managers as $key => $manager) 
 					{
-					//var_dump($manager->email);
-					//var_dump($manager->surname." ".$manager->name);
 					$sname=$manager->surname." ".$manager->name;
 					
 					if ( GaletteMail::isValidEmail($manager->email) ) 
@@ -216,11 +195,8 @@ foreach ($_POST as $key => $value)
 						
 						$mail->html=true;
 						$mail->setMessage("Bonjour,\r\n\r\n"."connectez vous sur Galette pour valider la nouvelle inscription de ".$adherent->surname." ".$adherent->name." pour la section ".$group->getName().".\r\n"."Allez dans l'onglet Abonnement/Gestion des abonnés. L'abonnement concerné est le N°".$subscription->id_abn.".\r\n".$proto . '://' . $_SERVER['SERVER_NAME'] .dirname($_SERVER['REQUEST_URI'])."/management_subs.php\r\n\r\n"."Cordialement,\r\n"."le bureau.");
-						//var_dump($mail);
 						//envoi de l'email:
 						$sent = $mail->send();
-						//var_dump($preferences->pref_mail_method);
-											
 						}//fin du if
 					}//fin pour chaque manager	
 				 }//fin du if 
@@ -233,8 +209,6 @@ foreach ($_POST as $key => $value)
 		//si message_adh_act(id_group)=message_adh_act
 		if(substr($key,0,15)=='message_adh_act')
 			{
-			//var_dump(substr($key,15,3));
-			//substr($key,15,3)=id_group
 			$followups[substr($key,15,3)]->message_adh_act=$value;
 			$followups[substr($key,15,3)]->store();
 			}//fin du if message
@@ -258,7 +232,6 @@ foreach ($_POST as $key => $value)
 		if(substr($key,0,9)=='timestamp')
 			{
 			$files[$id_group][$number]->emplacement=$value;
-			//var_dump($files[substr($key,10,3)]);
 			$res=$files[$id_group][$number]->getFileDesc($files[$id_group][$number]);
 			if($res == 1)
 				{
@@ -267,18 +240,11 @@ foreach ($_POST as $key => $value)
 			}
 		
 		}//fin du foreach
-		//var_dump($followups);
 //------------------------------------------------------------------------------------>FIN	du traitement du $_POST
 
 $tpl->assign('page_title', _T("Validation"));
-
-//var_dump ($activity);
-		
 $tpl->assign('subscription',$subscription);
-//var_dump ($subscription);
-
 $tpl->assign('statut_abn',$statut_abn);
-//var_dump ($statut_abn);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before

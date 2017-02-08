@@ -60,7 +60,6 @@ require_once GALETTE_BASE_PATH. "plugins/galette-plugin-subcription/includes/nav
 // enregistrement de la description
 $file= new File();
 $file->id_adh=$id_adh;
-//var_dump($_GET);
 
 if(isset($_GET['id_adh']))
 		{
@@ -99,8 +98,6 @@ if(isset($_GET['delete']))
 			$file_del->id_doc=$_GET['id_doc'];
 			$file_del->getFile($file_del);
 			$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement,$login->isStaff());
-			//var_dump("suppression=");
-			//var_dump($res);
 			$deleteok=$res;
 			}
 		}
@@ -124,18 +121,13 @@ if(isset($_POST['description']))
 	//si la page précédante est la page de gestion des groupes, $GET['vierge']==1, on affiche la liste des fichiers vierges uniquement et on autorise le return file, 
 	//sinon on affiche la liste des fichiers de l'adhérent + liste des fichers verges
 	$personnal_files=0;
-	
 	$files_vierges=array();
 	$files_vierges=$file->getFileListVierge();
-	//var_dump($files_vierges);
-	// var_dump($file);
-	
 		
 	if($file->vierge != 1)
 		{
 		$personnal_files=array();
 		$personnal_files=$file->getFileListAdh();
-		//var_dump($personnal_files);
 		}
 
 
@@ -151,11 +143,8 @@ $tpl->template_dir = 'templates/' . $preferences->pref_theme;
 //temps en s*10 (centieme de s)
 $timestamp=intval(microtime(true)*10-13992330840);
 	
-
 $tpl->assign('timestamp', $timestamp);
-//var_dump($timestamp);
 $tpl->assign('file',$file);
-//var_dump($file);
 //liste des fichiers concernant l'activité (informatifs ou à retourner)
 $tpl->assign('files_vierges',$files_vierges);
 $tpl->assign('vierge',$file->vierge);
