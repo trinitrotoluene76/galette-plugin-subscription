@@ -53,7 +53,7 @@ if ( !$login->isSuperAdmin() ) {
 }
 require_once '_config.inc.php';
 //-------------------------------------------------------------------------->Détection du navigateur
-require_once GALETTE_BASE_PATH. "plugins/galette-plugin-subcription/includes/navigator_detection.php";
+require_once GALETTE_BASE_PATH. 'includes/navigator_detection.php';
 //--------------------------------------------------------------------------->FIN détection
 
 //------------------------------------------------------------------------->
