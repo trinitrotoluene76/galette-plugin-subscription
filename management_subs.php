@@ -126,11 +126,7 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 							}//fin du foreach
 					
 					
-					// à faire: $file->remove($file);
-					//suppression des fichiers personnels uniquement. Concernant les fichiers posssédant id_act=id _act à reseter
-					//ou bien les fichiers d'une activité supprimée ou d'un adhérent supprimé
-					//getFileListDel() avec id_act
-					
+					//Lorsqu'un membre du staff supprime un fichier quelconque, ceci lance la fonction de nettoyage file/clean_file()
 					
 					//on retire les membres de l'activité/du groupe en fin de saison
 					$activity2=new Activity();
@@ -367,7 +363,7 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 							}//fin du foreach
 					
 					
-					// à faire: $file->remove($file); -->automatiquement géré lorsqu'un membre du staff supprime un fichier
+					//Lorsqu'un membre du staff supprime un fichier quelconque, ceci lance la fonction de nettoyage file/clean_file() 
 					
 					//on retire les membres de l'activité/du groupe en fin de saison
 					$activity2=new Activity();
