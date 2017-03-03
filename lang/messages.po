@@ -2,7 +2,7 @@
 msgid "Informations about groups"
 msgstr ""
 
-#: ../classes/followup.class.php:240
+#: ../classes/followup.class.php:241
 msgid "followup.insert ECHEC"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Validated"
 msgstr ""
 
-#: ../management_subs2.php:259
+#: ../management_subs2.php:237
 msgid "Management of Subscribers"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Amount due"
 msgstr ""
 
-#: ../new_subscription.php:102
+#: ../new_subscription.php:37
 msgid "New subsciption"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Management of groups"
 msgstr ""
 
-#: ../management_groups.php:173
+#: ../management_groups.php:145
 msgid "Groups Management for staff"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "2. Add a description"
 msgstr ""
 
-#: ../subs_confirmation.php:273 ../templates/default/new_subscription.tpl:2
+#: ../subs_confirmation.php:245 ../templates/default/new_subscription.tpl:2
 #: ../templates/default/confirmation2.tpl:2 ../templates/default/send_files.tpl:2
 #: ../templates/default/follow_up_subs.tpl:2 ../templates/default/subs_confirmation.tpl:2
 msgid "Validation"
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Cancel my request"
 msgstr ""
 
-#: ../view_files.php:112
+#: ../view_files.php:102
 msgid "My Files"
 msgstr ""
 
@@ -148,7 +148,7 @@ msgstr ""
 msgid "Age"
 msgstr ""
 
-#: ../view_activity.php:73
+#: ../view_activity.php:65
 msgid "View Activity"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr ""
 msgid "Delete members that haven't subscribed to the parent activity during 2 years or that haven't modified their profile"
 msgstr ""
 
-#: ../classes/subscription.class.php:174
+#: ../classes/subscription.class.php:167
 msgid "Subscription.AJOUT update ECHEC"
 msgstr ""
 
@@ -275,7 +275,7 @@ msgstr ""
 msgid "yes"
 msgstr ""
 
-#: ../classes/file.class.php:185 ../classes/file.class.php:196
+#: ../classes/file.class.php:184 ../classes/file.class.php:196
 msgid "file.AJOUT ECHEC"
 msgstr ""
 
@@ -291,7 +291,7 @@ msgstr ""
 msgid "1. Send your file"
 msgstr ""
 
-#: ../management_subs.php:349
+#: ../management_subs.php:280
 msgid "Subscriptions Management for staff"
 msgstr ""
 
@@ -316,11 +316,11 @@ msgstr ""
 msgid "Subscriber status"
 msgstr ""
 
-#: ../about_group.php:102
+#: ../about_group.php:38
 msgid "About Groups"
 msgstr ""
 
-#: ../classes/followup.class.php:253
+#: ../classes/followup.class.php:255
 msgid "followup.update ECHEC"
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 msgid "orange"
 msgstr ""
 
-#: ../follow_up_subs.php:157
+#: ../follow_up_subs.php:143
 msgid "Follow up Subscriptions"
 msgstr ""
 
@@ -442,7 +442,7 @@ msgstr ""
 msgid "File name to fill up"
 msgstr ""
 
-#: ../management_subs.php:76
+#: ../management_subs.php:72
 msgid "Subscriptions Management"
 msgstr ""
 
@@ -474,7 +474,7 @@ msgstr ""
 msgid "Actual value"
 msgstr ""
 
-#: ../confirmation_reset_saison.php:69
+#: ../confirmation_reset_saison.php:62
 msgid "Confirmation for a new saison"
 msgstr ""
 
@@ -489,11 +489,11 @@ msgstr ""
 msgid "Full"
 msgstr ""
 
-#: ../confirmation2.php:136
+#: ../confirmation2.php:122
 msgid "Follow up & Payment"
 msgstr ""
 
-#: ../send_files_standalone.php:147
+#: ../send_files_standalone.php:135
 msgid "Add File"
 msgstr ""
 
@@ -519,11 +519,11 @@ msgstr ""
 msgid "recorded on :"
 msgstr ""
 
-#: ../classes/subscription.class.php:160
+#: ../classes/subscription.class.php:153
 msgid "Subscription.AJOUT insert ECHEC"
 msgstr ""
 
-#: ../management_groups.php:71
+#: ../management_groups.php:68
 msgid "Groups Management"
 msgstr ""
 
@@ -564,7 +564,7 @@ msgstr ""
 msgid "Price 1"
 msgstr ""
 
-#: ../classes/activity.class.php:261
+#: ../classes/activity.class.php:258
 msgid "ACTIVITY.AJOUT ECHEC res=2"
 msgstr ""
 
@@ -616,11 +616,11 @@ msgstr ""
 msgid "feedback off"
 msgstr ""
 
-#: ../export_subs.php:146
+#: ../export_subs.php:164
 msgid "Export"
 msgstr ""
 
-#: ../confirmation_clean_adh.php:98
+#: ../confirmation_clean_adh.php:87
 msgid "Confirmation to clean members"
 msgstr ""
 
@@ -739,7 +739,7 @@ msgstr ""
 msgid "Add file by fill up this panel for the group:"
 msgstr ""
 
-#: ../send_files.php:129
+#: ../send_files.php:113
 msgid "Send Files"
 msgstr ""
 
@@ -762,5 +762,12 @@ msgstr ""
 
 #: ../templates/default/confirmation_clean_adh.tpl:9
 msgid "Members list to delete"
+msgstr ""
+
+#: ../management_subs.php:251 ../management_subs.php:309
+#: ../management_subs.php:489 ../confirmation2.php:76
+#: ../confirmation_clean_adh.php:74 ../follow_up_subs.php:84
+#: ../management_subs2.php:172
+msgid "Y-m-d"
 msgstr ""
 

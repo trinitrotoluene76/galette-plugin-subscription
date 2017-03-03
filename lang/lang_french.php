@@ -1,9 +1,9 @@
 <?php
-// This file was automatically generated on Thu Jul 14 15:37:14 2016 (GMT)
+// This file was automatically generated on Fri Mar  3 23:10:26 2017 (GMT)
 // Don't modify it by hand, rather use the target lang from the Makefile.
 
 
-// ../management_subs2.php:259 
+// ../management_subs2.php:237 
 $lang['Management of Subscribers'] = 'Gestion des abonnés';
 
 // ../templates/default/confirmation2.tpl:122 
@@ -12,7 +12,7 @@ $lang['TOTAL Amount:'] = 'Montant TOTAL:';
 // ../templates/default/confirmation2.tpl:5 
 $lang['recorded on :'] = 'enregistré le :';
 
-// ../confirmation_reset_saison.php:69 
+// ../confirmation_reset_saison.php:62 
 $lang['Confirmation for a new saison'] = 'Confirmation pour une nouvelle saison';
 
 // ../templates/default/send_files_standalone.tpl:83 ../templates/default/management_groups.tpl:114 ../templates/default/management_groups.tpl:131 
@@ -75,7 +75,7 @@ $lang['Auto validation'] = 'Auto validation';
 // ../templates/default/send_files.tpl:125 
 $lang['Add a message for subscription'] = 'Ajouter un message lié à l\'abonnement';
 
-// ../confirmation2.php:136 
+// ../confirmation2.php:122 
 $lang['Follow up & Payment'] = 'Suivi et règlement';
 
 // ../templates/default/new_subscription.tpl:2 ../templates/default/confirmation2.tpl:2 ../templates/default/send_files.tpl:2 ../templates/default/follow_up_subs.tpl:2 ../templates/default/subs_confirmation.tpl:2 
@@ -90,10 +90,10 @@ $lang['Data aren\'t valid'] = 'Les données sont invalides';
 // ../templates/default/management_subs2.tpl:59 
 $lang['Subscribtion subscriber message'] = 'Message de l\'abonné pour l\'abonnement';
 
-// ../confirmation_clean_adh.php:98 
+// ../confirmation_clean_adh.php:87 
 $lang['Confirmation to clean members'] = 'Confirmation de néttoyage de la base d\'adhérents';
 
-// ../subs_confirmation.php:273 ../templates/default/new_subscription.tpl:2 ../templates/default/confirmation2.tpl:2 ../templates/default/send_files.tpl:2 ../templates/default/follow_up_subs.tpl:2 ../templates/default/subs_confirmation.tpl:2 
+// ../subs_confirmation.php:245 ../templates/default/new_subscription.tpl:2 ../templates/default/confirmation2.tpl:2 ../templates/default/send_files.tpl:2 ../templates/default/follow_up_subs.tpl:2 ../templates/default/subs_confirmation.tpl:2 
 $lang['Validation'] = 'Validation';
 
 // ../templates/default/management_subs2.tpl:162 ../templates/default/follow_up_subs.tpl:49 ../templates/default/subs_confirmation.tpl:25 
@@ -123,7 +123,7 @@ $lang['tick box'] = 'case à cocher';
 // ../templates/default/send_files.tpl:33 
 $lang['Upload your file filled up'] = 'Uploader votre fichier rempli';
 
-// ../management_groups.php:71 
+// ../management_groups.php:68 
 $lang['Groups Management'] = 'Gestion des Groupes';
 
 // ../templates/default/send_files_standalone.tpl:72 
@@ -141,13 +141,13 @@ $lang['State'] = 'Etat';
 // ../templates/default/management_subs2.tpl:77 ../templates/default/management_subs.tpl:81 ../templates/default/management_subs.tpl:84 ../templates/default/management_subs.tpl:87 
 $lang['Activity status'] = 'Statut de l\'activité';
 
-// ../classes/file.class.php:185 ../classes/file.class.php:196 
+// ../classes/file.class.php:184 ../classes/file.class.php:196 
 $lang['file.AJOUT ECHEC'] = '';
 
 // ../templates/default/send_files.tpl:32 
 $lang['File name to fill up'] = 'Nom du fichier à remplir';
 
-// ../view_activity.php:73 
+// ../view_activity.php:65 
 $lang['View Activity'] = 'Voir l\'Activité';
 
 // ../templates/default/new_subscription.tpl:2 ../templates/default/confirmation2.tpl:2 ../templates/default/send_files.tpl:2 ../templates/default/follow_up_subs.tpl:2 ../templates/default/subs_confirmation.tpl:2 
@@ -201,7 +201,7 @@ $lang['Age'] = 'Age';
 // ../templates/default/management_subs.tpl:33 
 $lang['Number of subscribers:'] = 'Nombre d\'abonnés:';
 
-// ../classes/subscription.class.php:174 
+// ../classes/subscription.class.php:167 
 $lang['Subscription.AJOUT update ECHEC'] = '';
 
 // ../templates/default/new_subscription.tpl:121 ../templates/default/about_group.tpl:56 
@@ -210,7 +210,7 @@ $lang['You are'] = 'Vous avez ';
 // ../templates/default/management_subs.tpl:77 
 $lang['Sub. status'] = 'Statut de l\'abonné';
 
-// ../classes/followup.class.php:253 
+// ../classes/followup.class.php:255 
 $lang['followup.update ECHEC'] = '';
 
 // ../templates/default/management_subs2.tpl:27 ../templates/default/management_subs2.tpl:29 
@@ -237,7 +237,7 @@ $lang['Photo'] = 'Photo';
 // ../templates/default/new_subscription.tpl:12 ../templates/default/about_group.tpl:8 
 $lang['List of activities'] = 'Liste des activités';
 
-// ../management_groups.php:173 
+// ../management_groups.php:145 
 $lang['Groups Management for staff'] = 'Gestion des groupes par le bureau';
 
 // ../templates/default/view_activity.tpl:51 ../templates/default/management_groups.tpl:86 
@@ -249,10 +249,10 @@ $lang['Yes'] = 'Oui';
 // ../templates/default/management_subs.tpl:138 
 $lang['New Sport Season'] = 'Nouvelle Saison Sportive';
 
-// ../management_subs.php:76 
+// ../management_subs.php:72 
 $lang['Subscriptions Management'] = 'Gestion des Abonnements';
 
-// ../send_files.php:129 
+// ../send_files.php:113 
 $lang['Send Files'] = 'Envoyer des fichiers';
 
 // ../templates/default/send_files_standalone.tpl:138 ../templates/default/view_activity.tpl:80 ../templates/default/management_subs2.tpl:25 ../templates/default/management_subs.tpl:28 ../templates/default/management_groups.tpl:118 ../templates/default/management_groups.tpl:135 
@@ -294,7 +294,7 @@ $lang['Cancel my request'] = 'Annuler ma demande d\'abn';
 // ../templates/default/confirmation2.tpl:50 ../templates/default/confirmation2.tpl:96 ../templates/default/management_subs2.tpl:82 ../templates/default/management_subs2.tpl:93 ../templates/default/management_subs2.tpl:138 ../templates/default/management_subs.tpl:120 
 $lang['Paid'] = 'Payé';
 
-// ../follow_up_subs.php:157 
+// ../follow_up_subs.php:143 
 $lang['Follow up Subscriptions'] = 'Suivi des Abonnements';
 
 // ../templates/default/adh_fiche_action.tpl:2 
@@ -339,7 +339,7 @@ $lang['Personnal files of group:'] = 'Fichiers personnels du groupe:';
 // ../templates/default/view_activity.tpl:20 ../templates/default/management_groups.tpl:28 
 $lang['Nobody is manager, go to group management page'] = 'Aucun responsable, allez à la page de gestion des groupes';
 
-// ../view_files.php:112 
+// ../view_files.php:102 
 $lang['My Files'] = 'Mes fichiers';
 
 // ../templates/default/management_subs2.tpl:2 
@@ -348,7 +348,7 @@ $lang['Subscriber added to group:'] = 'Abonné ajouté au groupe:';
 // ../templates/default/new_subscription.tpl:16 ../templates/default/about_group.tpl:12 
 $lang['Price* (&euro;)'] = 'Tarif* (&euro;)';
 
-// ../send_files_standalone.php:147 
+// ../send_files_standalone.php:135 
 $lang['Add File'] = 'Ajouter un fichier';
 
 // ../templates/default/send_files_standalone.tpl:79 
@@ -414,7 +414,7 @@ $lang['Group updated'] = 'Groupe mis à jour';
 // ../templates/default/management_subs2.tpl:48 
 $lang['ans'] = 'ans';
 
-// ../classes/activity.class.php:261 
+// ../classes/activity.class.php:258 
 $lang['ACTIVITY.AJOUT ECHEC res=2'] = '';
 
 // ../templates/default/new_subscription.tpl:96 ../templates/default/about_group.tpl:45 
@@ -429,7 +429,7 @@ $lang['Files of group:'] = 'Fichiers du groupe:';
 // ../templates/default/management_groups.tpl:116 ../templates/default/management_groups.tpl:133 
 $lang['Actual value'] = 'Valeur actuelle';
 
-// ../management_subs.php:349 
+// ../management_subs.php:280 
 $lang['Subscriptions Management for staff'] = 'Gestion des Abonnements par le Bureau';
 
 // ../templates/default/subs_confirmation.tpl:6 
@@ -441,7 +441,7 @@ $lang['id'] = 'Id';
 // ../templates/default/follow_up_subs.tpl:21 
 $lang['Activities'] = 'Activités';
 
-// ../classes/subscription.class.php:160 
+// ../classes/subscription.class.php:153 
 $lang['Subscription.AJOUT insert ECHEC'] = '';
 
 // ../templates/default/send_files_standalone.tpl:94 ../templates/default/management_subs2.tpl:183 ../templates/default/management_groups.tpl:148 
@@ -453,7 +453,7 @@ $lang['Description'] = 'Description';
 // ../templates/default/send_files_standalone.tpl:82 ../templates/default/management_groups.tpl:113 ../templates/default/management_groups.tpl:130 
 $lang['no'] = 'non';
 
-// ../classes/followup.class.php:240 
+// ../classes/followup.class.php:241 
 $lang['followup.insert ECHEC'] = '';
 
 // ../templates/default/management_subs2.tpl:85 
@@ -468,10 +468,13 @@ $lang['Refused'] = 'Refusé';
 // ../templates/default/management_subs2.tpl:14 ../templates/default/management_subs2.tpl:16 
 $lang['of2'] = 'de';
 
+// ../management_subs.php:251 ../management_subs.php:309 ../management_subs.php:489 ../confirmation2.php:76 ../confirmation_clean_adh.php:74 ../follow_up_subs.php:84 ../management_subs2.php:172 
+$lang['Y-m-d'] = 'd/m/Y';
+
 // ../templates/default/management_subs2.tpl:126 
 $lang['Activities linked'] = 'Activités liées';
 
-// ../export_subs.php:146 
+// ../export_subs.php:164 
 $lang['Export'] = 'Export';
 
 // ../templates/default/management_subs.tpl:15 
@@ -486,7 +489,7 @@ $lang['Activity selected'] = 'Activité sélectionnée';
 // ../templates/default/confirmation_clean_adh.tpl:20 ../templates/default/management_subs.tpl:65 ../templates/default/management_subs.tpl:68 ../templates/default/management_subs.tpl:71 
 $lang['Name'] = 'Nom';
 
-// ../about_group.php:102 
+// ../about_group.php:38 
 $lang['About Groups'] = 'A propos des Groupes';
 
 // ../templates/default/follow_up_subs.tpl:17 
@@ -531,7 +534,7 @@ $lang['Manager'] = 'Responsable';
 // ../templates/default/management_subs2.tpl:165 ../templates/default/follow_up_subs.tpl:52 ../templates/default/subs_confirmation.tpl:28 
 $lang['green'] = 'vert';
 
-// ../new_subscription.php:102 
+// ../new_subscription.php:37 
 $lang['New subsciption'] = 'Nouvel abonnement';
 
 // ../templates/default/management_subs2.tpl:40 
