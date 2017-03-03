@@ -71,7 +71,7 @@ require_once '_config.inc.php';
 				 
 			if($adherent_del->isStaff2()==false)
 				{
-				$lastsubsdate= \DateTime::createFromFormat('j/m/Y',$adherent_del->modification_date);
+				$lastsubsdate= \DateTime::createFromFormat(_T("Y-m-d"),$adherent_del->modification_date);
 				$today= new \DateTime("now");
 				$elapse=$lastsubsdate->diff($today);
 				$elapse=$elapse->format('%Y');

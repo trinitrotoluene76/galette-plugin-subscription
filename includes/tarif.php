@@ -113,7 +113,7 @@ foreach ( $dynamic_fields as $k => $v )
  * age_category=3 si >25ans
  * 
  */	
-$birthdate= DateTime::createFromFormat('j/m/Y',$member->birthdate);
+$birthdate= DateTime::createFromFormat(_T("Y-m-d"),$member->birthdate);
 $today= new DateTime("now");
 $age=$birthdate->diff($today);
 $age=$age->format('%Y');

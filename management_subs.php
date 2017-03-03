@@ -248,7 +248,7 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 			$subscription->getSubscription($subscription);
 			//formatage de la date pour affichage
 			$date=DateTime::createFromFormat('Y-m-d', $subscription->date_demande);
-			$subscription->date_demande=$date->format('d-m-Y');
+			$subscription->date_demande=$date->format(_T("Y-m-d"));
 			
 			$subscriptions[$id_act2][$value]=$subscription;
 			
@@ -306,7 +306,7 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 						 
 					if($adherent_del->isStaff2()==false)
 						{
-						$lastsubsdate= \DateTime::createFromFormat('j/m/Y',$adherent_del->modification_date);
+						$lastsubsdate= \DateTime::createFromFormat(_T("Y-m-d"),$adherent_del->modification_date);
 						$today= new \DateTime("now");
 						$elapse=$lastsubsdate->diff($today);
 						$elapse=$elapse->format('%Y');
@@ -486,7 +486,7 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 			$subscription->getSubscription($subscription);
 			//formatage de la date pour affichage
 			$date=DateTime::createFromFormat('Y-m-d', $subscription->date_demande);
-			$subscription->date_demande=$date->format('d-m-Y');
+			$subscription->date_demande=$date->format(_T("Y-m-d"));
 			
 			$subscriptions[$id_act2][$value]=$subscription;
 			

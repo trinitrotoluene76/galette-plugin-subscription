@@ -73,7 +73,7 @@ if(isset($_GET['id_abn']))
 $subscription->getSubscription($subscription);
 //formatage de la date pour affichage
 $date=DateTime::createFromFormat('Y-m-d', $subscription->date_demande);
-$subscription->date_demande=$date->format('d-m-Y');
+$subscription->date_demande=$date->format(_T("Y-m-d"));
 
 //retourner la liste des activités d'un abn
 $followup=new Followup;
