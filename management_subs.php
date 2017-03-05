@@ -104,7 +104,7 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 					$followup2->id_act=$id_act2;
 						//suppression des abonnements mono activité .
 						//l'abonnement n'est pas supprimé s'il reste plus d'une activité dans l'abonnement avec une saison en cours
-						$id_anbs2=$followup2->getFollowupSub($followup2);
+						$id_anbs2=$followup2->getFollowupSub($followup2,null,null,null);
 						//pour chaque abn compter le nb d'activité (getFollowupAct)
 						foreach ( $id_anbs2 as $key5 => $id_abn2)
 							{
@@ -280,7 +280,8 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 	$tpl->assign('page_title', _T("Subscriptions Management for staff"));
 	$groups=array();
 	//on charge tous les groupes
-	$groups=Groups::getList();
+	$groups2 = new Groups();
+	$groups=$groups2->getList();
 	$activities=array();
 	$nbinscr=array();
 	$followups=array();
@@ -341,7 +342,7 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 					$followup2->id_act=$id_act2;
 						//suppression des abonnements mono activité .
 						//l'abonnement n'est pas supprimé s'il reste plus d'une activité dans l'abonnement avec une saison en cours
-						$id_anbs2=$followup2->getFollowupSub($followup2);
+						$id_anbs2=$followup2->getFollowupSub($followup2,null,null,null);
 						//pour chaque abn compter le nb d'activité (getFollowupAct)
 						foreach ( $id_anbs2 as $key5 => $id_abn2)
 							{
@@ -521,15 +522,19 @@ $tpl->assign('nbinscr',$nbinscr);
 $tpl->assign('nbpages',$nbpages);
 $tpl->assign('currentpages',$currentpages);
 $tpl->assign('select_nbligne',$select_nbligne);
-$tpl->assign('valid',$valid);
+if (isset($valid))
+	{
+	$tpl->assign('valid',$valid);
+	}
 
 //traitement de la sélection de l'activité, evol#48
 if(isset($_GET["id_act"]))
 	{
 	$id_act_s=$_GET["id_act"];
-	$tpl->assign('id_act_s',$id_act_s);
-	//activté sélectionnée dans la liste déroulante
 	}
+else{$id_act_s="";}
+$tpl->assign('id_act_s',$id_act_s);
+//activté sélectionnée dans la liste déroulante	
 //fin de l'évol + voir assign
 
 
