@@ -4,7 +4,7 @@
 -- détails: ce fichier est à placer dans le répertoire "scripts" du plugin subscription. 
 -- 			Il faut le renommer en "mysql.sql" et cliquer sur le bouton bdd (configuration/plugin) pour qu'il soit pris en compte
 --			ce fichier est un copier coller des fichiers:
---				galette_amaury_config_0.8.x_170129.sql
+--				galette_amaury_config_0.8.x.sql
 --				subscription_tables.sql
 --				bdd_test_sql_0.8.x.sql
 --
@@ -54,14 +54,14 @@ CREATE TABLE IF NOT EXISTS `galette_fields_config` (
 --
 -- Contenu de la table `galette_fields_config`
 -- Ces champs sont utilisés par le plugin (vérifications de doublons mail, date de naissance erronnée, privilèges suivant le statut...)
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '0', `visible` = '2', `position`='6', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'date_modif_adh';
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '1', `visible` = '1', `position`='5', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'ddn_adh';
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '1', `visible` = '1', `position`='7', `id_field_category`='3'WHERE `galette_fields_config`.`field_id` = 'email_adh';
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '0', `visible` = '2', `position`='0', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'id_statut';
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '1', `visible` = '1', `position`='3', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'login_adh';
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '1', `visible` = '1', `position`='4', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'mdp_adh';
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '1', `visible` = '1', `position`='0', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'nom_adh';
-UPDATE `asnextersql`.`galette_fields_config` SET `required` = '1', `visible` = '1', `position`='1', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'prenom_adh';
+UPDATE `galette_fields_config` SET `required` = '0', `visible` = '2', `position`='6', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'date_modif_adh';
+UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='5', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'ddn_adh';
+UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='7', `id_field_category`='3'WHERE `galette_fields_config`.`field_id` = 'email_adh';
+UPDATE `galette_fields_config` SET `required` = '0', `visible` = '2', `position`='0', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'id_statut';
+UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='3', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'login_adh';
+UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='4', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'mdp_adh';
+UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='0', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'nom_adh';
+UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='1', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'prenom_adh';
 
 -- --------------------------------------------------------
 
@@ -158,16 +158,16 @@ CREATE TABLE IF NOT EXISTS `galette_statuts` (
 --
 -- Contenu de la table `galette_statuts`
 -- Ajout du responsable de section/ de groupe
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 1;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 2;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 3;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 4;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 5;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 6;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 7;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 8;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 9;
-DELETE FROM `asnextersql`.`galette_statuts` WHERE `galette_statuts`.`id_statut` = 10;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 1;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 2;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 3;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 4;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 5;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 6;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 7;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 8;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 9;
+DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 10;
 
 INSERT INTO `galette_statuts` (`id_statut`, `libelle_statut`, `priorite_statut`) VALUES
 (1, 'President', 0),
@@ -181,8 +181,7 @@ INSERT INTO `galette_statuts` (`id_statut`, `libelle_statut`, `priorite_statut`)
 (12, 'Encadrant', 99),
 (13, 'Membre d''honneur', 99),
 (14, 'Responsable section', 99),
-(16, 'Secrétaire adjoint', 20),
-(17, 'Vice-président', 5);
+(16, 'Secrétaire adjoint', 20);
 
 -- Objet: Fichier d'installation des tables du plugin Subscription
 -- https://github.com/trinitrotoluene76/galette-plugin-subcription
