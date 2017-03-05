@@ -183,7 +183,7 @@ class Activity {
 	 * 
      * @param void
      */
-    public function get_parentgrouplist() 
+    static function get_parentgrouplist() 
 		{
 		global $zdb;
 		$result=0;
@@ -251,7 +251,7 @@ class Activity {
 				$insert = $zdb->insert(SUBSCRIPTION_PREFIX . self::TABLE, $values);
 				$insert->values($values);
 				$add = $zdb->execute($insert);
-				if ($add > 0) 
+				if ($add->count() > 0) 
 					{
 						$this->_id_group = $zdb->driver->getLastGeneratedValue();
 					} else {
@@ -307,7 +307,7 @@ class Activity {
      *
      * @return Zend_Db_RowSet
      */
-    public function getList($full = true)
+    static function getList($full = true)
     {
         global $zdb, $login;
         try {
