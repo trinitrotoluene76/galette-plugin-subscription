@@ -166,7 +166,7 @@ class Followup {
 				$insert->values($values);
                 $add = $zdb->execute($insert);
                 //Analog\Analog::log('insert followup');
-				if ($add > 0) 
+				if ($add->count() > 0) 
 					{	//lastInsertId n'est valable que pour les clés autoincrémentés
 						//$object->_id_abn = $zdb->db->lastInsertId();
 					} else {
@@ -234,7 +234,7 @@ class Followup {
 				$insert->values($values);
                 $add = $zdb->execute($insert);
                 //Analog\Analog::log('insert followup');
-				if ($add > 0) 
+				if ($add->count() > 0) 
 					{	//lastInsertId n'est valable que pour les clés autoincrémentés
 						//$this->_id_abn = $zdb->db->lastInsertId();
 					} else {
