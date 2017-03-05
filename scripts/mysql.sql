@@ -118,6 +118,12 @@ INSERT INTO `galette_field_types` (`field_id`, `field_form`, `field_index`, `fie
 (5, 'adh', 1, 'Appartenance', 0, 3, 1, 0, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
+-- Contenu de la table `galette_dynamic_fields` président=nexter, responsable 2=famille nexter, responsable 1=extérieur
+INSERT INTO `galette_dynamic_fields` (`item_id`, `field_id`, `field_form`, `val_index`, `field_val`) VALUES
+(9, 5, 'adh', 1, 0),
+(10, 5,'adh', 1, 1),
+(11, 5, 'adh', 1, 5);
+-- --------------------------------------------------------
 
 --
 -- Structure de la table `galette_groups`

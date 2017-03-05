@@ -43,6 +43,12 @@ INSERT INTO `galette_groups_managers` (`id_group`, `id_adh`) VALUES
 (7, 10),
 (6, 11);
 
+-- Contenu de la table `galette_dynamic_fields` président=nexter, responsable 2=famille nexter, responsable 1=extérieur
+INSERT INTO `galette_dynamic_fields` (`item_id`, `field_id`, `field_form`, `val_index`, `field_val`) VALUES
+(9, 5, 'adh', 1, 0),
+(10, 5,'adh', 1, 1),
+(11, 5, 'adh', 1, 5);
+
 -- --------------------------------------------------------
 --
 -- Contenu de la table `galette_subscription_activities`
