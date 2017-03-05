@@ -74,6 +74,8 @@ $statut_abn=0; //0 orange, 1 vert, 2 rouge
 $statut_abns=array();//$statut_abns[id_abn]=$statut_abn
 
 //pour chaque abonnement
+if($result>0)
+{
 foreach ( $result as  $key => $value ) 
 	{
 	$subscription= new Subscription;
@@ -139,7 +141,7 @@ foreach ( $result as  $key => $value )
 			}
 	$subscriptions[]=$subscription;
 	}//fin du foreach subscription
-
+}//fin du if
 $tpl->assign('page_title', _T("Follow up Subscriptions"));
 $tpl->assign('subscriptions',$subscriptions);
 $tpl->assign('activities',$activities);
