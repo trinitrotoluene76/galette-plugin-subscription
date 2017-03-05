@@ -159,13 +159,13 @@
 				</td>
 				<td>
 					{if $statut_abn == 0}
-						<img src="{$subcription_tpl_dir}templates/default/images/orange.png" alt="{_T string="orange"}" title="{_T string="At least one activity is on progress or validated but not payed"}">
+						<img src="templates/default/images/orange.png" alt="{_T string="orange"}" title="{_T string="At least one activity is on progress or validated but not payed"}">
 					{/if}
 					{if $statut_abn == 1}
-						<img src="{$subcription_tpl_dir}templates/default/images/vert.png" alt="{_T string="green"}"  title="{_T string="All activities are payed"}">
+						<img src="templates/default/images/vert.png" alt="{_T string="green"}"  title="{_T string="All activities are payed"}">
 					{/if}
 					{if $statut_abn == 2}
-						<img src="{$subcription_tpl_dir}templates/default/images/rouge.png" alt="{_T string="red"}" title="{_T string="At least one activity is refused"}">
+						<img src="templates/default/images/rouge.png" alt="{_T string="red"}" title="{_T string="At least one activity is refused"}">
 						
 					{/if}
 				</td>

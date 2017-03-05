@@ -36,7 +36,7 @@
 			
 		{foreach from=$files_vierges[{$activity->id_group}] key=k2 item=file}	
 			<tr>
-				<td><a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement}" title="{$file->description|escape}" target="blank">{$file->doc_name|escape}<div align="center"><img src="{$subcription_tpl_dir}templates/default/images/download.png" height="17px" widht="17px"></div></a></td>
+				<td><a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement}" title="{$file->description|escape}" target="blank">{$file->doc_name|escape}<div align="center"><img src="templates/default/images/download.png" height="17px" widht="17px"></div></a></td>
 			{if	$file->return_file == 1}
 				<td>
 					<script language="JavaScript" type="text/javascript">

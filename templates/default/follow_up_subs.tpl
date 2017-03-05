@@ -45,15 +45,15 @@
 					</td>
 					<td>
 						{if $statut_abns[{$subscription->id_abn}] == 0}
-							<img src="{$subcription_tpl_dir}templates/default/images/orange.png" alt="{_T string="orange"}">
+							<img src="templates/default/images/orange.png" alt="{_T string="orange"}">
 							{_T string="At least one activity is on progress or validated but not payed"}
 						{/if}
 						{if $statut_abns[{$subscription->id_abn}] == 1}
-							<img src="{$subcription_tpl_dir}templates/default/images/vert.png" alt="{_T string="green"}">
+							<img src="templates/default/images/vert.png" alt="{_T string="green"}">
 							{_T string="All activities are payed"}
 						{/if}
 						{if $statut_abns[{$subscription->id_abn}] == 2}
-							<img src="{$subcription_tpl_dir}templates/default/images/rouge.png" alt="{_T string="red"}">
+							<img src="templates/default/images/rouge.png" alt="{_T string="red"}">
 							{_T string="At least one activity is refused"}
 						{/if}
 						
