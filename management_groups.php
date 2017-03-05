@@ -149,7 +149,8 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 	$tpl->template_dir = 'templates/' . $preferences->pref_theme;
 
 	//on charge tous les groupes
-	$group=Groups::getList();
+	$groups = new Groups();
+	$group=$groups->getList();
 	
 	$activities;//=$activity0, $activity1, $activity2...
 	foreach ($group as $key => $value) 
