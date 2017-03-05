@@ -146,7 +146,7 @@ class Subscription {
 				$insert = $zdb->insert(SUBSCRIPTION_PREFIX . self::TABLE);
                 $insert->values($values);
                 $add = $zdb->execute($insert);
-                if ($add > 0) 
+                if ($add->count() > 0) 
 					{
 						$this->_id_abn = $zdb->driver->getLastGeneratedValue();
 					} else {
