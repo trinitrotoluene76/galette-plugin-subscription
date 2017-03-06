@@ -228,7 +228,7 @@ class File {
 			{
 			$res1=unlink($path);
 			$res=0;
-			if($res1==1 && $res2==1)
+			if($res1==1 && $res2==true)
 				{
 				$res=1;
 				}
@@ -264,7 +264,7 @@ class File {
 			{
 			$res1=unlink($path);
 			$res=0;
-			if($res1==1 && $res2==1)
+			if($res1==1 && $res2==true)
 				{
 				$res=1;
 				}
