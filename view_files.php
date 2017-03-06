@@ -73,8 +73,11 @@ if(isset($_GET['delete']))
 			$file_del=new File();
 			$file_del->id_doc=$_GET['id_doc'];
 			$file_del->getFile($file_del);
-			$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement,$login->isStaff());
-			$deleteok=$res;
+			if($file_del->emplacement)
+				{
+				$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement,$login->isStaff());
+				$deleteok=$res;
+				}
 			}
 		}
 //------------------------------------------------------------------------------------>FIN supression
@@ -88,14 +91,16 @@ if(isset($_GET['delete']))
 		$personnal_files=$file->getFileList();
 		
 		$activities=array();
-		foreach ($personnal_files as $key => $file) 
+		if($personnal_files>0)
 		{
-		$activity= new Activity();
-		$activity->id_group=$file->id_act;
-		$activity->getActivity($activity);
-		$activities[$key]=$activity;
+			foreach ($personnal_files as $key => $file) 
+			{
+			$activity= new Activity();
+			$activity->id_group=$file->id_act;
+			$activity->getActivity($activity);
+			$activities[$key]=$activity;
+			}
 		}
-		
 		
 
 //passage des informations au template
