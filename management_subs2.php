@@ -247,6 +247,7 @@ $tpl->assign('activities',$activities);
 $tpl->assign('followups',$followups);
 $tpl->assign('statut_abn',$statut_abn);
 $tpl->assign('valid',$valid);
+$tpl->assign('id_act',$id_act2);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before

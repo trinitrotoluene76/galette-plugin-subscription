@@ -1,7 +1,7 @@
 {if $valid== 1 }
 	<div id="successbox">{_T string="Subscriber added to group:"} {$activities[$followup->id_act]->group_name}</div>
 {/if}
-{if $followups[$activity2->id_group]->statut_act == 0 || $followups[$activity2->id_group]->statut_act == 3}
+{if $followups[$id_act]->statut_act == 0 || $followups[$id_act]->statut_act == 3}
 {else}
 							
 {/if}
@@ -10,7 +10,7 @@
 		<table class="details">
 			<caption class="ui-state-active ui-corner-top">
 				{$activities[$followup->id_act]->group_name}</br>
-				{if $followups[$activity2->id_group]->statut_act == 0 || $followups[$activity2->id_group]->statut_act == 3}
+				{if $followups[$id_act]->statut_act == 0 || $followups[$id_act]->statut_act == 3}
 				{_T string="Follow up the request"} N&deg;{$subscription->id_abn} {_T string="of1"} {$subscription->date_demande} {_T string="of2"} <a style="color:blue" class="link" href="{$galette_base_path}/voir_adherent_read_only.php?id_adh={$member->id}" target="blank" title="{_T string="View subscriber to modify informations & photo"}">{$member->surname|escape|nl2br} {$member->name|escape|nl2br}</a>			
 					{else}
 					{_T string="Follow up the request"} N&deg;{$subscription->id_abn} {_T string="of1"} {$subscription->date_demande} {_T string="of2"} <a style="color:blue" class="link" href="{$galette_base_path}/voir_adherent.php?id_adh={$member->id}" target="blank" title="{_T string="View subscriber to modify informations & photo"}">{$member->surname|escape|nl2br} {$member->name|escape|nl2br}</a>			
@@ -23,7 +23,7 @@
 				<td COLSPAN=2>
 					{if $picture == 0}
 						{_T string="No"} ->
-						{if $followups[$activity2->id_group]->statut_act == 0 || $followups[$activity2->id_group]->statut_act == 3}
+						{if $followups[$id_act]->statut_act == 0 || $followups[$id_act]->statut_act == 3}
 						<a href="{$galette_base_path}voir_adherent_read_only.php?id_adh={$member->id}" title="{_T string="Add picture on subscriber profile"}" target="blank">{_T string="Add picture on subscriber profile"}</a>	
 							{else}
 							<a href="{$galette_base_path}voir_adherent.php?id_adh={$member->id}" title="{_T string="Add picture on subscriber profile"}" target="blank">{_T string="Add picture on subscriber profile"}</a>							
@@ -126,18 +126,18 @@
 				<th>{_T string="Activities linked"}</th>
 				<td>
 					{foreach from=$activities key=k item=activity2}
-						<a title="{_T string="feedback"}: {$followups[$activity2->id_group]->feedback_act|escape}, &#13;{_T string="feedback off"}: {$followups[$activity2->id_group]->feedback_act_off|escape}">
+						<a title="{_T string="feedback"}: {$followups[$id_act]->feedback_act|escape}, &#13;{_T string="feedback off"}: {$followups[$id_act]->feedback_act_off|escape}">
 							-{$activity2->group_name} / 
-							{if $followups[$activity2->id_group]->statut_act == 0}
+							{if $followups[$id_act]->statut_act == 0}
 								{_T string="In progress"}
 							{/if}
-							{if $followups[$activity2->id_group]->statut_act == 1}
+							{if $followups[$id_act]->statut_act == 1}
 								{_T string="Validated"}
 							{/if}
-							{if $followups[$activity2->id_group]->statut_act == 2}
+							{if $followups[$id_act]->statut_act == 2}
 								{_T string="Paid"}
 							{/if}
-							{if $followups[$activity2->id_group]->statut_act == 3}
+							{if $followups[$id_act]->statut_act == 3}
 								{_T string="Refused"}
 							{/if}
 							/
