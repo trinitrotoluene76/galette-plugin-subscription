@@ -34,7 +34,7 @@
  */
 require_once 'includes/affichage_group.php';
 
-$tpl->assign('page_title', _T("New subsciption"));
+$tpl->assign('page_title', _T("New subscription"));
 $tpl->assign('activities',$activities);
 $tpl->assign('members',$members);
 $tpl->assign('age',$age);
