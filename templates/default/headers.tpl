@@ -1,6 +1,5 @@
 
-        <link rel="stylesheet" type="text/css" href="{$galette_base_path}{$subscription_tpl_dir}galette_subsciption.css"/>
-		<script type="text/javascript" src="{$galette_base_path}{$subscription_tpl_dir}form.js" ></script>
+        <script type="text/javascript" src="{$galette_base_path}{$subscription_tpl_dir}form.js" ></script>
 		
 		<script language="javascript"> AC_FL_RunContent = 0; </script>
 		<script language="javascript"> DetectFlashVer = 0; </script>
