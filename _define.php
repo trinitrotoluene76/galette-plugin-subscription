@@ -28,7 +28,7 @@ $this->register(
     'Galette Subscription',         //Name
     'Validation cycle',  //Short description
     'Amaury FROMENT',         //Author
-    '1.5',                      //Version
+    '2.0',                      //Version
     '0.8.3.3-amaury',           //Galette compatible version
 	'2017-05-01', 				//Date de modification du plugin
     null                        //Permissions needed - not yet implemented
