@@ -126,18 +126,18 @@
 				<th>{_T string="Activities linked"}</th>
 				<td>
 					{foreach from=$activities key=k item=activity2}
-						<a title="{_T string="feedback"}: {$followups[$id_act]->feedback_act|escape}, &#13;{_T string="feedback off"}: {$followups[$id_act]->feedback_act_off|escape}">
+						<a title="{_T string="feedback"}: {$followups[$activity2->id_group]->feedback_act|escape}, &#13;{_T string="feedback off"}: {$followups[$activity2->id_group]->feedback_act_off|escape}">
 							-{$activity2->group_name} / 
-							{if $followups[$id_act]->statut_act == 0}
+							{if $followups[$activity2->id_group]->statut_act == 0}
 								{_T string="In progress"}
 							{/if}
-							{if $followups[$id_act]->statut_act == 1}
+							{if $followups[$activity2->id_group]->statut_act == 1}
 								{_T string="Validated"}
 							{/if}
-							{if $followups[$id_act]->statut_act == 2}
+							{if $followups[$activity2->id_group]->statut_act == 2}
 								{_T string="Paid"}
 							{/if}
-							{if $followups[$id_act]->statut_act == 3}
+							{if $followups[$activity2->id_group]->statut_act == 3}
 								{_T string="Refused"}
 							{/if}
 							/

@@ -21,16 +21,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscription
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2009-2016 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 
@@ -38,9 +28,9 @@ $this->register(
     'Galette Subscription',         //Name
     'Validation cycle',  //Short description
     'Amaury FROMENT',         //Author
-    '1.4',                      //Version
+    '1.5',                      //Version
     '0.8.3.3-amaury',           //Galette compatible version
-	'2017-01-29', 				//Date de modification du plugin
+	'2017-05-01', 				//Date de modification du plugin
     null                        //Permissions needed - not yet implemented
 );
 
