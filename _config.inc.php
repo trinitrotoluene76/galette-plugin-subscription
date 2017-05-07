@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Configuration file for Subscribtion plugin
+ * Configuration file for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2011-2013 The Galette Team
+ * Copyright © 2009-2017 The Galette Team
  *
  * This file is part of Galette (http://galette.tuxfamily.org).
  *
@@ -21,16 +21,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2014 Amaury FROMENT
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
 
 define('SUBSCRIPTION_PREFIX', 'subscription_');

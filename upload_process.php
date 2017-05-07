@@ -1,12 +1,12 @@
 <?php
 /**
- * Upload process for Subscribtion plugin
+ * Upload process for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright © 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 define('GALETTE_BASE_PATH', '../../');
@@ -52,7 +42,6 @@ if (isset($_FILES['Filedata']))
                 } 
                 else  return false ; 
     }  
-      //else return false ; 
 	  
 //supression du fichier après avoir cliqué sur "supprimer"	dans l'animation flash  
 if(isset($_POST['supp']))
@@ -93,23 +82,10 @@ if(isset($_POST['store']))
 		$file->id_act=$_POST['id_act'];
 		$file->id_adh=$_POST['id_adh'];
 		$today= new DateTime("now");
-		//var_dump($today->format('d-m-Y'));
 		$file->date_record=$today->format('Y-m-d');
 		$file->store();
 		echo("&monStore=".utf8_encode(1)."&");
 		}
 		
 	}
-	// $file= new File();
-	//var_dump($file);
-	//$file->doc_name="doc.txt";
-	//$file->emplacement="187162.txt";
-	/* $today= new DateTime("now");
-		//var_dump($today->format('d-m-Y'));
-	$file->date_record=$today->format('Y-m-d');
-	$file->store();  */
-	//$file->remove(utf8_encode('186202'));
-	
-//var_dump($file);	
-
 ?> 

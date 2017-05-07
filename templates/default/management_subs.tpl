@@ -3,7 +3,7 @@
 	{foreach from=$activities key=id_act item=value}
 		<option  value="{$galette_base_path}{$subscription_dir}management_subs.php?id_act={$id_act}&nbligne=2" {if $id_act_s==$id_act}selected="selected"{/if}>{$activities[$id_act]->group_name}</option>
 	{/foreach}
-	<option  value="{$galette_base_path}{$subscription_dir}management_subs.php?id_act=all&nbligne=2" {if $id_act_s==""}selected="selected"{/if}>{_T string="All"}</option>
+	<option  value="{$galette_base_path}{$subscription_dir}management_subs.php" {if $id_act_s==""}selected="selected"{/if}>{_T string="All"}</option>
 </select>
 {if $login->isAdmin() == 1}
 	<a id="histreset" class="button" href="{$galette_base_path}{$subscription_dir}confirmation_clean_adh.php" title="{_T string="Delete members that haven't subscribed to the parent activity during 2 years or that haven't modified their profile"}">{_T string="Clean adh DB"}</a>
@@ -11,8 +11,10 @@
 {foreach from=$activities key=id_act item=value}	
 
 	{if $id_act_s==$id_act||$id_act_s==""}
-		{if $valid==$id_act}
-			<div id="successbox">{_T string="Subscriptions have been deleted"}</div>
+		{if isset($valid)}
+			{if $valid==$id_act}
+				<div id="successbox">{_T string="Subscriptions have been deleted"}</div>
+			{/if}
 		{/if}
 
 		{if $select_nbligne==0}{$nbligne=0}{/if}
@@ -48,7 +50,7 @@
 									<a href="{$galette_base_path}{$subscription_dir}management_subs.php?order=2{if $nbligne>0}&nbligne={$nbligne}&id_act={$id_act}{/if}">#</a>
 								{/if}
 							</th>
-							<th width=10%>
+							<th width=90px>
 								{if $order==1}
 									<a href="{$galette_base_path}{$subscription_dir}management_subs.php?order=2{if $nbligne>0}&nbligne={$nbligne}&id_act={$id_act}{/if}">{_T string="Date"} <img src="{$template_subdir}/images/up.png"></a>
 								{/if}
@@ -60,7 +62,7 @@
 								{/if}
 							</th>
 							
-							<th width=20%>
+							<th>
 								{if $order==3}
 									<a href="{$galette_base_path}{$subscription_dir}management_subs.php?order=4{if $nbligne>0}&nbligne={$nbligne}&id_act={$id_act}{/if}">{_T string="Name"} <img src="{$template_subdir}/images/up.png"></a>
 								{/if}
@@ -73,10 +75,10 @@
 								
 							</th>
 							
-							<th>
+							<th width=380px>
 								{_T string="Sub. status"}
 							</th>
-							 <th width=10%>
+							 <th>
 								{if $order==7 || $order==0}
 									<a href="{$galette_base_path}{$subscription_dir}management_subs.php?order=8{if $nbligne>0}&nbligne={$nbligne}&id_act={$id_act}{/if}">{_T string="Activity status"} <img src="{$template_subdir}/images/up.png"></a>
 								{/if}
@@ -88,48 +90,48 @@
 								{/if}
 														
 							</th>
-							<th width=17%>
+							<th width=170px>
 								{_T string="Details"}
 							</th>
 						</tr>
 					</thead>
-					
-					{foreach from=$subscriptions[$id_act] key=k2 item=subscription}	
-												
-						<tr>
-							<td>
-								{$subscription->id_abn}						
-							</td>
-							<td width=90px>
-								{$subscription->date_demande}
-							</td>
-							<td>
-								{$members[$id_act][$subscription->id_abn]->sname}
-							</td>
-							<td>
-								{$statuts[$id_act][$subscription->id_abn]}
-							</td>
-							<td>
-								{if $followups[$id_act][$subscription->id_abn]->statut_act == 0}
-									{_T string="In progress"}
-								{/if}
-								{if $followups[$id_act][$subscription->id_abn]->statut_act == 1}
-									{_T string="Validated"}
-								{/if}
-								{if $followups[$id_act][$subscription->id_abn]->statut_act == 2}
-									{_T string="Paid"}
-								{/if}
-								{if $followups[$id_act][$subscription->id_abn]->statut_act == 3}
-									{_T string="Refused"}
-								{/if}
-							</td>
-							<td>
-								<a href="{$galette_base_path}{$subscription_dir}management_subs2.php?id_act={$id_act}&id_abn={$subscription->id_abn}&id_adh={$members[$id_act][$subscription->id_abn]->id}" title="{_T string="View follow up details and modify fields"}">{_T string="View follow up & modify"}</a>
-							</td>
-												
-						</tr>
-					{/foreach}	
-						
+					{if isset($subscriptions[$id_act])}
+						{foreach from=$subscriptions[$id_act] key=k2 item=subscription}	
+													
+							<tr>
+								<td>
+									{$subscription->id_abn}						
+								</td>
+								<td >
+									{$subscription->date_demande}
+								</td>
+								<td>
+									{$members[$id_act][$subscription->id_abn]->sname}
+								</td>
+								<td>
+									{$statuts[$id_act][$subscription->id_abn]}
+								</td>
+								<td>
+									{if $followups[$id_act][$subscription->id_abn]->statut_act == 0}
+										{_T string="In progress"}
+									{/if}
+									{if $followups[$id_act][$subscription->id_abn]->statut_act == 1}
+										{_T string="Validated"}
+									{/if}
+									{if $followups[$id_act][$subscription->id_abn]->statut_act == 2}
+										{_T string="Paid"}
+									{/if}
+									{if $followups[$id_act][$subscription->id_abn]->statut_act == 3}
+										{_T string="Refused"}
+									{/if}
+								</td>
+								<td>
+									<a href="{$galette_base_path}{$subscription_dir}management_subs2.php?id_act={$id_act}&id_abn={$subscription->id_abn}&id_adh={$members[$id_act][$subscription->id_abn]->id}" title="{_T string="View follow up details and modify fields"}">{_T string="View follow up & modify"}</a>
+								</td>
+													
+							</tr>
+						{/foreach}	
+					{/if}	
 				</table>
 			</div>
 			</br>

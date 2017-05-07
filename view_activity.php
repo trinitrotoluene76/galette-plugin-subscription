@@ -1,13 +1,13 @@
 <?php
 
 /**
- * View activity for Subscribtion plugin
+ * View activity for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright © 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,25 +21,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 define('GALETTE_BASE_PATH', '../../');
 require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
 use Galette\Entity\Adherent as Adherent;
 use Galette\Entity\Group as Group;
-use Galette\Repository\Groups as Groups;
-
-
 
 if (!$login->isLogged()) {
     header('location: ' . GALETTE_BASE_PATH . 'index.php');
@@ -57,15 +44,10 @@ if ( !$login->isSuperAdmin() ) {
     }
 }
 require_once '_config.inc.php';
-//var_dump($login->isGroupManager());//Si manager de group ou staff ou admin
-//var_dump ($login);
 // Si l'adhérent est un groupmanager, on charge l'activité correspondante (on a donc besoin de id_group)
 $member = new Adherent();
 //on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 $member->load($id_adh);
-//var_dump($member);
-
-//var_dump($member->picture->hasPicture());
 $picture=$member->picture->hasPicture();
 
 
@@ -80,17 +62,13 @@ $picture=$member->picture->hasPicture();
 		$activity = new Activity();
 		//récupération de l'id_group ainsi que le nom du groupe managé
 		$activity->id_group = $_GET['id_group'];
-		//var_dump($activity->id_group);
 		 
 		//hydrate l'activité avec les données de la bdd. L'objet passé en paramètre doit être une activité avec un id_group valide
 		$activity->getActivity($activity);
-		//var_dump ($activity);
-
 		$group = new Group();
 		$group->load($activity->id_group);
 		//affiche le nom,tel,mail du manager de group + pour changer la manager de group, allez dans la page gestion group
 		$managers=$group->getManagers();
-		//var_dump($managers);
 		
 		//récupération de la liste des fichiers vierges
 		$file= new File();
@@ -100,14 +78,10 @@ $picture=$member->picture->hasPicture();
 		$files_vierges=$file->getFileListVierge();
 		
 		$tpl->assign('activity',$activity);
-		//var_dump ($activity);
 		$tpl->assign('managers',$managers);
-		//var_dump ($managers);
 		$tpl->assign('picture',$picture);
 		$tpl->assign('files_vierges',$files_vierges);
-		//var_dump($file);
 		
-
 $content = $tpl->fetch('view_activity.tpl', SUBSCRIPTION_SMARTY_PREFIX);
 $tpl->assign('content', $content);
 //Set path to main Galette's template

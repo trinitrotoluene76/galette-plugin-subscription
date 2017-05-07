@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Confirmation clean adherent for Subscribtion plugin
+ * Confirmation clean adherent for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright © 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,16 +21,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 define('GALETTE_BASE_PATH', '../../');
@@ -38,12 +28,6 @@ require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
 use Galette\Entity\Adherent as Adherent;
 use Galette\Filters\MembersList as MembersList;//#evol 55
 use Galette\Repository\Members as Members;//evol #55
-use Galette\Entity\Group as Group;
-use Galette\Repository\Groups as Groups;
-use Galette\Entity\DynamicFields as DynamicFields;
-use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
-
-
 
 if (!$login->isLogged()) {
     header('location: ' . GALETTE_BASE_PATH . 'index.php');
@@ -70,21 +54,16 @@ require_once '_config.inc.php';
 		 $members0 = new Members($filters);
 		 $adherent_del=new Adherent();
 		 $members_list = $members0->getMembersList(1,null,0,0,0,0,0);
-		//var_dump($members_list);
-		 //creation d'une boucle
+		//creation d'une boucle
 		 foreach ( $members_list as  $keydel => $valuedel ) 
 			{
 			 $adherent_del=$members_list[$keydel];
 				 
 			if($adherent_del->isStaff2()==false)
 				{
-				//var_dump($adherent_del->modification_date);
-				 
-				$lastsubsdate= \DateTime::createFromFormat('j/m/Y',$adherent_del->modification_date);
+				$lastsubsdate= \DateTime::createFromFormat(_T("Y-m-d"),$adherent_del->modification_date);
 				$today= new \DateTime("now");
-				//echo('diff:');
 				$elapse=$lastsubsdate->diff($today);
-				//var_dump($elapse->format('%R%Y'));
 				$elapse=$elapse->format('%Y');
 				//if( $elapse>=1)
 				if( $elapse>=2)
@@ -98,7 +77,6 @@ require_once '_config.inc.php';
 $tpl->assign('page_title', _T("Confirmation to clean members"));
 $tpl->assign('members', $members);
 $tpl->assign('countmb', $countmb);
-//var_dump($members);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before

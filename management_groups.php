@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Management group for Subscribtion plugin
+ * Management group for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright © 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,16 +21,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 define('GALETTE_BASE_PATH', '../../');
@@ -56,13 +46,10 @@ if ( !$login->isSuperAdmin() ) {
     }
 }
 require_once '_config.inc.php';
-//var_dump($login->isGroupManager());//Si manager de group ou staff ou admin
-//var_dump ($login);
 // Si l'adhérent est un groupmanager, on charge l'activité correspondante (on a donc besoin de id_group)
 $member = new Adherent();
 //on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 $member->load($id_adh);
-//var_dump($member);
 
 //Si la personne loggé gère un group on affiche son group uniquement
 if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !$login->isStaff())
@@ -76,7 +63,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 
 	//on charge les groupes pour lesquels il est manager
 	$group=Groups::loadManagedGroups($id_adh);
-	//var_dump ($group);
 
 	//affiche le nom,tel,mail du manager de group + pour changer la manager de group, allez dans la page gestion group
 
@@ -85,27 +71,18 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 		{
 		$group[$key];
 		//on prend le 1er group managé
-		//$group=$group["0"];
-		//var_dump ($group);
-		//echo ($group->getId());
-
 		//création de l'objet activité
 		$activity = new Activity();
 		//récupération de l'id_group ainsi que le nom du groupe managé
 		$activity->id_group = $group[$key]->getId();
-		//var_dump($activity->id_group);
 		$activity->group_name = $group[$key]->getName();
 		$nbinscr[$key]=$group[$key]->getMemberCount(true);
-		//var_dump($group[$key]->getMemberCount(true));
 		 
 		//hydrate l'activité avec les données de la bdd. L'objet passé en paramètre doit être une activité avec un id_group valide
 		$activity->getActivity($activity);
-		//var_dump ($activity);
 
 		//affiche le nom,tel,mail du manager de group + pour changer la manager de group, allez dans la page gestion group
 		$managers[$key]=$group[$key]->getManagers();
-		//var_dump($managers);
-		
 		
 		//si le formulaire est envoyé
 		if(isset($_POST['id_form']))
@@ -114,34 +91,22 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 			$k=$_POST['id_form'];
 			if($k==$key)
 				{
-				//echo ($k);
-				//echo ($key);
-				//var_dump ($activity);
-				//echo ('affichage du $post');
-				//var_dump ($_POST);
 				$valid = $activity->check($_POST);
-				//echo ('affichage de $activity une fois posté et asignée');
-				//var_dump ($activity);
-				//var_dump ($valid);
 				
 				//si les données sont valides on les enregistres -> continuer à bosser cette partie
 				if ( $valid == true ) 
 					{
 					//enregistrement des infos dans la bdd
 					$store = $activity->store();
-					//echo ('affichage du store');
-					//var_dump ($store);
 					
 					//on errore l'update si l'enregistrement est ok
 					if ( $store == true ) 
 						{
 						$tpl->assign('error',0);
-						//var_dump ($activity);
 						}
 					else
 						{
 						$tpl->assign('error',1);
-						//var_dump ($activity);
 						}
 					}
 				else 
@@ -155,13 +120,10 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 				{
 				$tpl->assign('error','2');
 				}
-		//var_dump ($activity);
 		$activities[$key]=$activity;
 		}//fin du foreach
 		$tpl->assign('activities',$activities);
-		//var_dump ($activities);
 		$tpl->assign('managers',$managers);
-		//var_dump ($managers[1][0]);
 		$tpl->assign('nbinscr',$nbinscr);
 		
 	}//fin du if member
@@ -177,21 +139,16 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 	$tpl->template_dir = 'templates/' . $preferences->pref_theme;
 
 	//on charge tous les groupes
-	$group=Groups::getList();
-	//var_dump ($group);
+	$groups = new Groups();
+	$group=$groups->getList();
 	
 	$activities;//=$activity0, $activity1, $activity2...
 	foreach ($group as $key => $value) 
 		{
 		$group[$key];
 		//on prend le 1er group managé
-		//$group=$group["0"];
-		//var_dump ($group);
-		//echo ($group->getId());
-
 		//affiche le nom,tel,mail du manager de group + pour changer la manager de group, allez dans la page gestion group
 		$managers[$key]=$group[$key]->getManagers();
-		//var_dump($managers);
 			
 		//création de l'objet activité
 		$activity = new Activity();
@@ -200,12 +157,9 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 		$activity->group_name = $group[$key]->getName();
 		//récupération du nombre d'inscrits
 		$nbinscr[$key]=$group[$key]->getMemberCount(true);
-		//var_dump($group[$key]->getMemberCount(true));
 		 
 		//hydrate l'activité avec les données de la bdd. L'objet passé en paramètre doit être une activité avec un id_group valide
 		$activity->getActivity($activity);
-		//var_dump ($activity);
-
 		
 		//si le formulaire est envoyé
 		if(isset($_POST['id_form']))
@@ -214,33 +168,21 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 			$k=$_POST['id_form'];
 			if($k==$key)
 				{
-				//echo ($k);
-				//echo ($key);
-				//var_dump ($activity);
-				//echo ('affichage du $post');
-				//var_dump ($_POST);
 				$valid = $activity->check($_POST);
-				//echo ('affichage de $activity une fois posté et asignée');
-				//var_dump ($activity);
-				
 				//si les données sont valides on les enregistres -> continuer à bosser cette partie
 				if ( $valid == true ) 
 					{
 					//enregistrement des infos dans la bdd
 					$store = $activity->store();
-					//var_dump ($store);
 					
 					//on errore l'update si l'enregistrement est ok
 					if ( $store == true ) 
 						{
 						$tpl->assign('error',0);
-						//var_dump ($activity);
-						//echo ('store && check= true');
 						}
 					else
 						{
 						$tpl->assign('error',1);
-						//var_dump ($activity);
 						echo ('check= true,store =false');
 						}
 					}
@@ -248,7 +190,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 					{
 					$tpl->assign('error',1);
 					echo ('check= false');
-						
 					}
 				}//fin du if key
 			}//fin du if $Post
@@ -257,15 +198,11 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 				{
 				$tpl->assign('error','2');
 				}
-		//var_dump ($activity);
 		$activities[$key]=$activity;
 		
 		}//fin du foreach
 		$tpl->assign('activities',$activities);
-		//var_dump ($activities);
-		
 		$tpl->assign('managers',$managers);
-		//var_dump ($managers[1][0]);
 		$tpl->assign('nbinscr',$nbinscr);
 		
 	}//fin du if staff

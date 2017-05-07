@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Subscription class for Subscribtion plugin
+ * Subscription class for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright © 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,16 +21,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 class Subscription {
@@ -67,11 +57,12 @@ class Subscription {
 
         if (is_int($args)) {
             try {
-                $select = new Zend_Db_Select($zdb->db);
-                $select->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                        ->where(self::PK . ' = ' . $args);
-                if ($select->query()->rowCount() == 1) {
-                    $this->_loadFromRS($select->query()->fetch());
+                $select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+                $select->where(self::PK . ' = ' . $args);
+                $results = $zdb->execute($select);
+            
+				if ($results->count() == 1) {
+                    $this->_loadFromRS($results->current());
                 }
                 
             } catch (Exception $e) {
@@ -112,17 +103,12 @@ class Subscription {
 		$result=0;
 		if($object->id_abn!=null)
 			{		
-			//echo('on rentre dasn is_id_abn, $object->id_abn');
-			//var_dump($object->id_abn);
-			$req1 = new Zend_Db_Select($zdb->db);
-			$req1->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-					->where('id_abn = ?', $object->id_abn)
-					->limit(1, 0);
-					
-			if ($req1->query()->rowCount() == 1) 
+			$req1 = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+			$req1->where(array('id_abn'=> $object->id_abn))
+					->limit(1);
+			$results = $zdb->execute($req1);		
+			if ($results->count() == 1) 
 				{
-				//echo('on rentre dans is_id_abn, result=1');
-			
 				$result=1;
 				}//fin du 1er if
 			}//fin du 1er if
@@ -145,29 +131,26 @@ class Subscription {
                 $values[substr($k, 1)] = $this->$k;
             }
 			$res=$this->is_id_abn($this);
-            //echo('$this->is_id_abn($this) dans store');
-			//var_dump($res);
-			//var_dump($this);
-			if ($res=='0') 
+            if ($res=='0') 
 				{
-				//var_dump('insert');
-				$add = $zdb->db->insert(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values);
-				//Analog\Analog::log('insert Subscription');
-				if ($add > 0) 
+				$insert = $zdb->insert(SUBSCRIPTION_PREFIX . self::TABLE);
+                $insert->values($values);
+                $add = $zdb->execute($insert);
+                if ($add->count() > 0) 
 					{
-						$this->_id_abn = $zdb->db->lastInsertId();
+						$this->_id_abn = $zdb->driver->getLastGeneratedValue();
 					} else {
 							throw new Exception(_T("Subscription.AJOUT insert ECHEC"));
 							}
 				} 
 			if ($res=='1') 
 				{
-				//Analog\Analog::log('update Subscription');
-				//echo('update id abn:');
-				//var_dump($this->_id_abn);
-				$edit = $zdb->db->update(
-				PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, $values, self::PK . '=' . $this->_id_abn
-										);
+				$update = $zdb->update(SUBSCRIPTION_PREFIX . self::TABLE);
+                $update->set($values);
+                $update->where(
+                    self::PK . '=' . $this->_id_abn
+                );
+				$edit = $zdb->execute($update);
 				if ($edit > 0) 
 					{
 					}else {
@@ -195,8 +178,12 @@ class Subscription {
     static function remove($object) {
         global $zdb;
 
-        $rem=$zdb->db->delete(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE, self::PK . '=' . $object->id_abn);
-        
+        $delete = $zdb->delete(SUBSCRIPTION_PREFIX . self::TABLE);
+                $delete->where(
+                    self::PK . ' = ' . $object->id_abn
+                );
+        $rem=$zdb->execute($delete);
+
 		return $rem;
     }
  
@@ -211,19 +198,17 @@ class Subscription {
         global $zdb;
 
         // Statut
-        $select_id_abn = new Zend_Db_Select($zdb->db);
-        $select_id_abn->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where('id_abn = ?', $object->id_abn)
-                ->limit(1, 0);
-        //Analog\Analog::log('test de load subscription');
-
-        if ($select_id_abn->query()->rowCount() == 1) {
-            $subscription = $select_id_abn->query()->fetch();
+        $select_id_abn = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_id_abn->where(array('id_abn'=> $object->id_abn))
+                ->limit(1);
+        $results = $zdb->execute($select_id_abn);
+                            
+        if ($results->count() == 1) {
+            $subscription = $results->current();
             $object->_id_adh = $subscription->id_adh;
             $object->_date_demande = $subscription->date_demande;
             $object->_total_estimme = $subscription->total_estimme;
             $object->_message_abn = $subscription->message_abn;
-            //var_dump($object); 
         }
     }
  
@@ -238,36 +223,37 @@ class Subscription {
         global $zdb;
 
         // Statut
-        $select_id_abn = new Zend_Db_Select($zdb->db);
-        $select_id_abn->from(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE)
-                ->where('id_adh = ?', $object->id_adh);
-        //var_dump($select_id_abn);
-		$result=0;
-        if ($select_id_abn->query()->rowCount() > 0) 
+        $select_id_abn = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+        $select_id_abn->where(array('id_adh'=> $object->id_adh));
+        $subscriptions = $zdb->execute($select_id_abn);
+        $result=0;
+        if ($subscriptions->count() > 0) 
 			{
 				$result=array();
-				$subscriptions = $select_id_abn->query()->fetchAll();
-				
 				foreach ( $subscriptions as  $key => $value ) 
 					{
-					//var_dump($key);
-					$result[]=$subscriptions[$key]->id_abn;
+					$result[]=$value->id_abn;
 					}
-					
 			}//fin du if
+			
 		return $result;
     }
 
 	    /**
-     * Retrieve fields from database
+     * Retrieve fields from database.copy past from Adherent
      *
      * @return array
      */
     public static function getDbFields()
     {
-        global $zdb;
-        return array_keys($zdb->db->describeTable(PREFIX_DB . SUBSCRIPTION_PREFIX . self::TABLE));
-    }
+     global $zdb;
+        $columns = $zdb->getColumns(SUBSCRIPTION_PREFIX . self::TABLE);
+        $fields = array();
+        foreach ( $columns as $col ) {
+            $fields[] = $col->getName();
+        }
+        return $fields;
+	}
 	
 	
 	 /**
@@ -283,23 +269,16 @@ class Subscription {
 		global $zdb;
 		$valid = '1';
 		$fields = self::getDbFields();
-		//var_dump ($fields);
-	 foreach ( $fields as $key ) {
+	foreach ( $fields as $key ) {
 				//first of all, let's sanitize values
 				$key = strtolower($key);
 				if ( isset($values[$key]) ) {
 					$value = stripslashes(trim($values[$key]));
 					$this->$key=$value;
-					
-					
-			
-				} 
-					//echo ('affichage de $key et $value');
-					//echo ($key);
-					//var_dump ($value);			
+				}			
 			}
 			
-			return $valid;
+	return $valid;
 	}			
  
  

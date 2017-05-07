@@ -1,12 +1,12 @@
 <?php
 /**
- * Tarif for Subscribtion plugin
+ * Tarif for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright ¬© 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,24 +20,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
 use Galette\Entity\DynamicFields as DynamicFields;
 use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
 
-//Nom du champ dynamique comportant les diffÈrents choix
+//Nom du champ dynamique comportant les diff√©rents choix
 $Field_name='Appartenance';
 
-//--------------------------------->rÈcupÈration du statut:
+//--------------------------------->r√©cup√©ration du statut:
 $dyn_fields = new DynamicFields();
 
 // declare dynamic field values
@@ -51,93 +41,71 @@ $dynamic_fields = $dyn_fields->prepareForDisplay(
     $disabled['dyn'],
     0
 );
-//var_dump($dynamic_fields[0]['choices']);
-//var_dump($dynamic_fields[0]['field_name']);
-//var_dump($Field_name);
 foreach ( $dynamic_fields as $k => $v ) 
 	{
-	//var_dump($dynamic_fields[$k]['field_name']);
 	//modification pour bug #40
 	if($dynamic_fields[$k]['field_name'] == $Field_name || $dynamic_fields[$k]['field_name'] == $Field_name." (not translated)")
 	//fin de la modif
 		{
-		//var_dump($dynamic_fields[$k]['choices']);
-		
-		//rÈcupÈration des statuts (personnel NS, ext...)
+		//r√©cup√©ration des statuts (personnel NS, ext...)
 		$form_name=$dynamic_fields[$k]['choices'];
 
 		}
 	}
-//var_dump($dynamic_fields);
-
-
-//rÈcupÈration des statuts (personnel NS, ext...) autre mÈthode mais dÈpend de l'id
-//$form_name = $dyn_fields->getFixedValues(5);
-//var_dump($form_name);
-
-//------------------------------------------------>rÈcupÈration du statut fin
+//------------------------------------------------>r√©cup√©ration du statut fin
 
 
 /**
- * ExÈcute une requÍte SQL retournant le statut (champ dynamique) de l'adhÈrent (ne fonctionne pas pour le super admin)
+ * Ex√©cute une requ√™te SQL retournant le statut (champ dynamique) de l'adh√©rent (ne fonctionne pas pour le super admin)
  * Retourne $statut
  * 
  * $statut=0 si il y a une erreur
  *
- * @param id_adh: l'id de l'adhÈrent et field_name: le nom du champ recherchÈ, ici "Statut"
+ * @param id_adh: l'id de l'adh√©rent et field_name: le nom du champ recherch√©, ici "Statut"
  */
  
 	global $zdb;
 		$statut=0;
 		// dans un 1er temps on retourne le field_id et le field_val
-		$select = new Zend_Db_Select($zdb->db);
-		$select->from(PREFIX_DB . DynamicFields::TABLE)
-                ->join(PREFIX_DB . DynamicFieldType::TABLE, PREFIX_DB . DynamicFieldType::TABLE . '.field_id = ' . PREFIX_DB . DynamicFields::TABLE . '.field_id')
-                ->where(PREFIX_DB . DynamicFieldType::TABLE.'.field_name = ?', $Field_name)
-                ->where(PREFIX_DB . DynamicFields::TABLE.'.item_id = ?', $id_adh);
-		//var_dump($select);
-		if ($select->query()->rowCount() == 1) 
+		$select = $zdb->select(DynamicFields::TABLE, 'a');
+		$select->join(
+					array('b' => PREFIX_DB . DynamicFieldType::TABLE),
+					'b.field_id = a.field_id'
+					)
+                ->where(array(
+								'b.field_name'=> $Field_name,
+								'a.item_id'=> $id_adh
+							));
+		$results = $zdb->execute($select);
+		if ($results->count() == 1) 
 			{
-			$resultat= $select->query()->fetch();
-            //var_dump($field_val=$resultat->field_val);
-			$field_val=$resultat->field_val;
+			$resultat= $results->current();
+            $field_val=$resultat->field_val;
 			$field_id=$resultat->field_id;
 			
-			//dans un 2eme temps on retourne la valeur du statut de l'adhÈrent
-			$select2 = new Zend_Db_Select($zdb->db);
-			$select2->from(PREFIX_DB . 'field_contents_'.$field_id)
-					->where('id = ?', $field_val);
-			if ($select2->query()->rowCount() == 1) 
+			//dans un 2eme temps on retourne la valeur du statut de l'adh√©rent
+			$select2 = $zdb->select('field_contents_'.$field_id);
+			$select2->where(array('id'=> $field_val));
+			$results2 = $zdb->execute($select2);
+			if ($results2->count() == 1) 
 				{
-				$resultat2= $select2->query()->fetch();
-				//var_dump($resultat2->val);
-				
+				$resultat2= $results2->current();
 				$statut=$resultat2->val;
-				//echo('statut de l adhÈrent: ');
-				//echo($statut);
-				
 				}//fin du 2eme if
 			
 			}//fin du 1er if
 //--------------------------------------------------->
 
 /**
- * compare la date de naissance de l'adhÈrent avec la date actuelle
+ * compare la date de naissance de l'adh√©rent avec la date actuelle
  * retourne age_category=1 si <18ans
  * age_category=2 si <=25ans && >18ans
  * age_category=3 si >25ans
  * 
  */	
-$birthdate= DateTime::createFromFormat('j/m/Y',$member->birthdate);
+$birthdate= DateTime::createFromFormat(_T("Y-m-d"),$member->birthdate);
 $today= new DateTime("now");
-//echo('today:');
-//var_dump($today);
-//echo('birthdate:');
-//var_dump($birthdate);
-//echo('diff:');
 $age=$birthdate->diff($today);
-//var_dump($age->format('%R%Y'));
-
 $age=$age->format('%Y');
 $age_limit1=18;
 $age_limit2=25;
@@ -155,16 +123,15 @@ if($age>$age_limit2)
 	$age_category=3;
 	}//fin du if
 
-//echo('age_category = '.$age_category);
 //---------------------------------------------------> 
 	
 /**
- * classe l'adhÈrent dans une catÈgorie tarifaire
+ * classe l'adh√©rent dans une cat√©gorie tarifaire
  * retourne $category
- * $category=[0]=Personnel Nexter et assimilÈs
- * $category=[1]=Enfant du Personnel Nexter et assimilÈs <18 ans
- * $category=[2]=Enfant du Personnel Nexter et assimilÈs <=25 ans
- * $category=[3]=ExtÈrieurs et Enfants du Personnel Nexter >25 ans
+ * $category=[0]=Personnel Nexter et assimil√©s
+ * $category=[1]=Enfant du Personnel Nexter et assimil√©s <18 ans
+ * $category=[2]=Enfant du Personnel Nexter et assimil√©s <=25 ans
+ * $category=[3]=Ext√©rieurs et Enfants du Personnel Nexter >25 ans
 
 
 $form_name
@@ -179,17 +146,16 @@ array (size=7)
   
 	0 => Personnel Nexter
 	1 => Famille Nexter (conjoint ou enfant)
-	2 => Assistance technique, intÈrimaire, stagiaire, TNS MArs
-	3 => RetraitÈ Nexter ou conjoint
+	2 => Assistance technique, int√©rimaire, stagiaire, TNS MArs
+	3 => Retrait√© Nexter ou conjoint
 	4 => Base de Soutien ou famille (civil ou militaire)
-	5 => ExtÈrieur
+	5 => Ext√©rieur
 
  */
 
  //si personnel NS (hors conjoint/enfant)
 if($statut!=$form_name[5] && $statut!=$form_name[1])
 	{
-	//echo('cat 0');
 	$category=0;
 	}
 
@@ -203,13 +169,10 @@ else
 		 switch ($age_category) 
 			{
 			case 1:
-			//echo('1');
 			$category=1; break;
 			case 2:
-			//echo('2');
 			$category=2; break;
 			case 3:
-			//echo('3');
 			$category=3; break;
 			default:
 			$category=3; break;

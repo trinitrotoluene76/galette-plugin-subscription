@@ -1,13 +1,13 @@
 <?php
 
 /**
- * management subs 2 for Subscribtion plugin
+ * management subs 2 for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright © 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,25 +21,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 define('GALETTE_BASE_PATH', '../../');
 require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
 use Galette\Entity\Adherent as Adherent;
 use Galette\Entity\Group as Group;
-use Galette\Repository\Groups as Groups;
-use Galette\Entity\DynamicFields as DynamicFields;
-use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
 use Galette\Core\GaletteMail as GaletteMail;
 
 if (!$login->isLogged()) {
@@ -59,9 +46,6 @@ if ( !$login->isSuperAdmin() ) {
 }
 require_once '_config.inc.php';
 
-
-	
-//var_dump($_GET);
 if(isset($_GET['id_abn']))
 	{
 	$id_adh2=$_GET['id_adh'];
@@ -70,7 +54,6 @@ if(isset($_GET['id_abn']))
 	}
 
 //enregistrement des données
-//var_dump($_POST);
 $valid=0;
 if(isset($_POST['valid']))
 	{
@@ -89,8 +72,6 @@ if(isset($_POST['valid']))
 		$valid=$followup4->put_into_group($followup4);
 		}
 	
-	//var_dump($followup4);
-	
 	//si l'activité est validé, payé ou refusé, on envoi un mail à l'adhérent
 	if($followup4->statut_act == 1|| $followup4->statut_act == 2 || $followup4->statut_act == 3)
 		{
@@ -104,7 +85,6 @@ if(isset($_POST['valid']))
 				//récupération des infos de l'adhérent à valider
 				$adherent=new Adherent();
 				$adherent->load($id_adh2);
-				//var_dump($adherent->surname." ".$adherent->name);
 				$sname1=$adherent->surname." ".$adherent->name;
 				
 				//les managers sont cités en signature du mail
@@ -154,11 +134,8 @@ if(isset($_POST['valid']))
 							{
 							$mail->setMessage("Bonjour,\r\n\r\n"."Votre inscription pour la section ".$group->getName()." a été refusée par le responsable de section ou le bureau.\r\n"."L'abonnement concerné est le N°".$followup4->id_abn.".\r\n\r\n"."Pour voir le suivi de vos abonnements et pour connaitre le motif du refus, connectez vous à l'adresse suivante (Abonnement/suivi): ".$proto . '://' . $_SERVER['SERVER_NAME'] .dirname($_SERVER['REQUEST_URI'])."/follow_up_subs.php\r\n\r\n"."Pour les questions ou réclamations, ne répondez pas à ce mail mais contactez vos responsables de section:\r\n".$sname."\r\n\r\n"."Cordialement,\r\n"."le bureau.");
 							}
-							
-						//var_dump($mail);
 						//envoi de l'email:
 						$sent = $mail->send();
-						//var_dump($preferences->pref_mail_method);
 											
 						}//fin du if	
 				 }//fin du if 
@@ -171,22 +148,18 @@ if(isset($_POST['valid']))
 $member = new Adherent();
 //on rempli l'Adhérent par ses caractéristiques à l'aide de son id
 $member->load($id_adh2);
-//var_dump($member);
 
 //check si l'adhérent a une photo (0/1)
-//var_dump($member->picture->hasPicture());
 $picture=$member->picture->hasPicture();
 
-
 require_once 'includes/tarif.php';
-
 
 $subscription= new Subscription;
 $subscription->id_abn=$id_abn2;
 $subscription->getSubscription($subscription);
 //formatage de la date pour affichage
 $date=DateTime::createFromFormat('Y-m-d', $subscription->date_demande);
-$subscription->date_demande=$date->format('d-m-Y');
+$subscription->date_demande=$date->format(_T("Y-m-d"));
 
 $followup= new Followup();
 $followup->id_act=$id_act2;
@@ -202,7 +175,6 @@ $followup->getFollowup($followup);
 	$res=$followup2->getFollowupAct($followup2);
 	$total_statut_ref=array();//sert à calculer le statut abn si refus
 	$statut_abn=0; //0 orange, 1 vert, 2 rouge
-	//var_dump($res);
 	//pour chaque suivi d'activité
 	foreach ( $res as  $key => $value ) 
 		{
@@ -210,7 +182,6 @@ $followup->getFollowup($followup);
 		$activity2->id_group=$value;
 		$activity2->getActivity($activity2);
 		$activities[$value]=$activity2;
-		//var_dump($activity2);
 		
 		$followup3=new Followup;
 		$followup3->id_act=$value;
@@ -235,8 +206,6 @@ $followup->getFollowup($followup);
 				$total_statut=$total_statut+$followup4->statut_act;
 				$total_statut_ref[]=$followup4->statut_act;
 				}
-			//var_dump(2*count($followups));
-			//var_dump($total_statut);
 			
 			//si toutes les activités sont payées	
 			if($total_statut==2*count($followups))
@@ -255,34 +224,20 @@ $followup->getFollowup($followup);
 				}
 		}//fin du foreach activity
 
-		
 $tpl->assign('page_title', _T("Management of Subscribers"));
-
 $tpl->assign('subscription',$subscription);
-//var_dump ($subscription);
-
 $tpl->assign('followup',$followup);
-//var_dump($followup);
-
 //non utilisé pour l'instant
 $tpl->assign('category',$category);
-//echo ('category: '.$category);
-
 $tpl->assign('member',$member);
 $tpl->assign('statut',$statut);
 $tpl->assign('age',$age);
-
 $tpl->assign('picture',$picture);
-//var_dump($picture);
-
 $tpl->assign('activities',$activities);
-//var_dump($activities);
 $tpl->assign('followups',$followups);
-//var_dump($followups);
 $tpl->assign('statut_abn',$statut_abn);
-//var_dump($statut_abn);
-
 $tpl->assign('valid',$valid);
+$tpl->assign('id_act',$id_act2);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before

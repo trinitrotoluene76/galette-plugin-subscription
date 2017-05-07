@@ -1,8 +1,0 @@
-
-                <section>
-                    <table>
-                        
-                    </table>
-                    
-                </section>
-               

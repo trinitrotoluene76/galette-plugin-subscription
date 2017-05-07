@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Confirmation 2 for Subscribtion plugin
+ * Confirmation reset saison for galette Subscription plugin
  *
  * PHP version 5
  *
- * Copyright © 2013 The Galette Team
+ * Copyright © 2009-2016 The Galette Team
  *
- * This file is part of Galette (http://galette.eu).
+ * This file is part of Galette (http://galette.tuxfamily.org).
  *
  * Galette is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,26 +21,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category  Plugins
- * @package   GaletteSubscribtion
- *
- * @author    Amaury FROMENT <amaury.froment@gmail.com>
- * @copyright 2011-2013 The Galette Team
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
- * @version   0.7.8
- * @link      http://galette.tuxfamily.org
- * @since     Available since 0.7.8
  */
  
 define('GALETTE_BASE_PATH', '../../');
 require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
-use Galette\Entity\Adherent as Adherent;
-use Galette\Entity\Group as Group;
-use Galette\Repository\Groups as Groups;
-use Galette\Entity\DynamicFields as DynamicFields;
-use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
-
 
 if (!$login->isLogged()) {
     header('location: ' . GALETTE_BASE_PATH . 'index.php');
@@ -63,7 +47,6 @@ if(isset($_GET["remove_id_act"]))
 	{
 	$remove_id_act=$_GET["remove_id_act"];
 	$tpl->assign('remove_id_act',$remove_id_act);
-	//var_dump($remove_id_act);
 	}
 	
 $tpl->assign('page_title', _T("Confirmation for a new saison"));
