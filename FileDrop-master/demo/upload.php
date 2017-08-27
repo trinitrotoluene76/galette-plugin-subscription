@@ -13,6 +13,8 @@
   Result is either output as HTML with JavaScript code to invoke the callback
   (like JSONP) or in plain text if none is given (it's usually absent on AJAX).
 */
+//définition des constantes
+$chemin="./test";//relatif à ce fichier upload.php
 
 // If an error causes output to be generated before headers are sent - catch it.
 ob_start();
@@ -31,6 +33,11 @@ if (!empty($_FILES['fd-file']) and is_uploaded_file($_FILES['fd-file']['tmp_name
   $name = urldecode(@$_SERVER['HTTP_X_FILE_NAME']);
   $data = file_get_contents("php://input");
 }
+
+//écriture du fichier
+$fp = fopen($chemin.'/'.$name, 'w');
+fwrite($fp, $data); //User will see Hello World!
+fclose($fp);
 
 // Output message for this demo upload. In your real app this would be something
 // meaningful for the calling script (that uses FileDrop.js).
