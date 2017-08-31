@@ -50,57 +50,202 @@
   </head>
   <body>
     <noscript style="color: maroon">
-      <h2>JavaScript is disabled in your browser. How do you expect FileDrop to work?</h2>
+      <h2>Activez le javascript de votre navigateur pour uploader un fichier</h2>
     </noscript>
-
-    <h2 style="text-align: center">
-      <a href="http://filedropjs.org">FileDrop</a> basic sample
-    </h2>
 
     <!-- A FileDrop area. Can contain any text or elements, or be empty.
          Can be of any HTML tag too, not necessary fieldset. -->
     <fieldset id="zone">
-      <legend>Drop a file inside&hellip;</legend>
-      <p>Or click here to <em>Browse</em>..</p>
+      <legend>Glissez-déposez un fichier</legend>
+      <p id="consigne">ou cliquez ici <em>Parcourir</em>...</p>
 
       <!-- Putting another element on top of file input so it overlays it
            and user can interact with it freely. -->
-      <p id="txtprogress"></p>
+		<p id="txtprogress"></p>
 	  	<p>
 			<span id="bar_zone"></span>
 		</p>
     </fieldset>
-<p id="filelink"></p>
 
     <script type="text/javascript">
       // Tell FileDrop we can deal with iframe uploads using this URL:
       var options = {iframe: {url: 'upload.php'}};
       // Attach FileDrop to an area ('zone' is an ID but you can also give a DOM node):
       var zone = new FileDrop('zone', options);
-	  		
+	  var filesize_max=2;//Mo
+	  var authorized_extensions=["application/gzip",
+								"application/x-zip-compressed",
+								"application/x-7z-compressed",
+								"application/x-rar-compressed",
+								"application/x-tar",
+								"application/x-bzip",
+								"application/x-bzip2",
+								"application/msword",
+								"application/pdf",
+								"application/vnd.cups-pdf",
+								"application/vnd.kde.kword",
+								"application/vnd.lotus-wordpro",
+								"application/vnd.ms-excel",
+								"application/vnd.ms-excel.addin.macroEnabled.12",
+								"application/vnd.ms-excel.sheet.binary.macroEnabled.12",
+								"application/vnd.ms-excel.sheet.macroEnabled.12",
+								"application/vnd.ms-excel.template.macroEnabled.12",
+								"application/vnd.ms-officetheme",
+								"application/vnd.ms-powerpoint",
+								"application/vnd.ms-powerpoint.addin.macroEnabled.12",
+								"application/vnd.ms-powerpoint.presentation.macroEnabled.12",
+								"application/vnd.ms-powerpoint.slide.macroEnabled.12",
+								"application/vnd.ms-powerpoint.slideshow.macroEnabled.12",
+								"application/vnd.ms-powerpoint.template.macroEnabled.12",
+								"application/vnd.ms-word.document.macroEnabled.12",
+								"application/vnd.ms-word.template.macroEnabled.12",
+								"application/vnd.oasis.opendocument.chart",
+								"application/vnd.oasis.opendocument.chart-template",
+								"application/vnd.oasis.opendocument.database",
+								"application/vnd.oasis.opendocument.formula",
+								"application/vnd.oasis.opendocument.formula-template",
+								"application/vnd.oasis.opendocument.graphics",
+								"application/vnd.oasis.opendocument.graphics-template",
+								"application/vnd.oasis.opendocument.image",
+								"application/vnd.oasis.opendocument.image-template",
+								"application/vnd.oasis.opendocument.presentation",
+								"application/vnd.oasis.opendocument.presentation-template",
+								"application/vnd.oasis.opendocument.spreadsheet",
+								"application/vnd.oasis.opendocument.spreadsheet-template",
+								"application/vnd.oasis.opendocument.text",
+								"application/vnd.oasis.opendocument.text-master",
+								"application/vnd.oasis.opendocument.text-template",
+								"application/vnd.oasis.opendocument.text-web",
+								"application/vnd.openxmlformats-officedocument.custom-properties+xml",
+								"application/vnd.openxmlformats-officedocument.customXmlProperties+xml",
+								"application/vnd.openxmlformats-officedocument.drawing+xml",
+								"application/vnd.openxmlformats-officedocument.drawingml.chart+xml",
+								"application/vnd.openxmlformats-officedocument.drawingml.chartshapes+xml",
+								"application/vnd.openxmlformats-officedocument.drawingml.diagramColors+xml",
+								"application/vnd.openxmlformats-officedocument.drawingml.diagramData+xml",
+								"application/vnd.openxmlformats-officedocument.drawingml.diagramLayout+xml",
+								"application/vnd.openxmlformats-officedocument.drawingml.diagramStyle+xml",
+								"application/vnd.openxmlformats-officedocument.extended-properties+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.commentAuthors+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.comments+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.handoutMaster+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.notesMaster+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+								"application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.presProps+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.slide",
+								"application/vnd.openxmlformats-officedocument.presentationml.slide+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+								"application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.slideUpdateInfo+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.tableStyles+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.tags+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml-template",
+								"application/vnd.openxmlformats-officedocument.presentationml.template.main+xml",
+								"application/vnd.openxmlformats-officedocument.presentationml.viewProps+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.calcChain+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.connections+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.dialogsheet+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheDefinition+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheRecords+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.queryTable+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.revisionHeaders+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.revisionLog+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.sheetMetadata+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml-template",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.userNames+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.volatileDependencies+xml",
+								"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml",
+								"application/vnd.openxmlformats-officedocument.theme+xml",
+								"application/vnd.openxmlformats-officedocument.themeOverride+xml",
+								"application/vnd.openxmlformats-officedocument.vmlDrawing",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml-template",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml",
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml",
+								"application/vnd.rar",
+								"application/vnd.software602.filler.form-xml-zip",
+								"application/zip",
+								"image/bmp",
+								"image/gif",
+								"image/jpeg",
+								"image/png",
+								"image/tiff",
+								"image/tiff-fx",
+								"image/vnd.adobe.photoshop",
+								"text/css",
+								"text/csv",
+								"text/csv-schema",
+								"text/enriched",
+								"text/markdown",
+								"text/plain",
+								"text/richtext",
+								"text/rtf",
+								"text/rtx",
+								"text/vnd.latex-z",
+								"text/xml"];
       // Do something when a user chooses or drops a file:
       zone.event('send', function (files) {
 		// Depending on browser support files (FileList) might contain multiple items.
 		files.each(function (file) {
-			// Reset the progress when a new upload starts:
-			file.event('sendXHR', function () {
-				fd.byID('bar_zone').style.width = "0%"
-				})
-			file.event('progress', function (sent, total) {
-				fd.byID('txtprogress').textContent = 'Uploaded ' + Math.round(sent / total * 100) + '%';
-				var width = sent / total * 100 + '%';
-				fd.byID('bar_zone').style.width = width;
-				})
-			// React on successful AJAX upload:
-			file.event('done', function (xhr) {
-				// 'this' here points to fd.File instance that has triggered the event.
-				alert('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
-				fd.byID('filelink').innerHTML='<a href=\"http://www.un_lien_quelconque.com\">file.name</a> uploadé';
-				});
-			// Send the file:
-			file.sendTo('upload.php');
+			//controle de l'extension
+			if(authorized_extensions.includes(file.type)==true)
+				{
+				//controle de la taille
+				var filesize=file.size/Math.pow(10,6);//en Mo
+				if(filesize<filesize_max)
+					{
+					// Reset the progress when a new upload starts:
+					file.event('sendXHR', function () {
+						fd.byID('bar_zone').style.width = "0%"
+						})
+					file.event('progress', function (sent, total) {
+						fd.byID('consigne').innerHTML="";	
+						fd.byID('txtprogress').textContent = 'Uploaded ' + Math.round(sent / total * 100) + '%';
+						var width = sent / total * 100 + '%';
+						fd.byID('bar_zone').style.width = width;
+						})
+					// React on successful AJAX upload:
+					file.event('done', function (xhr) {
+						// 'this' here points to fd.File instance that has triggered the event.
+						//alert('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
+						fd.byID('bar_zone').style.width = "0%";
+						fd.byID('txtprogress').textContent ="";	
+						fd.byID('consigne').innerHTML='Fichier <a href=\"http://www.un_lien_quelconque.com\">'+file.name+'</a> uploadé';
+						document.getElementsByClassName("fd-file")[0].style.visibility="hidden";
+						});
+					// Send the file:
+					file.sendTo('upload.php');
+					}
+					else {alert('Le fichier est trop gros (limite: '+filesize_max+' Mo)');}
+				}
+			else {alert('Type de fichier non autorisé');}
+			});
 		});
-      });
 
       // React on successful iframe fallback upload (this is separate mechanism
       // from proper AJAX upload hence another handler):
@@ -108,10 +253,6 @@
 			alert('Done uploading via <iframe>, response:\n\n' + xhr.responseText);
 		  });
 
-      // A bit of sugar - toggling multiple selection:
-      fd.addEvent(fd.byID('multiple'), 'change', function (e) {
-			zone.multiple(e.currentTarget || e.srcElement.checked);
-		  });
 	</script>
   </body>
 </html>
