@@ -68,6 +68,12 @@
     </fieldset>
 
     <script type="text/javascript">
+	function cancel()
+	{
+	//alert('lalert');
+	document.getElementsByClassName("fd-file")[0].style.visibility="normal";
+	fd.byID('consigne').innerHTML="ou cliquez ici <em>Parcourir</em>...";
+	}
       // Tell FileDrop we can deal with iframe uploads using this URL:
       var options = {iframe: {url: 'upload.php'}};
       // Attach FileDrop to an area ('zone' is an ID but you can also give a DOM node):
@@ -225,7 +231,7 @@
 						})
 					file.event('progress', function (sent, total) {
 						fd.byID('consigne').innerHTML="";	
-						fd.byID('txtprogress').textContent = 'Uploaded ' + Math.round(sent / total * 100) + '%';
+						fd.byID('txtprogress').textContent = 'Progression ' + Math.round(sent / total * 100) + '%';
 						var width = sent / total * 100 + '%';
 						fd.byID('bar_zone').style.width = width;
 						})
@@ -235,7 +241,7 @@
 						//alert('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
 						fd.byID('bar_zone').style.width = "0%";
 						fd.byID('txtprogress').textContent ="";	
-						fd.byID('consigne').innerHTML='Fichier <a href=\"http://www.un_lien_quelconque.com\">'+file.name+'</a> uploadé';
+						fd.byID('consigne').innerHTML='Fichier <a href=\"http://www.un_lien_quelconque.com\">'+file.name+'</a> uploadé. <a href="" onClick="cancel()">Supprimer</a>';
 						document.getElementsByClassName("fd-file")[0].style.visibility="hidden";
 						});
 					// Send the file:
