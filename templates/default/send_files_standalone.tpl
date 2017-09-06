@@ -67,7 +67,7 @@
 					 </td>
 			
 			
-			
+			</tr>
 			<tr>
 				<th>{_T string="2. Add a description"}</th>
 				<td>
