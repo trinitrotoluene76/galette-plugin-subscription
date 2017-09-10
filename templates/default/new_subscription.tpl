@@ -93,7 +93,7 @@
 						
 					</td>
 					<td>
-						<a href="{$galette_base_path}{$subscription_dir}view_activity.php?id_group={$activity->id_group}" title="{_T string="view details of activity"}" target="blank">{_T string="view details"}</a>
+						<a href="{$galette_base_path}{$subscription_dir}view_activity.php?id_group={$activity->id_group}" title="{_T string="view details of activity"}" target="_blank">{_T string="view details"}</a>
 					</td>
 				</tr>
 	{/foreach}			

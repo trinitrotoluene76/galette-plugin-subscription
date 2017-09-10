@@ -36,7 +36,7 @@
 			
 		{foreach from=$files_vierges[{$activity->id_group}] key=k2 item=file}	
 			<tr>
-				<td><a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement}" title="{$file->description|escape}" target="blank">{$file->doc_name|escape}<div align="center"><img src="templates/default/images/download.png" height="17px" widht="17px"></div></a></td>
+				<td><a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement}" title="{$file->description|escape}" target="_blank">{$file->doc_name|escape}<div align="center"><img src="templates/default/images/download.png" height="17px" widht="17px"></div></a></td>
 			{if	$file->return_file == 1}
 				<td>
 					<script language="JavaScript" type="text/javascript">
@@ -79,7 +79,7 @@
 						else 
 							{  // version Flash trop ancienne ou détection du plug-in impossible
 								var alternateContent = '{_T string="We detect that your web browser isn&#39;t Chrome. To avoid malfunction with flash player, Please use Chrome to upload files"}'
-									+ '<div><img src="{$galette_base_path}{$subscription_tpl_dir}/images/chrome.png" width=25px height=25px><a target="blank" href="http://www.google.com/intl/fr/chrome/browser/?hl=fr" >{_T string=" (Get Google Chrome) "}<img src="{$galette_base_path}{$subscription_tpl_dir}/images/flash.jpg"  width=25px height=25px></a></div>';
+									+ '<div><img src="{$galette_base_path}{$subscription_tpl_dir}/images/chrome.png" width=25px height=25px><a target="_blank" href="http://www.google.com/intl/fr/chrome/browser/?hl=fr" >{_T string=" (Get Google Chrome) "}<img src="{$galette_base_path}{$subscription_tpl_dir}/images/flash.jpg"  width=25px height=25px></a></div>';
 								document.write(alternateContent);  // Insérer contenu non-Flash
 							}
 						}
@@ -116,7 +116,7 @@
 				<tr>
 					<th>{_T string="You haven't got a picture on your profile. We need one for the licence"}</BR></th>
 					<td>
-						<a href="{$galette_base_path}voir_adherent.php" title="{_T string="Add picture on my profile"}" target="blank">{_T string="Add picture on my profile"}</a>
+						<a href="{$galette_base_path}voir_adherent.php" title="{_T string="Add picture on my profile"}" target="_blank">{_T string="Add picture on my profile"}</a>
 					</td>
 				</tr>
 			{/if}

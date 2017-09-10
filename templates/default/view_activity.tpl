@@ -4,7 +4,7 @@
 			
 			{if $picture == 0}
 				{_T string="-> You haven't got a picture on your profile. We need one for the licence"}</BR>
-				<a href="{$galette_base_path}voir_adherent.php" title="{_T string="Add picture on my profile"}" target="blank">{_T string="Add picture on my profile"}</a>
+				<a href="{$galette_base_path}voir_adherent.php" title="{_T string="Add picture on my profile"}" target="_blank">{_T string="Add picture on my profile"}</a>
 			{/if}
 			<tr>
 				<th>{_T string="Manager"}</th>
@@ -92,7 +92,7 @@
 			{foreach from=$files_vierges key=k item=file}
 			<tr>
 				<th>
-					<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement|escape}" title="{$file->description|escape}" target="blank">{$file->doc_name|escape} </a>
+					<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement|escape}" title="{$file->description|escape}" target="_blank">{$file->doc_name|escape} </a>
 				</th>
 				<td>
 					{$file->description|escape}

@@ -100,7 +100,7 @@
 										
 				<tr>
 					<td>
-						<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file2->emplacement|escape}" title="{$file2->description|escape}" target="blank">{$file2->doc_name|escape} </a>
+						<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file2->emplacement|escape}" title="{$file2->description|escape}" target="_blank">{$file2->doc_name|escape} </a>
 					</td>
 					<td>
 						{$file2->description|escape}
@@ -157,7 +157,7 @@
 										
 				<tr>
 					<td>
-						<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement|escape}" title="{$file->description|escape}" target="blank">{$file->doc_name|escape} </a>
+						<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement|escape}" title="{$file->description|escape}" target="_blank">{$file->doc_name|escape} </a>
 					</td>
 					<td>
 						{$file->description|escape}
