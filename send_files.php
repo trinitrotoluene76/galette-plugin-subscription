@@ -27,10 +27,6 @@ define('GALETTE_BASE_PATH', '../../');
 require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
 use Galette\Entity\Adherent as Adherent;
 
-//-------------------------------------------------------------------------->Détection du navigateur
-require_once GALETTE_BASE_PATH. 'includes/navigator_detection.php';
-//--------------------------------------------------------------------------->FIN détection
-
 if (!$login->isLogged()) {
     header('location: ' . GALETTE_BASE_PATH . 'index.php');
     die();
