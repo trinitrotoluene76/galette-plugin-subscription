@@ -6,7 +6,7 @@
 {/if}
 
 	 
-	 <form action="send_files_standalone.php?id_act={$file->id_act}{if $file->vierge eq 1}&vierge=1{/if}{if $file->vierge eq 0}&vierge=0{/if}&timestamp={$timestamp}{if $file->id_abn != NULL}&id_abn={$file->id_abn}{/if}{if $file->id_adh != NULL}&id_adh={$file->id_adh}{/if}" method="post" enctype="multipart/form-data" id="form">
+	<form action="send_files_standalone.php?id_act={$file->id_act}{if $file->vierge eq 1}&vierge=1{/if}{if $file->vierge eq 0}&vierge=0{/if}&timestamp={$timestamp}{if $file->id_abn != NULL}&id_abn={$file->id_abn}{/if}{if $file->id_adh != NULL}&id_adh={$file->id_adh}{/if}" method="post" enctype="multipart/form-data" id="form">
 			
 	<div class="bigtable wrmenu">
 		<table class="details">
@@ -64,8 +64,8 @@
 			<div class="button-container">
 				<a id="prev" class="button" href="" onclick="javascript:window.close()">{_T string="Previous"}</a>
 				<input type="submit" name="valid" id="btnsave" value="{_T string="Save"}"/>
-				<input type="hidden" name="id_group" value=""/>
-				<input type="hidden" name="id_form" value=""/>
+				<input type="hidden" id="doc_name" name="doc_name" value=""/>
+				<input type="hidden" id="emplacement" name="emplacement" value=""/>
 			</div>
 	</form> 
 	
@@ -372,19 +372,17 @@
 						fd.byID('bar_zone').style.width = "0%";
 						fd.byID('txtprogress').textContent ="";
 						fd.byID('lien').style.display="block";
-						fd.byID('lien').innerHTML = '{_T string="File"} <a target="_blank" href=\"{$galette_base_path}{$subscription_dir}upload/files/'+file.name+'\">'+old_filename+'</a> {_T string="uploaded"}. <button id="histreset" class="button" onClick="cancel()">{_T string="Delete"}</button>';
+						fd.byID('lien').innerHTML = '{_T string="File"} <a target="_blank" href=\"{$galette_base_path}{$subscription_dir}upload/files/'+file.name+'\">'+old_filename+'</a> {_T string="uploaded"}. <input  type="button" id="histreset" class="button" formnovalidate="formnovalidate" onClick="cancel()" value="{_T string="Delete"}">';
 						});
 						
 					//rename the file timestamp.extension
 					//Extraction de l'extension
 					var re = /(?:\.([^.]+))?$/;
 					var ext = re.exec(file.name)[1]; 
-					//définition du timestamp
-					//exception pour IE8 sinon Date.now() est connu des autres navigateurs
-					if (!Date.now) {
-						Date.now = function() { return new Date().getTime(); }
-						}
-					file.name=Date.now()+'.'+ext;
+					//récupération du timestamp
+					file.name={$timestamp}+'_'+{$file->id_act}+'_1'+'.'+ext;
+					document.getElementById('emplacement').value=file.name;
+					document.getElementById('doc_name').value=old_filename;
 					
 					// Send the file:
 					file.sendTo('{$galette_base_path}{$subscription_dir}upload/code/upload.php');
