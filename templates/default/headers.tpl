@@ -15,6 +15,12 @@
 	  margin: 5px auto;
 	  text-align: center;
 	  cursor:pointer;
+	  border-style:dashed;
+	  border-width: 3px; 
+	  border-radius: 10px; 
+	}
+	.fd-zone:hover {
+	  border-color: maroon; background: #eee;
 	}
 
 	/* Hides <input type="file"> while simulating "Browse" button: */
@@ -22,7 +28,7 @@
 	  display:none;
 	}
 
-	#bar_zone {
+	.bar_zone {
 		display:block; 
 		background-color:red; 
 		width:0;
