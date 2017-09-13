@@ -28,7 +28,7 @@
       display:none;
     }
 	
-	#bar_zone {
+	.bar_zone {
 		display:block; 
 		background-color:red; 
 		width:0;
@@ -48,44 +48,44 @@
     <!-- A FileDrop area. Can contain any text or elements, or be empty.
          Can be of any HTML tag too, not necessary fieldset. -->
     <fieldset id="zone" onclick="getfile();">
-	  <legend>Glissez-déposez un fichier</legend>
+	  <legend>Glissez-déposez un fichier 1</legend>
       <p id="consigne">ou cliquez ici <em>Parcourir</em>...</p>
 
       <!-- Putting another element on top of file input so it overlays it
            and user can interact with it freely. -->
 		<p id="txtprogress"></p>
 	  	<p>
-			<span id="bar_zone"></span>
+			<span id="bar_zone" class="bar_zone"></span>
 		</p>
     </fieldset>
-	<p id="lien" style="display:none">lien du fichier</p>
+	<p id="lien" >lien du fichier1</p>
 	</div>
+	
+  <div id="container2">
+
+    <!-- A FileDrop area. Can contain any text or elements, or be empty.
+         Can be of any HTML tag too, not necessary fieldset. -->
+    <fieldset id="zone2" onclick="getfile2();">
+	  <legend>Glissez-déposez un fichier2</legend>
+      <p id="consigne2">ou cliquez ici <em>Parcourir</em>...</p>
+
+      <!-- Putting another element on top of file input so it overlays it
+           and user can interact with it freely. -->
+		<p id="txtprogress2"></p>
+	  	<p>
+			<span id="bar_zone2" class="bar_zone"></span>
+		</p>
+    </fieldset>
+	<p id="lien2" >lien du fichier2</p>
+</div>
+	
     <script type="text/javascript">
-	function getfile(){
-		document.getElementsByClassName('fd-file')[0].click();
-		}
-	function cancel()
-		{
-		fd.byID('zone').style.display="block";
-		fd.byID('lien').style.display="none";
-		fd.byID('consigne').innerHTML="ou cliquez ici <em>Parcourir</em>...";
-		}
-	//For IE because includes() not supported natively
-	function includes(container, value) 
-		{
-		var returnValue = false;
-		var pos = container.indexOf(value);
-		if (pos >= 0) 
-			{
-			returnValue = true;
-			}
-		return returnValue;
-		}
 	//Variables globales
       // Tell FileDrop we can deal with iframe uploads using this URL:
       var options = {iframe: {url: 'upload.php'}};
       // Attach FileDrop to an area ('zone' is an ID but you can also give a DOM node):
-      var zone = new FileDrop('zone', options);
+      var zone2 = new FileDrop('zone2', options);
+	  var zone = new FileDrop('zone', options);
 	  var filesize_max=2;//Mo
 	  var old_filename;
 	  var authorized_extensions=["application/gzip",
@@ -223,6 +223,102 @@
 								"text/rtx",
 								"text/vnd.latex-z",
 								"text/xml"];
+	//fonctions spécifiques
+	function getfile2(){
+		document.getElementsByClassName('fd-file')[1].click();
+		}
+	function cancel2()
+		{
+		fd.byID('zone2').style.display="block";
+		fd.byID('lien2').style.display="none";
+		fd.byID('consigne2').innerHTML="ou cliquez ici <em>Parcourir</em>...";
+		}
+	//For IE because includes() not supported natively
+	function includes(container, value) 
+		{
+		var returnValue = false;
+		var pos = container.indexOf(value);
+		if (pos >= 0) 
+			{
+			returnValue = true;
+			}
+		return returnValue;
+		}
+	
+      // Do something when a user chooses or drops a file:
+      zone2.event('send', function (files) {
+		// Depending on browser support files (FileList) might contain multiple items.
+		files.each(function (file) {
+			//controle de l'extension
+			if(includes(authorized_extensions,file.type)==true)
+				{
+				//controle de la taille
+				var filesize=file.size/Math.pow(10,6);//en Mo
+				if(filesize<filesize_max)
+					{
+					old_filename=file.name;	
+					// Reset the progress when a new upload starts:
+					file.event('sendXHR', function () {
+						fd.byID('bar_zone2').style.width = "0%"
+						})
+					file.event('progress', function (sent, total) {
+						fd.byID('consigne2').innerHTML="";	
+						fd.byID('txtprogress2').textContent = 'Progression ' + Math.round(sent / total * 100) + '%';
+						var width = sent / total * 100 + '%';
+						fd.byID('bar_zone2').style.width = width;
+						})
+					// React on successful AJAX upload:
+					file.event('done', function (xhr) {
+						// 'this' here points to fd.File instance that has triggered the event.
+						//alert('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
+						fd.byID('zone2').style.display="none";
+						fd.byID('bar_zone2').style.width = "0%";
+						fd.byID('txtprogress2').textContent ="";
+						fd.byID('lien2').style.display="block";
+						fd.byID('lien2').innerHTML = 'Fichier <a target="_blank" href=\"http://localhost/galette_amaury/galette/plugins/galette-plugin-subscription/FileDrop-master/demo/test/'+file.name+'\">'+old_filename+'</a> uploadé. <button onClick="cancel2()">Supprimer</button>';
+						});
+						
+					//rename the file timestamp.extension
+					//Extraction de l'extension
+					var re = /(?:\.([^.]+))?$/;
+					var ext = re.exec(file.name)[1]; 
+					//définition du timestamp
+					//exception pour IE8 sinon Date.now() est connu des autres navigateurs
+					if (!Date.now) {
+						Date.now = function() { return new Date().getTime(); }
+						}
+					file.name=Date.now()+'.'+ext;
+					
+					// Send the file:
+					file.sendTo('upload.php');
+					}
+					else { alert('Le fichier est trop gros (limite: '+filesize_max+' Mo)');}
+				}
+			else { alert('Type de fichier non autorisé');}
+			});
+		});
+
+      // React on successful iframe fallback upload (this is separate mechanism
+      // from proper AJAX upload hence another handler):
+      zone2.event('iframeDone', function (xhr) {
+			alert('Done uploading via <iframe>, response:\n\n' + xhr.responseText);
+		  });
+
+	</script>
+	
+	
+	    <script type="text/javascript">
+	function getfile(){
+		document.getElementsByClassName('fd-file')[0].click();
+		}
+	function cancel()
+		{
+		fd.byID('zone').style.display="block";
+		fd.byID('lien').style.display="none";
+		fd.byID('consigne').innerHTML="ou cliquez ici <em>Parcourir</em>...";
+		}
+	
+	
       // Do something when a user chooses or drops a file:
       zone.event('send', function (files) {
 		// Depending on browser support files (FileList) might contain multiple items.
