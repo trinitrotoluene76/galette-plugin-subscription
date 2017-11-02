@@ -3,9 +3,30 @@
   FileDrop Revamped - server-side upload handler for subscription plugin
   in public domain  | http://filedropjs.org
 
-*/
-//définition des constantes
-$chemin="../files";//relatif à ce fichier upload.php
+ * Upload process for galette Subscription plugin
+ *
+ * PHP version 5
+ *
+ * Copyright © 2009-2016 The Galette Team
+ *
+ * This file is part of Galette (http://galette.tuxfamily.org).
+ *
+ * Galette is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Galette is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Galette. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+//define path of uploaded files
+$chemin="../files";//path is relative to this file upload.php
 
 // If an error causes output to be generated before headers are sent - catch it.
 ob_start();
@@ -25,7 +46,7 @@ if (!empty($_FILES['fd-file']) and is_uploaded_file($_FILES['fd-file']['tmp_name
   $data = file_get_contents("php://input");
 }
 
-//écriture du fichier
+//writing the file
 $fp = fopen($chemin.'/'.$name, 'w');
 fwrite($fp, $data); //User will see Hello World!
 fclose($fp);
