@@ -24,7 +24,7 @@
 						  <p id="consigne">{_T string="or click here"} <em>{_T string="Browse"}</em>...</p>
 						  <p id="txtprogress"></p><!-- percentage -->
 							<p>
-								<span id="bar_zone"></span><!-- progressbar -->
+								<span id="bar_zone" class="bar_zone"></span><!-- progressbar -->
 							</p>
 						</fieldset>
 						<p id="lien" style="display:none">lien du fichier</p><!-- visible after the full download -->
