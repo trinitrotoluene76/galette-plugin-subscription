@@ -4,10 +4,7 @@
 {if $deleteok eq 0}
    <div id="errorbox">{_T string="Your file hasn't been found"}</div> 
 {/if}
-
-	 
 	<form action="send_files_standalone.php?id_act={$file->id_act}{if $file->vierge eq 1}&vierge=1{/if}{if $file->vierge eq 0}&vierge=0{/if}&timestamp={$timestamp}{if $file->id_abn != NULL}&id_abn={$file->id_abn}{/if}{if $file->id_adh != NULL}&id_adh={$file->id_adh}{/if}" method="post" enctype="multipart/form-data" id="form">
-			
 	<div class="bigtable wrmenu">
 		<table class="details">
 			<caption class="ui-state-active ui-corner-top">{_T string="Add file by fill up this panel for the group:"} {$activity->group_name}</caption>
@@ -15,8 +12,8 @@
 			<tr>
 				<th>{_T string="1. Send your file"}</th>
 				<td>
-				    <div id="container">
-						<noscript style="color: maroon">
+				    <div><!-- contain upload module Filedrop -->
+						<noscript style="color: maroon"><!-- Filedrop needs javascript -->
 						  <h2>{_T string="Activate javascript in your browser to upload a file"}</h2>
 						</noscript>
 
@@ -25,20 +22,14 @@
 						<fieldset id="zone" onclick="getfile();">
 						  <legend>{_T string="Drag and drop a file"}</legend>
 						  <p id="consigne">{_T string="or click here"} <em>{_T string="Browse"}</em>...</p>
-
-						  <!-- Putting another element on top of file input so it overlays it
-							   and user can interact with it freely. -->
-							<p id="txtprogress"></p>
+						  <p id="txtprogress"></p><!-- percentage -->
 							<p>
-								<span id="bar_zone"></span>
+								<span id="bar_zone"></span><!-- progressbar -->
 							</p>
 						</fieldset>
-						<!-- visible après le téléchargement -->
-						<p id="lien" style="display:none">lien du fichier</p>
+						<p id="lien" style="display:none">lien du fichier</p><!-- visible after the full download -->
 					</div>
 				</td>
-			
-			
 			</tr>
 			<tr>
 				<th>{_T string="2. Add a description"}</th>
@@ -60,7 +51,6 @@
 		{/if}	
 		</table>
 	</div>
-				
 			<div class="button-container">
 				<a id="prev" class="button" href="" onclick="javascript:window.close()">{_T string="Previous"}</a>
 				<input type="submit" name="valid" id="btnsave" value="{_T string="Save"}"/>
@@ -68,9 +58,7 @@
 				<input type="hidden" id="emplacement" name="emplacement" value=""/>
 			</div>
 	</form> 
-	
 	</BR>
-	
 {if $files_vierges> 0}
 <b><u>{_T string="Files of group:"} {$activity->group_name}</b></u>
 	<div class="bigtable wrmenu" >
@@ -94,10 +82,8 @@
 				{/if}
                 </tr>
             </thead>
-			
 				
 	{foreach from=$files_vierges key=k item=file2}
-										
 				<tr>
 					<td>
 						<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file2->emplacement|escape}" title="{$file2->description|escape}" target="_blank">{$file2->doc_name|escape} </a>
@@ -120,13 +106,10 @@
 				{/if}
 				</tr>
 	{/foreach}			
-				
-        </table>
+		</table>
 </div>
 {/if}
-
 </BR>
-	
 {if $personnal_files> 0 && $vierge == 0}
 <b><u>{_T string="Personnal files of group:"} {$activity->group_name}</u></b>
 	<div class="bigtable wrmenu" >
@@ -151,10 +134,7 @@
                     </th>
                 </tr>
             </thead>
-			
-				
 	{foreach from=$personnal_files key=k item=file}
-										
 				<tr>
 					<td>
 						<a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement|escape}" title="{$file->description|escape}" target="_blank">{$file->doc_name|escape} </a>
@@ -168,27 +148,28 @@
 					<td>
 						{$file->id_abn}
 					</td>
-					
 					<td>
 						<a id="histreset" class="button" href="{$galette_base_path}{$subscription_dir}send_files_standalone.php?id_act={$file->id_act}{if $file->vierge eq 1}&vierge=1{/if}{if $file->vierge eq 0}&vierge=0{/if}&delete=1&id_doc={$file->id_doc}{if $file->id_abn != NULL}&id_abn={$file->id_abn}{/if}{if $file->id_adh != NULL}&id_adh={$file->id_adh}{/if}">{_T string="Delete"}</a>
 					</td>
 				</tr>
 	{/foreach}			
-				
-        </table>
+		</table>
 </div>
-{/if}	
+{/if}
+<!-- Filedrop script -->
 <script type="text/javascript">
+	//Function added to call the browser btn without see it
 	function getfile(){
 		document.getElementsByClassName('fd-file')[0].click();
 		}
+	//Cancel btn to reset visibility of elements
 	function cancel()
 		{
 		fd.byID('zone').style.display="block";
 		fd.byID('lien').style.display="none";
 		fd.byID('consigne').innerHTML="ou cliquez ici <em>Parcourir</em>...";
 		}
-	//For IE because includes() not supported natively
+	//For IE because includes() not supported natively. Used for extension check
 	function includes(container, value) 
 		{
 		var returnValue = false;
@@ -199,7 +180,7 @@
 			}
 		return returnValue;
 		}
-	//Variables globales
+	//Global Variables
       // Tell FileDrop we can deal with iframe uploads using this URL:
 	  {*//chemin erronné {$galette_base_path}{$subscription_dir}upload/code/ impossible à cause de {literal}. Sinon smarty n'arrive pas à lire cette ligne *}
       {literal}var options = {iframe: {url: 'upload.php'}};{/literal}
@@ -346,11 +327,11 @@
       zone.event('send', function (files) {
 		// Depending on browser support files (FileList) might contain multiple items.
 		files.each(function (file) {
-			//controle de l'extension
+			//Extension check
 			if(includes(authorized_extensions,file.type)==true)
 				{
-				//controle de la taille
-				var filesize=file.size/Math.pow(10,6);//en Mo
+				//size check
+				var filesize=file.size/Math.pow(10,6);//in Mo
 				if(filesize<filesize_max)
 					{
 					old_filename=file.name;	
@@ -366,8 +347,6 @@
 						})
 					// React on successful AJAX upload:
 					file.event('done', function (xhr) {
-						// 'this' here points to fd.File instance that has triggered the event.
-						//alert('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
 						fd.byID('zone').style.display="none";
 						fd.byID('bar_zone').style.width = "0%";
 						fd.byID('txtprogress').textContent ="";
@@ -376,10 +355,10 @@
 						});
 						
 					//rename the file timestamp.extension
-					//Extraction de l'extension
+					//Extract the extension
 					var re = /(?:\.([^.]+))?$/;
 					var ext = re.exec(file.name)[1]; 
-					//récupération du timestamp
+					//Use php timestamp to name the file on the server. Format: timestamp_id_act_increment.ext
 					file.name={$timestamp}+'_'+{$file->id_act}+'_1'+'.'+ext;
 					document.getElementById('emplacement').value=file.name;
 					document.getElementById('doc_name').value=old_filename;
@@ -398,5 +377,4 @@
       zone.event('iframeDone', function (xhr) {
 			alert('Done uploading via <iframe>, response:\n\n' + xhr.responseText);
 		  });
-
-	</script>
+</script>
