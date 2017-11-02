@@ -7,7 +7,7 @@
  </BR></BR>
  <FORM NAME="form" action="subs_confirmation.php" method="post" enctype="multipart/form-data"> 
   <div class="bigtable wrmenu">
-		{assign "kinput" 0}	
+		{assign "kinput" 0}	<!-- number of input buton to upload files -->
 		{foreach from=$activities key=k item=activity}
 		<table class="details">
 			<caption class="ui-state-active ui-corner-top">{$activity->group_name|escape}</caption>
@@ -39,33 +39,28 @@
 					<td><div align="center"><a href="{$galette_base_path}{$subscription_dir}upload/files/{$file->emplacement}" title="{$file->description|escape}" target="_blank">{$file->doc_name|escape} <img src="templates/default/images/download.png" height="30px" width="30px"></div></a></td>
 				{if	$file->return_file == 1}
 					<td>
-						<div id="container{$k}{$k2}">
-							<noscript style="color: maroon">
+						<div><!-- contain upload module Filedrop -->
+							<noscript style="color: maroon"><!-- Filedrop needs javascript -->
 							  <h2>{_T string="Activate javascript in your browser to upload a file"}</h2>
 							</noscript>
 
 							<!-- A FileDrop area. Can contain any text or elements, or be empty.
 								 Can be of any HTML tag too, not necessary fieldset. -->
-							<fieldset id="zone{$k}{$k2}" onclick="getfile{$k}{$k2}();">
+							<fieldset id="zone{$k}_{$k2}" onclick="getfile{$k}_{$k2}();">
 							  <legend>{_T string="Drag and drop a file"}</legend>
-							  <p id="consigne{$k}{$k2}">{_T string="or click here"} <em>{_T string="Browse"}</em>...</p>
-
-							  <!-- Putting another element on top of file input so it overlays it
-								   and user can interact with it freely. -->
-								<p id="txtprogress{$k}{$k2}"></p>
-								<p>
-									<span id="bar_zone{$k}{$k2}" class="bar_zone"></span>
-								</p>
+							  <p id="consigne{$k}_{$k2}">{_T string="or click here"} <em>{_T string="Browse"}</em>...</p>
+							  <p id="txtprogress{$k}_{$k2}"></p><!-- percentage -->
+							  <p>
+								<span id="bar_zone{$k}_{$k2}" class="bar_zone"></span><!-- progressbar -->
+							  </p>
 							</fieldset>
-							<!-- visible après le téléchargement -->
-							<p id="lien{$k}{$k2}" style="display:none">lien du fichier</p>
+							<p id="lien{$k}_{$k2}" style="display:none">lien du fichier</p><!-- visible after the full download -->
 						</div>
-						
 					</td>
 					<td>
-						<TEXTAREA NAME="description_{$activity->id_group}_{$k}{$k2}" ROWS=3 COLS=25></TEXTAREA>
-						<input type="hidden" id="doc_name{$k}{$k2}" name="doc_name{$k}{$k2}" value=""/>
-						<input type="hidden" id="emplacement{$k}{$k2}" name="emplacement{$k}{$k2}" value=""/>
+						<TEXTAREA NAME="description_{$activity->id_group}_{$k}_{$k2}" ROWS=3 COLS=25></TEXTAREA>
+						<input type="hidden" id="doc_name{$k}_{$k2}" name="doc_name{$k}_{$k2}" value=""/>
+						<input type="hidden" id="emplacement{$k}_{$k2}" name="emplacement{$k}_{$k2}" value=""/>
 					</td>
 				
 				{else}
@@ -77,20 +72,22 @@
 				
 				</tr>
 				{if	$file->return_file == 1}
+					<!-- Filedrop script -->
 					<script type="text/javascript">
-					
-						function getfile{$k}{$k2}(){
+						//Function added to call the browser btn without see it
+						function getfile{$k}_{$k2}(){
 							document.getElementsByClassName('fd-file')[{$kinput}].click();
 							}
-						function cancel{$k}{$k2}()
+						//Cancel btn to reset visibility of elements
+						function cancel{$k}_{$k2}()
 							{
-							var increment='{$k}{$k2}';
+							var increment='{$k}_{$k2}';
 							fd.byID('zone'+increment).style.display="block";
 							fd.byID('lien'+increment).style.display="none";
 							fd.byID('consigne'+increment).innerHTML="ou cliquez ici <em>Parcourir</em>...";
 							}
-						//For IE because includes() not supported natively
-						function includes{$k}{$k2}(container, value) 
+						//For IE because includes() not supported natively. Used for extension check
+						function includes{$k}_{$k2}(container, value) 
 							{
 							var returnValue = false;
 							var pos = container.indexOf(value);
@@ -100,12 +97,12 @@
 								}
 							return returnValue;
 							}
-						//Variables globales
+						//Global Variables
 						  // Tell FileDrop we can deal with iframe uploads using this URL:
 						  {*//chemin erronné {$galette_base_path}{$subscription_dir}upload/code/ impossible à cause de {literal}. Sinon smarty n'arrive pas à lire cette ligne *}
 						  {literal}var options = {iframe: {url: 'upload.php'}};{/literal}
 						  // Attach FileDrop to an area ('zone' is an ID but you can also give a DOM node):
-						  var zone{$k}{$k2} = new FileDrop('zone{$k}{$k2}', options);
+						  var zone{$k}_{$k2} = new FileDrop('zone{$k}_{$k2}', options);
 						  var filesize_max=2;//Mo
 						  var old_filename;
 						  var authorized_extensions=["application/gzip",
@@ -244,15 +241,15 @@
 													"text/vnd.latex-z",
 													"text/xml"];
 						  // Do something when a user chooses or drops a file:
-						  zone{$k}{$k2}.event('send', function (files) {
+						  zone{$k}_{$k2}.event('send', function (files) {
 							// Depending on browser support files (FileList) might contain multiple items.
 							files.each(function (file) {
-								var increment='{$k}{$k2}';
-								//controle de l'extension
-								if(includes{$k}{$k2}(authorized_extensions,file.type)==true)
+								var increment='{$k}_{$k2}';
+								//Extension check
+								if(includes{$k}_{$k2}(authorized_extensions,file.type)==true)
 									{
-									//controle de la taille
-									var filesize=file.size/Math.pow(10,6);//en Mo
+									//size check
+									var filesize=file.size/Math.pow(10,6);//in Mo
 									if(filesize<filesize_max)
 										{
 										old_filename=file.name;	
@@ -268,8 +265,6 @@
 											})
 										// React on successful AJAX upload:
 										file.event('done', function (xhr) {
-											// 'this' here points to fd.File instance that has triggered the event.
-											//alert('Done uploading ' + this.name + ', response:\n\n' + xhr.responseText);
 											fd.byID('zone'+increment).style.display="none";
 											fd.byID('bar_zone'+increment).style.width = "0%";
 											fd.byID('txtprogress'+increment).textContent ="";
@@ -278,15 +273,15 @@
 											});
 											
 										//rename the file timestamp.extension
-										//Extraction de l'extension
+										//Extract the extension
 										var re = /(?:\.([^.]+))?$/;
 										var ext = re.exec(file.name)[1]; 
-										//récupération du timestamp
+										//Use php timestamp to name the file on the server. Format: timestamp_id_act_increment.ext
 										file.name={$timestamp}+'_'+{$file->id_act}+'_'+increment+'.'+ext;
 										document.getElementById('emplacement'+increment).value=file.name;
 										document.getElementById('doc_name'+increment).value=old_filename;
 										
-										// Send the file:
+										// Send the file to the server:
 										file.sendTo('{$galette_base_path}{$subscription_dir}upload/code/upload.php');
 										}
 										else { alert('{_T string="The file is too big (limit size:"} '+filesize_max+' Mo)');}
@@ -297,7 +292,7 @@
 
 						  // React on successful iframe fallback upload (this is separate mechanism
 						  // from proper AJAX upload hence another handler):
-						  zone{$k}{$k2}.event('iframeDone', function (xhr) {
+						  zone{$k}_{$k2}.event('iframeDone', function (xhr) {
 								alert('Done uploading via <iframe>, response:\n\n' + xhr.responseText);
 							  });
 			
