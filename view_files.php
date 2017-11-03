@@ -65,7 +65,7 @@ if(isset($_GET['delete']))
 			$file_del->getFile($file_del);
 			if($file_del->emplacement)
 				{
-				$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement,$login->isStaff());
+				$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement);
 				$deleteok=$res;
 				}
 			}
