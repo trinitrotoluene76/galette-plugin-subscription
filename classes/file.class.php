@@ -200,49 +200,12 @@ class File {
      *
      * @param path le chemin + nom du fichier à supprimer
 	 *		  nom le nom du fichier en question
-	 *		  clean si on souhaite nettoyer le répertoire et la bdd (à réserver pour le staff pour éviter les requetes inutiles)
 	 * Return 1 si ok, 0 sinon
 	 * exemple $file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement);
      */
 	 
-	 static function remove($path,$nom,$clean) {
+	 static function remove($path,$nom) {
 	 
-        global $zdb;
-		 $where=array(
-					"emplacement='".$nom."'"
-					); 
-		$delete = $zdb->delete(SUBSCRIPTION_PREFIX . self::TABLE);
-        $delete->where($where);
-        $res2=$zdb->execute($delete);
-		if(file_exists($path))
-			{
-			$res1=unlink($path);
-			$res=0;
-			if($res1==1 && $res2==true)
-				{
-				$res=1;
-				}
-			
-			}
-		if($clean == 1)
-			{
-			$file=new File();
-			$file->clean_file();
-			}
-		
-		return $res;
-    }
-  /**
-     * Exactement la même fonction que "remove" sans l'appel de cleanfile ni listrep pour éviter les boucles infinies
-     * supprime le doc de la table file et de son emplacement sur le serveur
-     *
-     * @param path le chemin + nom du fichier à supprimer
-	 *		  nom le nom du fichier en question
-	 * Return 1 si ok, 0 sinon
-	 * exemple $file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement);
-     */
-	 
-	 static function remove2($path,$nom) {
         global $zdb;
 		 $where=array(
 					"emplacement='".$nom."'"
@@ -295,7 +258,7 @@ global $zdb;
 				if ($results->count() < 1) 
 					{
 					$file1=new File();
-					$file1->remove2($pathrep."/".$element,"");
+					$file1->remove($pathrep."/".$element,"");
 					
 					//on stocke son emplacement dans un tableau
 					$tri[$element] = $element;
@@ -351,7 +314,7 @@ return $res;
 				{
 					$file = new File($row);
 					$path="./upload/files/".$file->emplacement;
-					$file->remove2($path,$file->emplacement);
+					$file->remove($path,$file->emplacement);
 				}
            
 			}//fin du if
@@ -391,7 +354,7 @@ return $res;
 							//var_dump ("Le fichier $file->emplacement existe.");
 						} else {
 							//var_dump ("Le fichier $file->emplacement n'existe pas.");
-							$file->remove2("",$file->emplacement);
+							$file->remove("",$file->emplacement);
 						}
 				}
 			}//fin du if
