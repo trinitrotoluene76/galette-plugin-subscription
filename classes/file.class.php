@@ -291,7 +291,7 @@ return $res;
 	 * recherche dans la bdd si le fichier est dans la bdd + non vierge && date_record >2ans && fichier existe->delete + delete bdd
 	 *	ou si le fichier n'est pas dans la bdd mais est présent dans le répertoire-> delete
 	 *  ou si fichier n'existe pas dans le répertoire mais présent dans la bdd, on supprime juste sa ligne ds la bdd
-	 *	script appelé à chaque suppression d'un fichier par qqn du staff.
+	 *	script appelé par un bouton dédié dans management_subs.tpl
      *
      * @param rien
 	 * Return rien
