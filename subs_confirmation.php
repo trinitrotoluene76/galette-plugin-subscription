@@ -218,15 +218,18 @@ foreach ($_POST as $key => $value)
 			$files[$id_group][$number]->description=$value;
 			}//fin du if description
 			
-		//si POST['timestamp'_id_act_N°]=timestamp
-		if(substr($key,0,9)=='timestamp')
+		//si POST['emplacementk2]=emplacement
+		if(substr($key,0,11)=='emplacement')
 			{
-			$files[$id_group][$number]->emplacement=$value;
-			$res=$files[$id_group][$number]->getFileDesc($files[$id_group][$number]);
-			if($res == 1)
+			//recherche d'un potentiel doublon (évite d'enregistrer au rafraichissement de page)			
+			$res=$files[$id_group][$number]->isFileExist($files[$id_group][$number]);
+			//si le fichier n'existe pas déjà, on l'enregistre
+			if($res==0 && $files[$id_group][$number]->emplacement!=null)
 				{
+				$today= new DateTime("now");
+				$files[$id_group][$number]->date_record=$today->format('Y-m-d');
 				$files[$id_group][$number]->store();
-				}
+				}		
 			}
 		
 		}//fin du foreach

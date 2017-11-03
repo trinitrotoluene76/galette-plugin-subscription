@@ -36,7 +36,7 @@
 						<b>{$activity->group_name|escape|nl2br}</b>
 						</br>
 						<div>
-							<a class="button" id="btnadd" href="{$galette_base_path}{$subscription_dir}send_files_standalone.php?id_act={$activity->id_group}&vierge=0&id_abn={$subscription->id_abn}" title="{_T string="Add/view file"}" target="blank">{_T string="Add/view file"}</a>
+							<a class="button" id="btnadd" href="{$galette_base_path}{$subscription_dir}send_files_standalone.php?id_act={$activity->id_group}&vierge=0&id_abn={$subscription->id_abn}" title="{_T string="Add/view file"}" target="_blank">{_T string="Add/view file"}</a>
 						</div>
 					</td>
 					<td>

@@ -563,28 +563,21 @@ return $res;
 
 	/**
 	*
-     * Exécute une requête SQL pour récupérer les données d'un fichier à partir de son timestamp réduit (sans) extension
+     * Exécute une requête SQL pour si un fichier existe dans la bdd à partir de son nom sur le disque {timestamp}_{id_act}_{id_fichier}.{extension}
      * 
      * Retourne 1 si le fichier a été trouvé 0 sinon.
      * 
      * @param File $object Le fichier à hydrater contenant le timestamp réduit nombre.(extension)
      */
-    static function getFileDesc($object) {
+    static function isFileExist($object) {
         global $zdb;
 		$result=0;
 		$select_timestamp = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
-        $select_timestamp->where->Like('emplacement', $object->emplacement.'%.%');
+        $select_timestamp->where->Like('emplacement', $object->emplacement);
 		$select_timestamp->limit(1);
-        $results = $zdb->execute($select_timestamp);  
-        if ($results->count() == 1) {
-            $file = $results->current();
-            $object->_id_doc = $file->id_doc;
-            $object->_id_act = $file->id_act;
-            $object->_id_adh = $file->id_adh;
-            $object->_doc_name = $file->doc_name;
-            $object->_emplacement = $file->emplacement;
-            $object->_date_record = $file->date_record;
-            $result=1;
+        $results = $zdb->execute($select_timestamp); 
+		if ($results->count() == 1) {
+           $result=1;
         }
 		return $result;
     }
