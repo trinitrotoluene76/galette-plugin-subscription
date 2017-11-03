@@ -101,7 +101,7 @@ if(isset($_GET['delete']))
 			$file_del=new File();
 			$file_del->id_doc=$_GET['id_doc'];
 			$file_del->getFile($file_del);
-			$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement,$login->isStaff());
+			$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement);
 			$deleteok=$res;
 			}
 		}
