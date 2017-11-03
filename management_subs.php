@@ -115,9 +115,6 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 								}
 							}//fin du foreach
 					
-					
-					//Lorsqu'un membre du staff supprime un fichier quelconque, ceci lance la fonction de nettoyage file/clean_file()
-					
 					//on retire les membres de l'activité/du groupe en fin de saison
 					$activity2=new Activity();
 					$activity2->remove($id_act2);
@@ -353,9 +350,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 								}
 							}//fin du foreach
 					
-					
-					//Lorsqu'un membre du staff supprime un fichier quelconque, ceci lance la fonction de nettoyage file/clean_file() 
-					
 					//on retire les membres de l'activité/du groupe en fin de saison
 					$activity2=new Activity();
 					$activity2->remove($id_act2);
@@ -364,7 +358,6 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 				}//fin du isset GET
 		//fin de la nouvelle saison		
 		//-------------------------------------------------------------------------------------------------------------->
-		
 		
 		//évol #42 tri et selection du nombre de résultat par page
 		//récupération du nombre de lignes à afficher
