@@ -47,7 +47,7 @@
 									{$file1->doc_name}						
 								</td>
 								<td>
-									{$file1->emplacement}						
+									<a target="_blank" href="{$galette_base_path}{$subscription_dir}upload/files/{$file1->emplacement}">{$file1->emplacement}</a>						
 								</td>
 								<td>
 									{$file1->description}						
@@ -83,7 +83,7 @@
 									{$file2->doc_name}						
 								</td>
 								<td>
-									{$file2->emplacement}						
+									<a target="_blank" href="{$galette_base_path}{$subscription_dir}upload/files/{$file2->emplacement}">{$file2->emplacement}</a>					
 								</td>
 								<td>
 									{$file2->description}						
