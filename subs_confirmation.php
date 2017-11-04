@@ -213,14 +213,22 @@ foreach ($_POST as $key => $value)
 			$files[$id_group][$number]= new File();
 			//hydratation (les id_act et _id_adh son remplis par l'upload_process.php)
 			$files[$id_group][$number]->id_abn=$subscription->id_abn;
-			
-			
+			$files[$id_group][$number]->id_act=$id_group;
+			$files[$id_group][$number]->id_adh=$id_adh;
 			$files[$id_group][$number]->description=$value;
 			}//fin du if description
+		
+		//si POST['doc_name'id_act_N°]=doc_name5_1
+		if(substr($key,0,8)=='doc_name')
+			{
+			//hydratation
+			$files[$id_group][$number]->doc_name=$value;
+			}//fin du if doc_name
 			
 		//si POST['emplacementk2]=emplacement
 		if(substr($key,0,11)=='emplacement')
 			{
+			$files[$id_group][$number]->emplacement=$value;
 			//recherche d'un potentiel doublon (évite d'enregistrer au rafraichissement de page)			
 			$res=$files[$id_group][$number]->isFileExist($files[$id_group][$number]);
 			//si le fichier n'existe pas déjà, on l'enregistre
@@ -228,11 +236,13 @@ foreach ($_POST as $key => $value)
 				{
 				$today= new DateTime("now");
 				$files[$id_group][$number]->date_record=$today->format('Y-m-d');
+				$files[$id_group][$number]->emplacement=$value;
 				$files[$id_group][$number]->store();
 				}		
 			}
 		
 		}//fin du foreach
+			
 //------------------------------------------------------------------------------------>FIN	du traitement du $_POST
 
 $tpl->assign('page_title', _T("Validation"));
