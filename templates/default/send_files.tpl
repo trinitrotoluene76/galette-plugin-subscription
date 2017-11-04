@@ -58,9 +58,9 @@
 						</div>
 					</td>
 					<td>
-						<TEXTAREA NAME="description_{$activity->id_group}_{$k}_{$k2}" ROWS=3 COLS=25></TEXTAREA>
-						<input type="hidden" id="doc_name{$k}_{$k2}" name="doc_name{$k}_{$k2}" value=""/>
-						<input type="hidden" id="emplacement{$k}_{$k2}" name="emplacement{$k}_{$k2}" value=""/>
+						<TEXTAREA NAME="description_{$activity->id_group}_{$k2}" ROWS=3 COLS=25></TEXTAREA>
+						<input type="hidden" id="doc_name{$k}_{$k2}" name="doc_name{$activity->id_group}_{$k2}" value=""/>
+						<input type="hidden" id="emplacement{$k}_{$k2}" name="emplacement{$activity->id_group}_{$k2}" value=""/>
 					</td>
 				
 				{else}
