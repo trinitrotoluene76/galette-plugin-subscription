@@ -1,3 +1,6 @@
+{if $picture==0}
+	<div id="errorbox">{_T string="Please, add a picture to your profile before subscribe"}</div>
+{else}
  <p> 
  <b><u>{_T string="Form"}</u></b> -> {_T string="Send files"} -> {_T string="Validation"} -> {_T string="Payement"}
  </p>      
@@ -121,3 +124,4 @@
 {_T string="You are"} {$age} {_T string="year old and your status is:"} {$statut}
 
 </p>
+{/if}
