@@ -28,7 +28,7 @@
 										
 				<tr>
 					<td>
-						{if $activity->is_parent_group() == 1 && $members[$k] == 0}
+						{if $activity->is_parent_group() == 1 && $members[$k] == 0 && $activity->is_full($activity) ==0}
 							{if $category == 0}
 								<INPUT TYPE="CHECKBOX" NAME="{$activity->id_group}" VALUE="{$activity->price1|escape}" checked="checked" disabled="disabled"><BR>
 							{/if}
