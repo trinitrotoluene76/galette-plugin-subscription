@@ -42,12 +42,9 @@ if ( !$login->isSuperAdmin() ) {
     }
 }
 require_once '_config.inc.php';
-//-------------------------------------------------------------------------->Détection du navigateur
-require_once GALETTE_BASE_PATH. 'includes/navigator_detection.php';
-//--------------------------------------------------------------------------->FIN détection
 
 //------------------------------------------------------------------------->
-// enregistrement de la description
+// enregistrement des éléments transmis par le formulaire send_files_standalone.tpl
 $file= new File();
 $file->id_adh=$id_adh;
 
@@ -71,12 +68,29 @@ if(isset($_GET['vierge']))
 		{
 		$file->vierge=$_GET['vierge'];
 		}
-//si return_file: 0= document informatif / 1=formulaire à télécharger, remplir et à retourner
-if(isset($_POST['return_file']))
+//si return_file: 0= document informatif / 1=formulaire à télécharger, remplir et à retourner. hydratation du nom et de l'emplacement du fichier
+if(isset($_POST['return_file']) && isset($_POST['emplacement']) && isset($_POST['doc_name']))
 		{
 		$file->return_file=$_POST['return_file'];
+		$file->emplacement=$_POST['emplacement'];
+		$file->doc_name=$_POST['doc_name'];
 		}
-		
+//hydratation de la description si elle existe		
+if(isset($_POST['description']))
+		{
+		//un fichier se nomme timestamp_id_act_id_fichier.extension (id_fichier=1, 2, 3...)
+		$file->description=$_POST['description'];
+		}//fin du if description
+//recherche d'un potentiel doublon (évite d'enregistrer au rafraichissement de page)			
+$res=$file->isFileExist($file);
+//si le fichier n'existe pas déjà, on l'enregistre
+if($res==0 && $file->emplacement!=null)
+	{
+	$today= new DateTime("now");
+	$file->date_record=$today->format('Y-m-d');
+	$file->store();
+	}		
+//------------------------------------------------------------------------------->FIN
 //supprimer un fichier à partir de son emplacement et de son nom
 //------------------------------------------------------------------------------------>
 $deleteok=2;
@@ -87,25 +101,11 @@ if(isset($_GET['delete']))
 			$file_del=new File();
 			$file_del->id_doc=$_GET['id_doc'];
 			$file_del->getFile($file_del);
-			$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement,$login->isStaff());
+			$res=$file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement);
 			$deleteok=$res;
 			}
 		}
 //------------------------------------------------------------------------------------>FIN supression
-
-if(isset($_POST['description']))
-		{
-		//un fichier se nomme timestamp_id_act_id_fichier.extension (id_fichier=1, 2, 3...)
-		$file->emplacement=$_GET['timestamp']."_".$_GET['id_act']."_";
-		$res=$file->getFileDesc($file);
-		$file->description=$_POST['description'];
-		if($res == 1)
-			{
-			$file->store();
-			}
-		}//fin du if description
-//------------------------------------------------------------------------------->FIN
-
 
 //affichage de la liste des fichiers
 	//si la page précédante est la page de gestion des groupes, $GET['vierge']==1, on affiche la liste des fichiers vierges uniquement et on autorise le return file, 

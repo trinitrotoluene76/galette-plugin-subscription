@@ -1,3 +1,6 @@
+{if $picture==0}
+	<div id="errorbox">{_T string="Please, add a picture to your profile before subscribe"}</div>
+{else}
  <p> 
  <b><u>{_T string="Form"}</u></b> -> {_T string="Send files"} -> {_T string="Validation"} -> {_T string="Payement"}
  </p>      
@@ -28,7 +31,7 @@
 										
 				<tr>
 					<td>
-						{if $activity->is_parent_group() == 1 && $members[$k] == 0}
+						{if $activity->is_parent_group() == 1 && $members[$k] == 0 && $activity->is_full($activity) ==0}
 							{if $category == 0}
 								<INPUT TYPE="CHECKBOX" NAME="{$activity->id_group}" VALUE="{$activity->price1|escape}" checked="checked" disabled="disabled"><BR>
 							{/if}
@@ -93,7 +96,7 @@
 						
 					</td>
 					<td>
-						<a href="{$galette_base_path}{$subscription_dir}view_activity.php?id_group={$activity->id_group}" title="{_T string="view details of activity"}" target="blank">{_T string="view details"}</a>
+						<a href="{$galette_base_path}{$subscription_dir}view_activity.php?id_group={$activity->id_group}" title="{_T string="view details of activity"}" target="_blank">{_T string="view details"}</a>
 					</td>
 				</tr>
 	{/foreach}			
@@ -121,3 +124,4 @@
 {_T string="You are"} {$age} {_T string="year old and your status is:"} {$statut}
 
 </p>
+{/if}

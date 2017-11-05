@@ -23,7 +23,14 @@
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'includes/affichage_group.php';
+use Galette\Entity\Adherent as Adherent;
+$member1 = new Adherent();
+//on rempli l'Adhérent par ses caractéristiques à l'aide de son id
+$member1->load($id_adh);
+//check si l'adhérent a une photo (0/1)
+$picture=$member1->picture->hasPicture();
 
+$tpl->assign('picture',$picture);
 $tpl->assign('page_title', _T("New subscription"));
 $tpl->assign('activities',$activities);
 $tpl->assign('members',$members);

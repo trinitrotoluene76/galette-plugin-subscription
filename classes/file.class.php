@@ -200,51 +200,14 @@ class File {
      *
      * @param path le chemin + nom du fichier à supprimer
 	 *		  nom le nom du fichier en question
-	 *		  clean si on souhaite nettoyer le répertoire et la bdd (à réserver pour le staff pour éviter les requetes inutiles)
 	 * Return 1 si ok, 0 sinon
 	 * exemple $file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement);
      */
 	 
-	 static function remove($path,$nom,$clean) {
+	 static function remove($path,$nom) {
 	 
         global $zdb;
-		 $where=array(
-					"emplacement='".$nom."'"
-					); 
-		$delete = $zdb->delete(SUBSCRIPTION_PREFIX . self::TABLE);
-        $delete->where($where);
-        $res2=$zdb->execute($delete);
-		if(file_exists($path))
-			{
-			$res1=unlink($path);
-			$res=0;
-			if($res1==1 && $res2==true)
-				{
-				$res=1;
-				}
-			
-			}
-		if($clean == 1)
-			{
-			$file=new File();
-			$file->clean_file();
-			}
-		
-		return $res;
-    }
-  /**
-     * Exactement la même fonction que "remove" sans l'appel de cleanfile ni listrep pour éviter les boucles infinies
-     * supprime le doc de la table file et de son emplacement sur le serveur
-     *
-     * @param path le chemin + nom du fichier à supprimer
-	 *		  nom le nom du fichier en question
-	 * Return 1 si ok, 0 sinon
-	 * exemple $file_del->remove("./upload/files/".$file_del->emplacement,$file_del->emplacement);
-     */
-	 
-	 static function remove2($path,$nom) {
-        global $zdb;
-		 $where=array(
+		$where=array(
 					"emplacement='".$nom."'"
 					); 
 		$delete = $zdb->delete(SUBSCRIPTION_PREFIX . self::TABLE);
@@ -265,79 +228,78 @@ class File {
     }
 	
 	/**
-     * Liste les fichiers d'un répertoire et supprime le fichier s'il n'est pas dans la bdd (ne supprime pas les répertoires)
+     * Liste les fichiers d'un répertoire si le fichier n'est pas dans la bdd, il est stocké dans un tableau de résultat (ne concerne pas les répertoires)
      *
      * @param $pathrep emplacement du répertoire
-	 * Return un tableau contenant les emplacements des fichiers supprimés (123587_5_1.jpg, mother.pdf...)
+	 * Return un tableau contenant les emplacements des fichiers non présent en base (123587_5_1.jpg, mother.pdf...)
+				-1 si Répertoire non accessible !
+				-2 si repertoire vide
      */
 	 
 
- static function listrep($pathrep)
-{
-global $zdb;
-
-	//si le répertoire existe, on l'ouvre
-	if ($rep = opendir($pathrep)) 
+	static function listrep($pathrep)
 	{
-		//tant q'il y a des fichiers
-		while ($element = readdir($rep))
+	global $zdb;
+	$res =-1;
+		//si le répertoire existe, on l'ouvre
+		if ($rep = opendir($pathrep)) 
 		{
-		   $ext=strrchr($element,'.');
-		   //si le fichier n'est pas un répertoire
-		   if (!is_dir($pathrep.'/'.$element) && $ext)
+			//tant q'il y a des fichiers
+			while ($element = readdir($rep))
 			{
+			   $ext=strrchr($element,'.');
+			   //si le fichier n'est pas un répertoire
+			   if (!is_dir($pathrep.'/'.$element) && $ext)
+				{
+				
+				//on execute une requete SQL pour savoir s'il est ds la bdd sinon on le stocke dans un tableau
+				 $select_empl = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
+				 $select_empl->where(array('emplacement'=> $element))
+						->limit(1);
+				 $results = $zdb->execute($select_empl);		
+					if ($results->count() < 1) 
+						{
+						//on stocke son emplacement dans un tableau en vue de sa suppression
+						$tri[$element] = $element;
+						}
+				}//fin du if
+			}//fin du while
+			closedir($rep);
 			
-			//on execute une requete SQL pour savoir s'il est ds la bdd sinon on le supprime
-			 $select_empl = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
-			 $select_empl->where(array('emplacement'=> $element))
-					->limit(1);
-			 $results = $zdb->execute($select_empl);		
-				if ($results->count() < 1) 
-					{
-					$file1=new File();
-					$file1->remove2($pathrep."/".$element,"");
-					
-					//on stocke son emplacement dans un tableau
-					$tri[$element] = $element;
-					}
-			}//fin du if
-		}//fin du while
-		closedir($rep);
-		
-		//si le tableau contient des fichiers
-		if(isset($tri))
-			{
-			//Tri du tableau sur le nom.
-			sort($tri);
-			$res = $tri;
-			}
+			//si le tableau contient des fichiers
+			if(isset($tri))
+				{
+				//Tri du tableau sur le nom.
+				sort($tri);
+				$res = $tri;
+				}
+			else
+				{
+				//repertoire vide
+				$res= -2;
+				}
+		}
 		else
 			{
-			$res[0] = "repertoire vide";
+			//Répertoire non accessible !
 			}
+	return $res;
 	}
-	else
-		{
-		var_dump("Répertoire non accessible !");
-		}
-return $res;
-}
 
 	/**
-     * Script de nettoyage
+     * Execute une requete SQL pour obtenir tous les vieux fichiers
 	 * recherche dans la bdd si le fichier est dans la bdd + non vierge && date_record >2ans && fichier existe->delete + delete bdd
-	 *	ou si le fichier n'est pas dans la bdd mais est présent dans le répertoire-> delete
-	 *  ou si fichier n'existe pas dans le répertoire mais présent dans la bdd, on supprime juste sa ligne ds la bdd
-	 *	script appelé à chaque suppression d'un fichier par qqn du staff.
+	 * script appelé par un bouton dédié dans management_subs.tpl
      *
      * @param rien
-	 * Return rien
+	 * Return les fichiers à supprimer
      */
 	 
-	 static function clean_file() {
-        //paramètres
+	 static function get_FileList_old() {
+        //Liste les fichiers (hors formulaires) vieux de plus de 2 ans
+		//paramètres
 		$duree1=2;//en année
-				
+		
 		global $zdb;
 		$select =  $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
 		$left='date_record';
@@ -345,57 +307,24 @@ return $res;
 		$select->where('vierge=0')
 			   ->where->lessThanOrEqualTo($left,$right);
 		$results = $zdb->execute($select);
-        if ($results->count() > 0) 
-			{
-			foreach ( $results as $row ) 
-				{
-					$file = new File($row);
-					$path="./upload/files/".$file->emplacement;
-					$file->remove2($path,$file->emplacement);
-				}
-           
-			}//fin du if
-		
-		//supprime tous les fichiers non présent dans la bdd mais présent dans le répertoire
-		$file2=new File();
-		$pathrep="./upload/files/";
-		$file2->listrep($pathrep);
-		
-		//supprime tous les fichiers de la bdd qui sont inexistant dans le répertoire
-		$file2->clean_file_bdd();
-    }
+        return $results;
+	}
 	
 	/**
-     * Script de nettoyage
-	 * si fichier n'existe pas sur le serveur, on supprime juste sa ligne ds la bdd
-	 *	script appelé à chaque suppression d'un fichier.
-     *
+     * Execute une requete SQL pour obtenir tous les fichiers
+	 *
      * @param 
 	 *
-	 * Return rien
+	 * Return -1 s'il n'y a aucun fichier et les fichiers sinon
      */
 	 
-	 static function clean_file_bdd() {
+	 static function get_FileList_bdd() {
        	global $zdb;
-		
+		$results=-1;
 		$select = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
         $results = $zdb->execute($select);
-        if ($results->count() > 0) 
-			{
-			foreach ( $results as $row ) 
-				{
-					$file = new File($row);
-					$path="./upload/files/".$file->emplacement;
-					if (file_exists($path)) 
-						{
-							//var_dump ("Le fichier $file->emplacement existe.");
-						} else {
-							//var_dump ("Le fichier $file->emplacement n'existe pas.");
-							$file->remove2("",$file->emplacement);
-						}
-				}
-			}//fin du if
-    }
+        return $results;
+	 }
 	
     /**
 	*
@@ -563,28 +492,21 @@ return $res;
 
 	/**
 	*
-     * Exécute une requête SQL pour récupérer les données d'un fichier à partir de son timestamp réduit (sans) extension
+     * Exécute une requête SQL pour si un fichier existe dans la bdd à partir de son nom sur le disque {timestamp}_{id_act}_{id_fichier}.{extension}
      * 
      * Retourne 1 si le fichier a été trouvé 0 sinon.
      * 
      * @param File $object Le fichier à hydrater contenant le timestamp réduit nombre.(extension)
      */
-    static function getFileDesc($object) {
+    static function isFileExist($object) {
         global $zdb;
 		$result=0;
 		$select_timestamp = $zdb->select(SUBSCRIPTION_PREFIX . self::TABLE);
-        $select_timestamp->where->Like('emplacement', $object->emplacement.'%.%');
+        $select_timestamp->where->Like('emplacement', $object->emplacement);
 		$select_timestamp->limit(1);
-        $results = $zdb->execute($select_timestamp);  
-        if ($results->count() == 1) {
-            $file = $results->current();
-            $object->_id_doc = $file->id_doc;
-            $object->_id_act = $file->id_act;
-            $object->_id_adh = $file->id_adh;
-            $object->_doc_name = $file->doc_name;
-            $object->_emplacement = $file->emplacement;
-            $object->_date_record = $file->date_record;
-            $result=1;
+        $results = $zdb->execute($select_timestamp); 
+		if ($results->count() == 1) {
+           $result=1;
         }
 		return $result;
     }

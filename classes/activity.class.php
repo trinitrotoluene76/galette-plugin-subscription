@@ -232,7 +232,14 @@ class Activity {
             $values = array();
 
             foreach ($this->_fields as $k => $v) {
-                $values[substr($k, 1)] = $this->$k;
+				$values[substr($k, 1)] = $this->$k;
+				//si c'est un prix (price1, price2...)
+				if(substr($k, 1,5)=='price')
+					{
+					$number=$values[substr($k, 1)];//float
+					$number=number_format($number, 2, '.', '');//formatte l'affichage à 2 décimales, retourne un string avec un .
+					$values[substr($k, 1)] =$number;//une insertion d'un float avec une virgule tronque la valeur, d'où la convertion en string #bug 71
+					}
             }
 			$res=$this->is_id_group($this);
 			
@@ -251,11 +258,11 @@ class Activity {
 			if ($res=='1') 
 				{
 				$update = $zdb->update(SUBSCRIPTION_PREFIX . self::TABLE);
-                $update->set($values);
-                $update->where(
+				$update->set($values);
+				$update->where(
                     self::PK . '=' . $this->_id_group
                 );
-                $edit = $zdb->execute($update);
+				$edit = $zdb->execute($update);
 				}//fin du if res==1
 			else {
 					//echo ('res=0');
@@ -385,7 +392,7 @@ class Activity {
 	 /**
 	 * modifies le type des prix de string à float
 	 *
-	 * @param Price
+	 * @param Price (string)
 	 *
 	 * @return price en float
 	 */

@@ -7,6 +7,7 @@
 </select>
 {if $login->isAdmin() == 1}
 	<a id="histreset" class="button" href="{$galette_base_path}{$subscription_dir}confirmation_clean_adh.php" title="{_T string="Delete members that haven't subscribed to the parent activity during 2 years or that haven't modified their profile"}">{_T string="Clean adh DB"}</a>
+	<a id="histreset" class="button" href="{$galette_base_path}{$subscription_dir}confirmation_clean_file.php" title="{_T string="Delete files that aren't forms, but that are old from 2 years, or not present in the database, or not present in the folder"}">{_T string="Clean files"}</a>
 {/if}
 {foreach from=$activities key=id_act item=value}	
 
