@@ -68,10 +68,18 @@ if(isset($_GET['vierge']))
 		{
 		$file->vierge=$_GET['vierge'];
 		}
-//si return_file: 0= document informatif / 1=formulaire à télécharger, remplir et à retourner. hydratation du nom et de l'emplacement du fichier
-if(isset($_POST['return_file']) && isset($_POST['emplacement']) && isset($_POST['doc_name']))
+if(isset($_POST['return_file']))
 		{
 		$file->return_file=$_POST['return_file'];
+		}
+//si return_file: 0= document informatif / 1=formulaire à télécharger, remplir et à retourner. un simple adh ne peut pas retourner de formulaire, d'où return_file=0
+else 
+	{
+		$file->return_file=0;
+	}
+//hydratation du nom et de l'emplacement du fichier
+if(isset($_POST['emplacement']) && isset($_POST['doc_name']))
+		{
 		$file->emplacement=$_POST['emplacement'];
 		$file->doc_name=$_POST['doc_name'];
 		}
