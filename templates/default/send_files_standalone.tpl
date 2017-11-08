@@ -37,6 +37,7 @@
 					<TEXTAREA NAME="description" ROWS=2 COLS=50></TEXTAREA>
 				</td>
 			</tr>
+		<!-- only staff can select form to fill up = return_file -->
 		{if $file->vierge eq 1}
 			<tr>
 				<th>{_T string="3. Form to fill up?"}</th>
@@ -59,6 +60,7 @@
 			</div>
 	</form> 
 	</BR>
+<!-- List of files uploaded by the manager for the group -->
 {if $files_vierges> 0}
 <b><u>{_T string="Files of group:"} {$activity->group_name}</b></u>
 	<div class="bigtable wrmenu" >
@@ -110,6 +112,7 @@
 </div>
 {/if}
 </BR>
+<!-- List of files uploaded by the member of that group -->
 {if $personnal_files> 0 && $vierge == 0}
 <b><u>{_T string="Personnal files of group:"} {$activity->group_name}</u></b>
 	<div class="bigtable wrmenu" >
