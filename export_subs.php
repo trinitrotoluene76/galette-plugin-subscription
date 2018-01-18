@@ -88,7 +88,7 @@ $select = $zdb->select('subscription_followup', 'f2');
 				 $result[] = $row;
             }
 //ajout des entetes
-	array_unshift($result,array ('id_act','id_adh','id_abn (identifiant de l\'abonnement)','statut_act: 0=en cours, 1=validé, 2=payé, 3=refusé','feedback act','message adh act (Message de l\'abonné pour l\'activité)','feedback off','date de la demande d\'abonnement', 'total estimmé lors de l\'abonnement','message de l\'abonné concernant l\'abonnement','Appartenance','id_statut','nom_adh','prenom_adh','pseudo','société','titre adh','date de naissance','sexe (0=non spécifié, 1=M, 2=F)','adresse','adresse2','code postal','ville','pays','tel','gsm','mail','url','icq','msn','jabber','info','info publique','profession','login','mdp','date de création du profil','date de modification du profil','activite_adh','bool admin','bool exempt','bool display','date echeance','pref lanque','lieu de naissance','gpgid','fingerprint'));
+	array_unshift($result,array ('id_act','id_adh','id_abn (identifiant de l\'abonnement)','statut_act: 0=en cours, 1=validé, 2=payé, 3=refusé','feedback act','message adh act (Message de l\'abonné pour l\'activité)','feedback off','date de la demande d\'abonnement', 'total estimmé lors de l\'abonnement','message de l\'abonné concernant l\'abonnement','id_adh','item_id','field_id','field_form','val_index','id','Appartenance','id_statut','nom_adh','prenom_adh','pseudo','société','titre adh','date de naissance','sexe (0=non spécifié, 1=M, 2=F)','adresse','adresse2','code postal','ville','pays','tel','gsm','mail','url','icq','msn','jabber','info','info publique','profession','login','mdp','date de création du profil','date de modification du profil','activite_adh','bool admin','bool exempt','bool display','date echeance','pref lanque','lieu de naissance','gpgid','fingerprint','parent_id'));
         if ( $results->count() > 0 ) {
             $filename ='liste_abn_appartenance_statut_'.$id_act.'.csv';
             $filepath = CsvOut::DEFAULT_DIRECTORY . $filename;
@@ -128,7 +128,7 @@ $select = $zdb->select('adherents', 'a');
 				 $result[] = $row;
             }
 //ajout des entetes
-	array_unshift($result,array ('id_adh','id_statut','nom_adh','prenom_adh','pseudo','société','titre adh','date de naissance','sexe (0=non spécifié, 1=M, 2=F)','adresse','adresse2','code postal','ville','pays','tel','gsm','mail','url','icq','msn','jabber','info','info publique','profession','login','mot de passe crypté','date de création du profil','date de modification du profil','activite_adh','bool admin','bool exempt','bool display','date echeance','pref lanque','lieu de naissance','gpgid','fingerprint','appartenance'));
+	array_unshift($result,array ('id_adh','id_statut','nom_adh','prenom_adh','pseudo','société','titre adh','date de naissance','sexe (0=non spécifié, 1=M, 2=F)','adresse','adresse2','code postal','ville','pays','tel','gsm','mail','url','icq','msn','jabber','info','info publique','profession','login','mot de passe crypté','date de création du profil','date de modification du profil','activite_adh','bool admin','bool exempt','bool display','date echeance','pref lanque','lieu de naissance','gpgid','fingerprint','parent_id','id_group','id_adh','item_id','field_id','field_form','val_index','id','Appartenance'));
         if ( $results->count() > 0 ) {
             $filename ='liste_adherents_appartenance_'.$id_act.'.csv';
             $filepath = CsvOut::DEFAULT_DIRECTORY . $filename;
