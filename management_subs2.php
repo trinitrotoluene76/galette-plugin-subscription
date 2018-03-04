@@ -128,7 +128,14 @@ if(isset($_POST['valid']))
 							}
 						if($followup4->statut_act == 2)
 							{
-							$mail->setMessage("Bonjour,\r\n\r\n"."Votre inscription pour la section ".$group->getName()." est maintenant payée.\r\n"."L'abonnement concerné est le N°".$followup4->id_abn.".\r\n\r\n"."Pour voir le suivi de vos abonnements et les montants à payer, connectez vous à l'adresse suivante (Abonnement/suivi): ".$proto . '://' . $_SERVER['SERVER_NAME'] .dirname($_SERVER['REQUEST_URI'])."/follow_up_subs.php\r\n\r\n"."Pour les questions ou réclamations, ne répondez pas à ce mail mais contactez vos responsables de section:\r\n".$sname."\r\n\r\n"."Cordialement,\r\n"."le bureau.");
+							//génération des données à passer dans l'url (get ?code=): 
+							//http://localhost/galette_amaury/galette/plugins/galette-plugin-subscription/carte_adherent2.php?code=%B3%B4620%B4%D050%D650%04%00
+							$today= new DateTime("now");
+							$date_fin_validite = date_add($today, date_interval_create_from_date_string('1 year'));
+							$compressed   = gzdeflate($id_adh2.';'.$date_fin_validite->format('Y-m-d'));//id_adh;date de fin de validité
+							$compressed =urlencode($compressed );
+							//corp du mail
+							$mail->setMessage("Bonjour,\r\n\r\n"."Votre inscription pour la section ".$group->getName()." est maintenant payée.\r\n"."L'abonnement concerné est le N°".$followup4->id_abn.".\r\n\r\n"."Pour voir le suivi de vos abonnements et les montants à payer, connectez vous à l'adresse suivante (Abonnement/suivi): ".$proto . '://' . $_SERVER['SERVER_NAME'] .dirname($_SERVER['REQUEST_URI'])."/follow_up_subs.php\r\n\r\n"."Pour télécharger votre carte d'adhérent, cliquer sur le lien ci dessous:\r".$proto . '://' . $_SERVER['SERVER_NAME'] .dirname($_SERVER['REQUEST_URI'])."/carte_adherent2.php?code=".$compressed."\r\nCette carte vous sera demandée pour accéder aux installations sportives.\r\n\r\n"."Pour les questions ou réclamations, ne répondez pas à ce mail mais contactez vos responsables de section:\r\n".$sname."\r\n\r\n"."Cordialement,\r\n"."le bureau.");
 							}
 						if($followup4->statut_act == 3)
 							{
