@@ -50,7 +50,8 @@ use Analog\Analog;
 use Galette\Repository\Members;
 
 /** @ignore */
-require_once 'includes/galette.inc.php';
+define('GALETTE_BASE_PATH', '../../');
+require_once GALETTE_BASE_PATH .'includes/galette.inc.php';
 
 if ( !$login->isLogged() ) {
     header("location: index.php");
