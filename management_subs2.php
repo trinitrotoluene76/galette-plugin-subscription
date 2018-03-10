@@ -28,6 +28,7 @@ require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
 use Galette\Entity\Adherent as Adherent;
 use Galette\Entity\Group as Group;
 use Galette\Core\GaletteMail as GaletteMail;
+use Galette\Entity\Contribution as Contribution;
 
 if (!$login->isLogged()) {
     header('location: ' . GALETTE_BASE_PATH . 'index.php');
@@ -128,6 +129,7 @@ if(isset($_POST['valid']))
 							}
 						if($followup4->statut_act == 2)
 							{
+							//création du code pour pouvoir télécharger sa carte d'adhérent depuis le mail
 							//génération des données à passer dans l'url (get ?code=): 
 							//http://localhost/galette_amaury/galette/plugins/galette-plugin-subscription/carte_adherent2.php?code=%B3%B4620%B4%D050%D650%04%00
 							$today= new DateTime("now");
@@ -136,6 +138,18 @@ if(isset($_POST['valid']))
 							$compressed =urlencode($compressed );
 							//corp du mail
 							$mail->setMessage("Bonjour,\r\n\r\n"."Votre inscription pour la section ".$group->getName()." est maintenant payée.\r\n"."L'abonnement concerné est le N°".$followup4->id_abn.".\r\n\r\n"."Pour voir le suivi de vos abonnements et les montants à payer, connectez vous à l'adresse suivante (Abonnement/suivi): ".$proto . '://' . $_SERVER['SERVER_NAME'] .dirname($_SERVER['REQUEST_URI'])."/follow_up_subs.php\r\n\r\n"."Pour télécharger votre carte d'adhérent, cliquer sur le lien ci dessous:\r".$proto . '://' . $_SERVER['SERVER_NAME'] .dirname($_SERVER['REQUEST_URI'])."/carte_adherent2.php?code=".$compressed."\r\nCette carte vous sera demandée pour accéder aux installations sportives. Vous pouvez aussi à tout moment télécharger cette carte à partir de votre profil (Navigation/mes informations \"Générer la carte de membre\").\r\n\r\n"."Pour les questions ou réclamations, ne répondez pas à ce mail mais contactez vos responsables de section:\r\n".$sname."\r\n\r\n"."Cordialement,\r\n"."le bureau.");
+							//création de la contribution pour pouvoir dl sa carte depuis son profil. (autant de contribution que de click payé)
+							$args = array(
+								'type'  => '1',
+								'payment_type'  => '6',
+								'adh'   => $id_adh2
+							);//_payment_type=1 espece, 3 cheque...6 autre, type=1= cotisation annuelle
+							if ( $preferences->pref_membership_ext != '' ) {
+								$args['ext'] = $preferences->pref_membership_ext;
+							}
+							$contrib = new Contribution($args);
+							$contrib->__set(amount,1);//montant contribution factice
+							$contrib->store();
 							}
 						if($followup4->statut_act == 3)
 							{
