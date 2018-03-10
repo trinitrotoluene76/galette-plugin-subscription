@@ -332,6 +332,12 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 					$delete = $zdb->delete('cotisations');
 					$del = $zdb->execute($delete);
 					
+					//suppression des dates d'échéances pour tous les adhérents
+					$update = $zdb->update('adherents');
+					$update->set(
+								array('date_echeance' => NULL)
+								);
+					$zdb->execute($update);
 					//suppression des suivis concernant l'activité en question pour tout adhérent
 					$followup2=new Followup();
 					$followup2->id_act=$id_act2;
