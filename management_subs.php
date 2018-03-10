@@ -88,7 +88,11 @@ if($member->managed_groups && !$login->isSuperAdmin() && !$login->isAdmin() && !
 				{
 				if($_GET['remove_id_act']==$id_act2)
 					{
-										
+					//suppression des contributions
+					global $zdb;
+					$delete = $zdb->delete('cotisations');
+					$del = $zdb->execute($delete);
+					
 					//suppression des suivis concernant l'activité en question pour tout adhérent
 					$followup2=new Followup();
 					$followup2->id_act=$id_act2;
@@ -323,7 +327,17 @@ if($login->isSuperAdmin() || $login->isAdmin() || $login->isStaff())
 				{
 				if($_GET['remove_id_act']==$id_act2)
 					{
-										
+					//suppression des contributions
+					global $zdb;
+					$delete = $zdb->delete('cotisations');
+					$del = $zdb->execute($delete);
+					
+					//suppression des dates d'échéances pour tous les adhérents
+					$update = $zdb->update('adherents');
+					$update->set(
+								array('date_echeance' => NULL)
+								);
+					$zdb->execute($update);
 					//suppression des suivis concernant l'activité en question pour tout adhérent
 					$followup2=new Followup();
 					$followup2->id_act=$id_act2;
