@@ -147,12 +147,6 @@
 							{if $category == 1}
 								{$activity2->price2|escape|nl2br} &euro;
 							{/if}
-							{if $category == 2}
-								{$activity2->price3|escape|nl2br} &euro;
-							{/if}
-							{if $category == 3}
-								{$activity2->price4|escape|nl2br} &euro;
-							{/if}
 						</a>
 					</br>
 					{/foreach}

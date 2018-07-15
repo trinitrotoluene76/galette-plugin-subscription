@@ -23,8 +23,6 @@ CREATE TABLE `galette_subscription_activities` (
   `id_group` int(10) NOT NULL DEFAULT '0',
   `price1` decimal(15,2) unsigned DEFAULT '0.00',
   `price2` decimal(15,2) unsigned DEFAULT '0.00',
-  `price3` decimal(15,2) unsigned DEFAULT '0.00',
-  `price4` decimal(15,2) unsigned DEFAULT '0.00',
   `lieu` text COLLATE utf8_unicode_ci NOT NULL,
   `jours` text COLLATE utf8_unicode_ci NOT NULL,
   `horaires` text COLLATE utf8_unicode_ci,

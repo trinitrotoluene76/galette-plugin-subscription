@@ -90,7 +90,7 @@ foreach ( $res as  $key => $value )
 				$followup->getFollowup($followup);
 				$followups[]=$followup;
 				
-				//si l'adhésion à m'activité est validé par le responsable de group statut_act == 1, alors on met à jour le total due
+				//si l'adhésion à l'activité est validée par le responsable de group statut_act == 1, alors on met à jour le total due
 				if(	$followup->statut_act == 1)
 					{
 					switch ($category)
@@ -99,12 +99,8 @@ foreach ( $res as  $key => $value )
 						$total=$total+$activity->floatprice($activity->price1); break;
 						case 1:
 						$total=$total+$activity->floatprice($activity->price2); break;
-						case 2:
-						$total=$total+$activity->floatprice($activity->price3); break;
-						case 3:
-						$total=$total+$activity->floatprice($activity->price4); break;
 						default:
-						$total=$total+$activity->floatprice($activity->price4); break;
+						$total=$total+$activity->floatprice($activity->price2); break;
 						}
 					}//fin du if
 				}//fin du foreach
