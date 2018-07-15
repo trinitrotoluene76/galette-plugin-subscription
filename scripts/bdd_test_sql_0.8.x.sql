@@ -54,9 +54,9 @@ INSERT INTO `galette_dynamic_fields` (`item_id`, `field_id`, `field_form`, `val_
 -- Contenu de la table `galette_subscription_activities`
 --
 
-INSERT INTO `galette_subscription_activities` (`id_group`, `price1`, `price2`, `price3`, `price4`, `lieu`, `jours`, `horaires`, `renseignements`, `complet`, `autovalidation`) VALUES
-(5, '22.00', '11.00', '22.00', '27.00', '', '', '', 'Obligatoire pour toute adhésion lors d\'une première activité et pour les tournois inter services.\r\nPaiement de l\'adhésion AS à  faire avec une des autres sections sélectionnées.\r\nPar contre le paiement des adhésions des sections se fait auprès de chaque responsable de section avec un paiement séparé.', 0, 0),
-(6, '12.00', '6.00', '12.00', '20.00', 'Gymnase de la base de soutien', 'Lundi midi\r\nMercredi et Jeudi soir\r\nSamedi matin', '11h30 à  13h30\r\n20h00 à  22h00\r\n08h00 à  12h00', 'Pratique en salle de modèle électrique - Initiation à  l\'activité', 0, 0),
-(7, '12.00', '6.00', '12.00', '25.00', 'Bâtiment 220', 'Mardi & Vendredi midi', '', 'Répétitions en salle pour travail en pupitre le mardi et en tutti le vendredi', 0, 0);
+INSERT INTO `galette_subscription_activities` (`id_group`, `price1`, `price2`, `lieu`, `jours`, `horaires`, `renseignements`, `complet`, `autovalidation`) VALUES
+(5, '22.00', '11.00', '', '', '', 'Obligatoire pour toute adhésion lors d\'une première activité et pour les tournois inter services.\r\nPaiement de l\'adhésion AS à  faire avec une des autres sections sélectionnées.\r\nPar contre le paiement des adhésions des sections se fait auprès de chaque responsable de section avec un paiement séparé.', 0, 0),
+(6, '12.00', '6.00', 'Gymnase de la base de soutien', 'Lundi midi\r\nMercredi et Jeudi soir\r\nSamedi matin', '11h30 à  13h30\r\n20h00 à  22h00\r\n08h00 à  12h00', 'Pratique en salle de modèle électrique - Initiation à  l\'activité', 0, 0),
+(7, '12.00', '6.00', 'Bâtiment 220', 'Mardi & Vendredi midi', '', 'Répétitions en salle pour travail en pupitre le mardi et en tutti le vendredi', 0, 0);
 
 -- --------------------------------------------------------
