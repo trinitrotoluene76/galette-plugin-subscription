@@ -45,7 +45,7 @@
 </BR>
 
 <p>
-{_T string="*Prices are function of age and status. View details of activities for more informations"}</BR>
-{_T string="You are"} {$age} {_T string="year old and your status is:"} {$statut}
+{_T string="*Prices are function of your status. View details of activities for more informations"}</BR>
+{_T string="Your status is:"} {$statut}
 
 </p>
