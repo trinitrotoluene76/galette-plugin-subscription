@@ -33,13 +33,6 @@
 						{if $category == 1}
 							{$activity->price2|escape} &euro;
 						{/if}
-						{if $category == 2}
-							{$activity->price3|escape} &euro;
-						{/if}
-						{if $category == 3}
-							{$activity->price4|escape} &euro;
-						{/if}
-						
 					</td>
 					<td>
 						<a href="{$galette_base_path}{$subscription_dir}view_activity.php?id_group={$activity->id_group}" title="{_T string="view details of activity"}" target="_blank">{_T string="view details"}</a>
