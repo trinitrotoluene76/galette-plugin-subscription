@@ -38,8 +38,6 @@ class Activity {
         '_id_group' => 'integer',
         '_price1' => 'decimal',
         '_price2' => 'decimal',
-        '_price3' => 'decimal',
-        '_price4' => 'decimal',
         '_lieu' => 'text',
         '_jours' => 'text',
         '_horaires' => 'text',
@@ -53,9 +51,7 @@ class Activity {
     private $_group_name = '';
     private $_price1 = 0.0;
     private $_price2 = 0.0;
-    private $_price3 = 0.0;
-    private $_price4 = 0.0;
-    private $_lieu = '';
+     private $_lieu = '';
     private $_jours = '';
     private $_horaires = '';
     private $_renseignements = '';
@@ -360,8 +356,6 @@ class Activity {
             $object->_group_name = $activity->group_name;
             $object->_price1 = $activity->price1;
             $object->_price2 = $activity->price2;
-            $object->_price3 = $activity->price3;
-            $object->_price4 = $activity->price4;
             $object->_lieu = $activity->lieu;
             $object->_jours = $activity->jours;
             $object->_horaires = $activity->horaires;
@@ -431,9 +425,7 @@ class Activity {
 						//vérification des prix et formatage (remplacement , par . conversion en float limitation à 2 décimales et arrondi)
 						case 'price1':
 						case 'price2':
-						case 'price3':
-						case 'price4':
-            
+						
 						if ( $value<0 ) 
 							{
 							$valid = '0';	
@@ -469,11 +461,7 @@ class Activity {
                 return number_format($this->_price1, 2, ',', ' ');
             case 'price2':
                 return number_format($this->_price2, 2, ',', ' ');
-            case 'price3':
-                return number_format($this->_price3, 2, ',', ' ');
-            case 'price4':
-                return number_format($this->_price4, 2, ',', ' ');
-            case 'jours':
+           case 'jours':
                 return str_replace('\'', '’', $this->_jours);
             case 'horaires':
                 return str_replace('\'', '’', $this->_horaires);
