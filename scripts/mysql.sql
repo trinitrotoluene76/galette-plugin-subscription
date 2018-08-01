@@ -83,8 +83,7 @@ INSERT INTO `galette_field_contents_5` (`id`, `val`) VALUES
 (1, 'Famille Nexter (enfant)'),
 (2, 'Assistance technique, intérimaire, stagiaire, TNS MArs'),
 (3, 'Retraité Nexter ou conjoint'),
-(4, 'Base de Soutien ou famille (civil ou militaire)'),
-(5, 'Extérieur');
+(4, 'Extérieur');
 
 -- --------------------------------------------------------
 
