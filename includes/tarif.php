@@ -27,7 +27,7 @@ use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
 //Nom du champ dynamique comportant les différents choix
 $Field_name='Appartenance';
 
-//--------------------------------->récupération du statut:
+//--------------------------------->récupération des valeurs du champ dynamique "Appartenance":
 $dyn_fields = new DynamicFields();
 
 // declare dynamic field values
@@ -52,16 +52,16 @@ foreach ( $dynamic_fields as $k => $v )
 
 		}
 	}
-//------------------------------------------------>récupération du statut fin
+//------------------------------------------------>récupération des valeurs du champ dynamique "Appartenance" fin
 
 
 /**
- * Exécute une requête SQL retournant le statut (champ dynamique) de l'adhérent (ne fonctionne pas pour le super admin)
+ * Exécute une requête SQL retournant le statut (champ dynamique "Appartenance") de l'adhérent (ne fonctionne pas pour le super admin)
  * Retourne $statut
  * 
  * $statut=0 si il y a une erreur
  *
- * @param id_adh: l'id de l'adhérent et field_name: le nom du champ recherché, ici "Statut"
+ * @param id_adh: l'id de l'adhérent et field_name: le nom du champ recherché, ici "Appartenance"
  */
  
 	global $zdb;
@@ -101,7 +101,6 @@ foreach ( $dynamic_fields as $k => $v )
  * $category=[0]=Personnel Nexter et assimilés
  * $category=[1]=Extérieurs
 
-
 $form_name
 array (size=7)
 Appartenance	
@@ -111,13 +110,11 @@ Appartenance
 	[3] Nexter -  intérimaire, stagiaire, 	Tarif 1 (€€)
 	[4] Nexter -  Filiales TNS MArs,  Nexter Training, Nexter Robotics	Tarif 1 (€€)
 	[5] Extérieur - Retraité Nexter ou conjoint	Tarif 1 (€€)
-	[6] Extérieur  - STAT, SIMMT, SMITer ou famille	Tarif 1 (€€)
-	[7] Extérieur	Tarif 2 (€€€)
-
+	[6] Extérieur	Tarif 2 (€€€)
  */
 
  //si personnel différent de "extérieur" cf champ appartenance
-if($statut!=$form_name[7])
+if($statut!=$form_name[6])
 	{
 	$category=0; //Tarif 1 (€€)
 	}
