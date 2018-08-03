@@ -79,12 +79,13 @@ CREATE TABLE IF NOT EXISTS `galette_field_contents_5` (
 -- Nécessaire à la gestion des tarifs par le plugin
 
 INSERT INTO `galette_field_contents_5` (`id`, `val`) VALUES
-(0, 'Personnel Nexter ou conjoint'),
-(1, 'Famille Nexter (enfant)'),
-(2, 'Assistance technique, intérimaire, stagiaire, TNS MArs'),
-(3, 'Retraité Nexter ou conjoint'),
-(4, 'Base de Soutien ou famille (civil ou militaire)'),
-(5, 'Extérieur');
+(0, 'Nexter - Personnel'),
+(1, 'Nexter - Conjoint ou Enfant'),
+(2, 'Nexter -  Prestataire'),
+(3, 'Nexter -  intérimaire, stagiaire'),
+(4, 'Nexter -  Filiales TNS MArs,  Nexter Training, Nexter Robotics'),
+(5, 'Extérieur - Retraité Nexter ou conjoint'),
+(6, 'Extérieur');
 
 -- --------------------------------------------------------
 
@@ -214,8 +215,6 @@ CREATE TABLE `galette_subscription_activities` (
   `id_group` int(10) NOT NULL DEFAULT '0',
   `price1` decimal(15,2) unsigned DEFAULT '0.00',
   `price2` decimal(15,2) unsigned DEFAULT '0.00',
-  `price3` decimal(15,2) unsigned DEFAULT '0.00',
-  `price4` decimal(15,2) unsigned DEFAULT '0.00',
   `lieu` text COLLATE utf8_unicode_ci NOT NULL,
   `jours` text COLLATE utf8_unicode_ci NOT NULL,
   `horaires` text COLLATE utf8_unicode_ci,
@@ -350,9 +349,9 @@ INSERT INTO `galette_groups_managers` (`id_group`, `id_adh`) VALUES
 -- Contenu de la table `galette_subscription_activities`
 --
 
-INSERT INTO `galette_subscription_activities` (`id_group`, `price1`, `price2`, `price3`, `price4`, `lieu`, `jours`, `horaires`, `renseignements`, `complet`, `autovalidation`) VALUES
-(5, '22.00', '11.00', '22.00', '27.00', '', '', '', 'Obligatoire pour toute adhésion lors d\'une première activité et pour les tournois inter services.\r\nPaiement de l\'adhésion AS à  faire avec une des autres sections sélectionnées.\r\nPar contre le paiement des adhésions des sections se fait auprès de chaque responsable de section avec un paiement séparé.', 0, 0),
-(6, '12.00', '6.00', '12.00', '20.00', 'Gymnase de la base de soutien', 'Lundi midi\r\nMercredi et Jeudi soir\r\nSamedi matin', '11h30 à  13h30\r\n20h00 à  22h00\r\n08h00 à  12h00', 'Pratique en salle de modèle électrique - Initiation à  l\'activité', 0, 0),
-(7, '12.00', '6.00', '12.00', '25.00', 'Bâtiment 220', 'Mardi & Vendredi midi', '', 'Répétitions en salle pour travail en pupitre le mardi et en tutti le vendredi', 0, 0);
+INSERT INTO `galette_subscription_activities` (`id_group`, `price1`, `price2`, `lieu`, `jours`, `horaires`, `renseignements`, `complet`, `autovalidation`) VALUES
+(5, '22.00', '11.00', '', '', '', 'Obligatoire pour toute adhésion lors d\'une première activité et pour les tournois inter services.\r\nPaiement de l\'adhésion AS à  faire avec une des autres sections sélectionnées.\r\nPar contre le paiement des adhésions des sections se fait auprès de chaque responsable de section avec un paiement séparé.', 0, 0),
+(6, '12.00', '6.00', 'Gymnase de la base de soutien', 'Lundi midi\r\nMercredi et Jeudi soir\r\nSamedi matin', '11h30 à  13h30\r\n20h00 à  22h00\r\n08h00 à  12h00', 'Pratique en salle de modèle électrique - Initiation à  l\'activité', 0, 0),
+(7, '12.00', '6.00', 'Bâtiment 220', 'Mardi & Vendredi midi', '', 'Répétitions en salle pour travail en pupitre le mardi et en tutti le vendredi', 0, 0);
 
 -- fin du fichier mysql.sql

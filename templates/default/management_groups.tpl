@@ -33,52 +33,28 @@
 			
 			{if $login->isStaff() == 1}
 			<tr>
-				<th>{_T string="Price 1"} (&euro;)</th>
+				<th>{_T string="Price 1"}</th>
 				<td>
 					<INPUT TYPE="TEXT" NAME="price1" VALUE="{$activity->price1|escape}"  SIZE=3 MAXLENGTH=20>
 				</td>
 			</tr>
 			<tr>
-				<th>{_T string="Price 2"} (&euro;)</th>
+				<th>{_T string="Price 2"}</th>
 				<td>
 					<INPUT TYPE="TEXT" NAME="price2" VALUE="{$activity->price2|escape}"  SIZE=3 MAXLENGTH=20>
 				</td>
 			</tr>
-			<tr>
-				<th>{_T string="Price 3"} (&euro;)</th>
-				<td>
-					<INPUT TYPE="TEXT" NAME="price3" VALUE="{$activity->price3|escape}"  SIZE=3 MAXLENGTH=20>
-				</td>
-			</tr>
-			<tr>
-				<th>{_T string="Price 4"} (&euro;)</th>
-				<td>
-					<INPUT TYPE="TEXT" NAME="price4" VALUE="{$activity->price4|escape}"  SIZE=3 MAXLENGTH=20>
-				</td>
-			</tr>
 			{else}
 			<tr>
-				<th>{_T string="Price 1"} (&euro;)</th>
+				<th>{_T string="Price 1"}</th>
 				<td>
 					{$activity->price1|escape}
 				</td>
 			</tr>
 			<tr>
-				<th>{_T string="Price 2"} (&euro;)</th>
+				<th>{_T string="Price 2"}</th>
 				<td>
 					{$activity->price2|escape}
-				</td>
-			</tr>
-			<tr>
-				<th>{_T string="Price 3"} (&euro;)</th>
-				<td>
-					{$activity->price3|escape}
-				</td>
-			</tr>
-			<tr>
-				<th>{_T string="Price 4"} (&euro;)</th>
-				<td>
-					{$activity->price4|escape}
 				</td>
 			</tr>
 			{/if}

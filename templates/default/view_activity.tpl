@@ -36,18 +36,6 @@
 				</td>
 			</tr>
 			<tr>
-				<th>{_T string="Price 3"}</th>
-				<td>
-					{$activity->price3|escape|nl2br} &euro;
-				</td>
-			</tr>
-			<tr>
-				<th>{_T string="Price 4"}</th>
-				<td>
-					{$activity->price4|escape|nl2br} &euro;
-				</td>
-			</tr>
-			<tr>
 				<th>{_T string="Place"}</th>
 				<td>
 					{$activity->lieu|escape|nl2br}

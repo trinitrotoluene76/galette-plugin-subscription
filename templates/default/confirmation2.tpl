@@ -80,14 +80,6 @@
 								<INPUT TYPE="hidden" NAME="price" VALUE="{$activity->price2|escape|nl2br}" readonly="readonly">
 								{$activity->price2|escape|nl2br} &euro;
 							{/if}
-							{if $category == 2}
-								<INPUT TYPE="hidden" NAME="price" VALUE="{$activity->price3|escape|nl2br}" readonly="readonly">
-								{$activity->price3|escape|nl2br} &euro;
-							{/if}
-							{if $category == 3}
-								<INPUT TYPE="hidden" NAME="price" VALUE="{$activity->price4|escape|nl2br}" readonly="readonly">
-								{$activity->price4|escape|nl2br} &euro;
-							{/if}
 						{/if}
 						{if $followups[$k]->statut_act == 0}
 							{_T string="In progress"}

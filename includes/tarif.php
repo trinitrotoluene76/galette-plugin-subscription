@@ -27,7 +27,7 @@ use Galette\DynamicFieldsTypes\DynamicFieldType as DynamicFieldType;
 //Nom du champ dynamique comportant les différents choix
 $Field_name='Appartenance';
 
-//--------------------------------->récupération du statut:
+//--------------------------------->récupération des valeurs du champ dynamique "Appartenance":
 $dyn_fields = new DynamicFields();
 
 // declare dynamic field values
@@ -52,16 +52,16 @@ foreach ( $dynamic_fields as $k => $v )
 
 		}
 	}
-//------------------------------------------------>récupération du statut fin
+//------------------------------------------------>récupération des valeurs du champ dynamique "Appartenance" fin
 
 
 /**
- * Exécute une requête SQL retournant le statut (champ dynamique) de l'adhérent (ne fonctionne pas pour le super admin)
+ * Exécute une requête SQL retournant le statut (champ dynamique "Appartenance") de l'adhérent (ne fonctionne pas pour le super admin)
  * Retourne $statut
  * 
  * $statut=0 si il y a une erreur
  *
- * @param id_adh: l'id de l'adhérent et field_name: le nom du champ recherché, ici "Statut"
+ * @param id_adh: l'id de l'adhérent et field_name: le nom du champ recherché, ici "Appartenance"
  */
  
 	global $zdb;
@@ -94,90 +94,34 @@ foreach ( $dynamic_fields as $k => $v )
 				}//fin du 2eme if
 			
 			}//fin du 1er if
-//--------------------------------------------------->
-
-/**
- * compare la date de naissance de l'adhérent avec la date actuelle
- * retourne age_category=1 si <18ans
- * age_category=2 si <=25ans && >18ans
- * age_category=3 si >25ans
- * 
- */	
-$birthdate= DateTime::createFromFormat(_T("Y-m-d"),$member->birthdate);
-$today= new DateTime("now");
-$age=$birthdate->diff($today);
-$age=$age->format('%Y');
-$age_limit1=18;
-$age_limit2=25;
-
-if($age<$age_limit1)
-	{
-	$age_category=1;
-	}//fin du if
-if($age<=$age_limit2 && $age>$age_limit1)
-	{
-	$age_category=2;
-	}//fin du if
-if($age>$age_limit2)
-	{
-	$age_category=3;
-	}//fin du if
-
-//---------------------------------------------------> 
 	
 /**
  * classe l'adhérent dans une catégorie tarifaire
  * retourne $category
  * $category=[0]=Personnel Nexter et assimilés
- * $category=[1]=Enfant du Personnel Nexter et assimilés <18 ans
- * $category=[2]=Enfant du Personnel Nexter et assimilés <=25 ans
- * $category=[3]=Extérieurs et Enfants du Personnel Nexter >25 ans
-
+ * $category=[1]=Extérieurs
 
 $form_name
 array (size=7)
-  0 => string '1-Personnel Nexter Satory' (length=25)
-  1 => string '3-Personnel extérieur Nexter' (length=29)
-  2 => string '1-Assistance technique, intérimaire, stagiaire, TNS MArs' (length=57)
-  3 => string '1-Personnel retraité Nexter Satory' (length=35)
-  4 => string '1-Personnel civil de la base de soutien' (length=39)
-  5 => string '1-Personnel militaire de la base de soutien' (length=43)
-  6 => string '1-Conjoint ou enfant du personnel Nexter Satory' (length=47)
-  
-	0 => Personnel Nexter
-	1 => Famille Nexter (conjoint ou enfant)
-	2 => Assistance technique, intérimaire, stagiaire, TNS MArs
-	3 => Retraité Nexter ou conjoint
-	4 => Base de Soutien ou famille (civil ou militaire)
-	5 => Extérieur
-
+Appartenance	
+	[0] Nexter - Personnel 	Tarif 1 (€€)
+	[1] Nexter - Conjoint ou Enfant	Tarif 1 (€€)
+	[2] Nexter -  Prestataire, 	Tarif 1 (€€)
+	[3] Nexter -  intérimaire, stagiaire, 	Tarif 1 (€€)
+	[4] Nexter -  Filiales TNS MArs,  Nexter Training, Nexter Robotics	Tarif 1 (€€)
+	[5] Extérieur - Retraité Nexter ou conjoint	Tarif 1 (€€)
+	[6] Extérieur	Tarif 2 (€€€)
  */
 
- //si personnel NS (hors conjoint/enfant)
-if($statut!=$form_name[5] && $statut!=$form_name[1])
+ //si personnel différent de "extérieur" cf champ appartenance
+if($statut!=$form_name[6])
 	{
-	$category=0;
+	$category=0; //Tarif 1 (€€)
 	}
 
 else
 	{
-	$category=3;
-	
-	//si conjoint ou enfant de personelle NS
-	if($statut==$form_name[1])
-		{
-		 switch ($age_category) 
-			{
-			case 1:
-			$category=1; break;
-			case 2:
-			$category=2; break;
-			case 3:
-			$category=3; break;
-			default:
-			$category=3; break;
-			}
-		}
+	$category=1; //Tarif 2 (€€€)
 	}
 
 //---------------------------------------------------> 
