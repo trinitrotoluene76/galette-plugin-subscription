@@ -63,11 +63,13 @@ CREATE TABLE IF NOT EXISTS `galette_field_contents_5` (
 -- Nécessaire à la gestion des tarifs par le plugin
 
 INSERT INTO `galette_field_contents_5` (`id`, `val`) VALUES
-(0, 'Personnel Nexter ou conjoint'),
-(1, 'Famille Nexter (enfant)'),
-(2, 'Assistance technique, intérimaire, stagiaire, TNS MArs'),
-(3, 'Retraité Nexter ou conjoint'),
-(4, 'Extérieur');
+(0, 'Nexter - Personnel'),
+(1, 'Nexter - Conjoint ou Enfant'),
+(2, 'Nexter -  Prestataire'),
+(3, 'Nexter -  intérimaire, stagiaire'),
+(4, 'Nexter -  Filiales TNS MArs,  Nexter Training, Nexter Robotics'),
+(5, 'Extérieur - Retraité Nexter ou conjoint'),
+(6, 'Extérieur');
 
 -- --------------------------------------------------------
 
