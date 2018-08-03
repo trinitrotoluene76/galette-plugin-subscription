@@ -60,36 +60,36 @@ $member->updateModificationDate();
 //Fonction de traitement d'un string
 //---------------------------------------------------------------------------------->
 //between ('@', '.', 'biohazard@online.ge');
-    function after ($this, $inthat)
+    function after ($ca, $inthat)
     {
-        if (!is_bool(strpos($inthat, $this)))
-        return substr($inthat, strpos($inthat,$this)+strlen($this));
+        if (!is_bool(strpos($inthat, $ca)))
+        return substr($inthat, strpos($inthat,$ca)+strlen($ca));
     };
 
-    function after_last ($this, $inthat)
+    function after_last ($ca, $inthat)
     {
-        if (!is_bool(strrevpos($inthat, $this)))
-        return substr($inthat, strrevpos($inthat, $this)+strlen($this));
+        if (!is_bool(strrevpos($inthat, $ca)))
+        return substr($inthat, strrevpos($inthat, $ca)+strlen($ca));
     };
 
-    function before ($this, $inthat)
+    function before ($ca, $inthat)
     {
-        return substr($inthat, 0, strpos($inthat, $this));
+        return substr($inthat, 0, strpos($inthat, $ca));
     };
 
-    function before_last ($this, $inthat)
+    function before_last ($ca, $inthat)
     {
-        return substr($inthat, 0, strrevpos($inthat, $this));
+        return substr($inthat, 0, strrevpos($inthat, $ca));
     };
 
-    function between ($this, $that, $inthat)
+    function between ($ca, $that, $inthat)
     {
-        return before ($that, after($this, $inthat));
+        return before ($that, after($ca, $inthat));
     };
 
-    function between_last ($this, $that, $inthat)
+    function between_last ($ca, $that, $inthat)
     {
-     return after_last($this, before_last($that, $inthat));
+     return after_last($ca, before_last($that, $inthat));
     };
 
 // use strrevpos function in case your php version does not include it
@@ -111,7 +111,7 @@ $subscription->total_estimme=$total;
 $subscription->id_adh=$id_adh;
 $subscription->message_abn=$_POST['message_abn'];
 $valid = $subscription->check($_POST);
-				
+			
 //si les données sont valides on les enregistres -> continuer à bosser cette partie
 	if ( $valid == true )
 		{
@@ -148,6 +148,8 @@ foreach ($_POST as $key => $value)
 					else
 						{//Statut abn = en cours
 						$statut_abn=0;
+						$followups[$value]->statut_act=0;
+						$followups[$value]->store();
 						}
 			
 			
