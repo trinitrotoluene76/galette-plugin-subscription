@@ -66,7 +66,7 @@ msgstr "Validated"
 msgid "The file is too big (limit size:"
 msgstr "The file is too big (limit size:"
 
-#: ../management_subs2.php:248
+#: ../management_subs2.php:254
 msgid "Management of Subscribers"
 msgstr "Management of Subscribers"
 
@@ -108,7 +108,7 @@ msgstr "Groups Management for staff"
 msgid "2. Add a description"
 msgstr "2. Add a description"
 
-#: ../subs_confirmation.php:248 ../templates/default/confirmation2.tpl:2
+#: ../subs_confirmation.php:250 ../templates/default/confirmation2.tpl:2
 #: ../templates/default/follow_up_subs.tpl:2
 #: ../templates/default/new_subscription.tpl:5
 #: ../templates/default/send_files.tpl:2
@@ -343,7 +343,7 @@ msgstr "Subscription sent to staff for validation"
 #: ../templates/default/management_groups.tpl:55
 #: ../templates/default/view_activity.tpl:33
 msgid "Price 2"
-msgstr "Price 2"
+msgstr "Price 2 (&euro;&euro;)"
 
 #: ../templates/default/about_group.tpl:12
 #: ../templates/default/new_subscription.tpl:19
@@ -738,7 +738,7 @@ msgstr "green"
 #: ../templates/default/management_groups.tpl:49
 #: ../templates/default/view_activity.tpl:27
 msgid "Price 1"
-msgstr "Price 1"
+msgstr "Price 1 (&euro;)"
 
 #: ../classes/activity.class.php:251
 msgid "ACTIVITY.AJOUT ECHEC res=2"
@@ -989,7 +989,7 @@ msgstr "Progress"
 #: ../confirmation2.php:66 ../confirmation_clean_adh.php:64
 #: ../follow_up_subs.php:76 ../management_subs.php:242
 #: ../management_subs.php:301 ../management_subs.php:487
-#: ../management_subs2.php:183
+#: ../management_subs2.php:189
 msgid "Y-m-d"
 msgstr "Y-m-d"
 

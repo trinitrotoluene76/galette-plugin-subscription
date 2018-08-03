@@ -68,7 +68,7 @@ msgstr "Validé"
 msgid "The file is too big (limit size:"
 msgstr "Le fichier est trop gros (taille maximum:"
 
-#: ../management_subs2.php:248
+#: ../management_subs2.php:254
 msgid "Management of Subscribers"
 msgstr "Gestion des abonnés"
 
@@ -110,7 +110,7 @@ msgstr "Gestion des groupes par le bureau"
 msgid "2. Add a description"
 msgstr "2. Ajoutez une description"
 
-#: ../subs_confirmation.php:248 ../templates/default/confirmation2.tpl:2
+#: ../subs_confirmation.php:250 ../templates/default/confirmation2.tpl:2
 #: ../templates/default/follow_up_subs.tpl:2
 #: ../templates/default/new_subscription.tpl:5
 #: ../templates/default/send_files.tpl:2
@@ -346,7 +346,7 @@ msgstr "L'abonnement a été envoyé au bureau pour validation"
 #: ../templates/default/management_groups.tpl:55
 #: ../templates/default/view_activity.tpl:33
 msgid "Price 2"
-msgstr "Tarif 2"
+msgstr "Tarif 2 (€€)"
 
 #: ../templates/default/about_group.tpl:12
 #: ../templates/default/new_subscription.tpl:19
@@ -745,7 +745,7 @@ msgstr "vert"
 #: ../templates/default/management_groups.tpl:49
 #: ../templates/default/view_activity.tpl:27
 msgid "Price 1"
-msgstr "Tarif 1"
+msgstr "Tarif 1 (€)"
 
 #: ../classes/activity.class.php:251
 msgid "ACTIVITY.AJOUT ECHEC res=2"
@@ -997,7 +997,7 @@ msgstr "Progression"
 #: ../confirmation2.php:66 ../confirmation_clean_adh.php:64
 #: ../follow_up_subs.php:76 ../management_subs.php:242
 #: ../management_subs.php:301 ../management_subs.php:487
-#: ../management_subs2.php:183
+#: ../management_subs2.php:189
 msgid "Y-m-d"
 msgstr "d/m/Y"
 
