@@ -47,7 +47,7 @@ msgstr ""
 msgid "The file is too big (limit size:"
 msgstr ""
 
-#: ../management_subs2.php:248
+#: ../management_subs2.php:254
 msgid "Management of Subscribers"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "2. Add a description"
 msgstr ""
 
-#: ../subs_confirmation.php:248 ../templates/default/confirmation2.tpl:2
+#: ../subs_confirmation.php:250 ../templates/default/confirmation2.tpl:2
 #: ../templates/default/follow_up_subs.tpl:2 ../templates/default/new_subscription.tpl:5
 #: ../templates/default/send_files.tpl:2 ../templates/default/subs_confirmation.tpl:2
 msgid "Validation"
@@ -849,7 +849,7 @@ msgstr ""
 #: ../confirmation2.php:66 ../confirmation_clean_adh.php:64
 #: ../follow_up_subs.php:76 ../management_subs.php:242
 #: ../management_subs.php:301 ../management_subs.php:487
-#: ../management_subs2.php:183
+#: ../management_subs2.php:189
 msgid "Y-m-d"
 msgstr ""
 

@@ -1,9 +1,9 @@
 <?php
-// This file was automatically generated on Sun Jul 15 17:00:37 2018 (GMT)
+// This file was automatically generated on Fri Aug  3 17:19:12 2018 (GMT)
 // Don't modify it by hand, rather use the target lang from the Makefile.
 
 
-// ../management_subs2.php:248 
+// ../management_subs2.php:254 
 $lang['Management of Subscribers'] = 'Gestion des abonnés';
 
 // ../templates/default/confirmation2.tpl:114 
@@ -58,10 +58,10 @@ $lang['Please, add a picture to your profile before subscribe'] = 'Ajoutez une p
 $lang['Follow up the request'] = 'Suivi de la demande';
 
 // ../templates/default/management_groups.tpl:36 ../templates/default/management_groups.tpl:49 ../templates/default/view_activity.tpl:27 
-$lang['Price 1'] = 'Tarif 1';
+$lang['Price 1'] = 'Tarif 1 (€)';
 
 // ../templates/default/management_groups.tpl:42 ../templates/default/management_groups.tpl:55 ../templates/default/view_activity.tpl:33 
-$lang['Price 2'] = 'Tarif 2';
+$lang['Price 2'] = 'Tarif 2 (€€)';
 
 // ../templates/default/send_files.tpl:314 
 $lang['You haven\'t got a picture on your profile. We need one for the licence'] = 'Vous n\'avez pas de photo dans votre profil. Nous en avons besoin pour la licence';
@@ -114,7 +114,7 @@ $lang['Cards'] = 'Cartes';
 // ../confirmation_clean_adh.php:77 
 $lang['Confirmation to clean members'] = 'Confirmation de nettoyage de la base d\'adhérents';
 
-// ../subs_confirmation.php:248 ../templates/default/confirmation2.tpl:2 ../templates/default/follow_up_subs.tpl:2 ../templates/default/new_subscription.tpl:5 ../templates/default/send_files.tpl:2 ../templates/default/subs_confirmation.tpl:2 
+// ../subs_confirmation.php:250 ../templates/default/confirmation2.tpl:2 ../templates/default/follow_up_subs.tpl:2 ../templates/default/new_subscription.tpl:5 ../templates/default/send_files.tpl:2 ../templates/default/subs_confirmation.tpl:2 
 $lang['Validation'] = 'Validation';
 
 // ../templates/default/management_subs.tpl:10 
@@ -528,7 +528,7 @@ $lang['Refused'] = 'Refusé';
 // ../templates/default/management_subs2.tpl:14 ../templates/default/management_subs2.tpl:16 
 $lang['of2'] = 'de';
 
-// ../confirmation2.php:66 ../confirmation_clean_adh.php:64 ../follow_up_subs.php:76 ../management_subs.php:242 ../management_subs.php:301 ../management_subs.php:487 ../management_subs2.php:183 
+// ../confirmation2.php:66 ../confirmation_clean_adh.php:64 ../follow_up_subs.php:76 ../management_subs.php:242 ../management_subs.php:301 ../management_subs.php:487 ../management_subs2.php:189 
 $lang['Y-m-d'] = 'd/m/Y';
 
 // ../templates/default/management_subs2.tpl:126 
