@@ -34,7 +34,6 @@ $tpl->assign('picture',$picture);
 $tpl->assign('page_title', _T("New subscription"));
 $tpl->assign('activities',$activities);
 $tpl->assign('members',$members);
-$tpl->assign('age',$age);
 $tpl->assign('statut',$statut);
 $tpl->assign('category',$category);
 $tpl->assign('is_parent_member',$is_parent_member);
