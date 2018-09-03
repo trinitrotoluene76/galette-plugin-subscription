@@ -102,18 +102,11 @@
 				<th>{_T string="Price category"}</th>
 				<td COLSPAN=2>
 					{if $category == 0}
-						(tarif1) Personnel Nexter et assimil&eacute;s
+						{_T string="Price 1"}
 					{/if}
 					{if $category == 1}
-						(tarif2) Enfant du Personnel Nexter et assimil&eacute;s &lsaquo;18 ans
-					{/if}
-					{if $category == 2}
-						(tarif3) Enfant du Personnel Nexter et assimil&eacute;s &lsaquo;=25 ans
-					{/if}
-					{if $category == 3}
-						(tarif4) Ext&eacute;rieurs et Enfants du Personnel Nexter &rsaquo;25 ans
-					{/if}
-					
+						{_T string="Price 2"}
+					{/if}					
 				</td>
 			</tr>
 			<tr>
