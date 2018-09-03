@@ -28,7 +28,6 @@ require_once 'includes/affichage_group.php';
 $tpl->assign('page_title', _T("About Groups"));
 $tpl->assign('activities',$activities);
 $tpl->assign('members',$members);
-$tpl->assign('age',$age);
 $tpl->assign('statut',$statut);
 $tpl->assign('category',$category);
 $tpl->assign('is_parent_member',$is_parent_member);
