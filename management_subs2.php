@@ -251,10 +251,15 @@ $followup->getFollowup($followup);
 				}
 		}//fin du foreach activity
 
+//Calcul de l'age de l'adhérent
+$birthdate= DateTime::createFromFormat(_T("Y-m-d"),$member->birthdate);	
+$today= new DateTime("now");	
+$age=$birthdate->diff($today);	
+$age=$age->format('%Y');
+
 $tpl->assign('page_title', _T("Management of Subscribers"));
 $tpl->assign('subscription',$subscription);
 $tpl->assign('followup',$followup);
-//non utilisé pour l'instant
 $tpl->assign('category',$category);
 $tpl->assign('member',$member);
 $tpl->assign('statut',$statut);
