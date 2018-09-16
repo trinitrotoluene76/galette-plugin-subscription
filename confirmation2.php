@@ -105,12 +105,55 @@ foreach ( $res as  $key => $value )
 					}//fin du if
 				}//fin du foreach
 
+//récupération de l'url de notification:	
+	//définition de la table de la bdd
+	$table="subscription_config_systempay";
+	$select = $zdb->select($table);
+	$select->where(array('field_name'=> 'vads_url_check'))
+						->limit(1);
+	$results = $zdb->execute($select);
+	$result = array();
+	foreach ( $results as $row ) {
+		$result[] = $row;
+	}
+	$vads_url_check=$result[0]->field_value;
+
+//récupération de l'url de paiement:	
+	$select = $zdb->select($table);
+	$select->where(array('field_name'=> 'url_payment_systempay'))
+						->limit(1);
+	$results = $zdb->execute($select);
+	$result = array();
+	foreach ( $results as $row ) {
+		$result[] = $row;
+	}
+	$url_payment_systempay=$result[0]->field_value;
+
+//récupération du global_enable:	
+	$select = $zdb->select($table);
+	$select->where(array('field_name'=> 'global_enable'))
+						->limit(1);
+	$results = $zdb->execute($select);
+	$result = array();
+	foreach ( $results as $row ) {
+		$result[] = $row;
+	}
+	$Sytempay_enable=$result[0]->field_value;
+
+//définition du path absolue nécessaire à vads_url_return. (confirmation2.php)
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$path_abs=$protocol.$_SERVER['SERVER_NAME'].$_SERVER["SCRIPT_NAME"];
+	
 $tpl->assign('page_title', _T("Follow up & Payment"));
 $tpl->assign('subscription',$subscription);
 $tpl->assign('activities',$activities);
 $tpl->assign('followups',$followups);
 $tpl->assign('category',$category);
 $tpl->assign('total',$total);
+$tpl->assign('vads_url_check',$vads_url_check);
+$tpl->assign('url_payment_systempay',$url_payment_systempay);
+$tpl->assign('Sytempay_enable',$Sytempay_enable);
+$tpl->assign('path_abs',$path_abs);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before
