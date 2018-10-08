@@ -139,6 +139,17 @@ foreach ( $res as  $key => $value )
 		$result[] = $row;
 	}
 	$Sytempay_enable=$result[0]->field_value;
+	
+//récupération du mode TEST ou PRODUCTION	
+	$select = $zdb->select($table);
+	$select->where(array('field_name'=> 'vads_ctx_mode'))
+						->limit(1);
+	$results = $zdb->execute($select);
+	$result = array();
+	foreach ( $results as $row ) {
+		$result[] = $row;
+	}
+	$vads_ctx_mode=$result[0]->field_value;
 
 //définition du path absolue nécessaire à vads_url_return. (confirmation2.php)
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
@@ -154,6 +165,7 @@ $tpl->assign('vads_url_check',$vads_url_check);
 $tpl->assign('url_payment_systempay',$url_payment_systempay);
 $tpl->assign('Sytempay_enable',$Sytempay_enable);
 $tpl->assign('path_abs',$path_abs);
+$tpl->assign('vads_ctx_mode',$vads_ctx_mode);
 
 //Set the path to the current plugin's templates,
 //but backup main Galette's template path before
