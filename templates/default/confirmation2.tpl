@@ -118,6 +118,7 @@
 						{if $Sytempay_enable>0 }
 							{if {$total}>0 }
 								<form method="post" action="{$url_payment_systempay}">
+									<input type="hidden" name="vads_ctx_mode" value="{if $vads_ctx_mode>0 }PRODUCTION{else}TEST{/if}">
 									<input type="hidden" name="vads_order_id" value="{$subscription->id_abn}">
 									<input type="hidden" name="vads_cust_id" value="{$subscription->id_adh}">
 									<input type="hidden" name="vads_amount" value="{$total*100}">
