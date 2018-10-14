@@ -1,0 +1,21 @@
+<?php
+/**
+ * Configuration pour votre DB
+ */
+$RepSystemPay = $_SERVER["DOCUMENT_ROOT"].'/systempay_as/';
+	
+define("DB_HOST", "localhost");
+define("DB_USER", "root");
+define("DB_PASSWORD", "");
+define("DB_DATABASE", "mabdd_galette");
+
+define("bEnvoyerMail", true);
+define("UTF8", true);
+define("DestinataireMail", "john@gmail.com");
+define("sNomFichierLog", $RepSystemPay."log/sp_log.txt");
+define("sNomFichierCompteur", $RepSystemPay."compteur/sp_compteur.txt");
+define("sp_configuration", $RepSystemPay."configuration/sp_configuration.txt");
+
+//	Si $bModeSilence est défini à true, la fonction n'affiche aucun message d'erreur si le mail n'a pas pu être envoyé.
+define("bModeSilence", false);
+?>
