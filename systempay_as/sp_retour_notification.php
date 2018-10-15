@@ -10,12 +10,11 @@
 //	Auteur ...... : Marc Labé
 //	Version ..... : 1.0 du 19/09/2018
 //********************************************************
-	$RepSystemPay = $_SERVER["DOCUMENT_ROOT"].'/systempay_as/';
-	include_once($RepSystemPay.'sp_outils.php');
-	include_once($RepSystemPay.'sp_include.php');
-	include_once($RepSystemPay.'configuration/sp_db_config.php');
-	include_once($RepSystemPay.'sp_paiement.php');
-	include_once($RepSystemPay.'sp_compta.php');
+	include_once('sp_outils.php');
+	include_once('sp_include.php');
+	include_once('configuration/sp_db_config.php');
+	include_once('sp_paiement.php');
+	include_once('sp_compta.php');
 
 	class sp_Retour_Notification
 	{

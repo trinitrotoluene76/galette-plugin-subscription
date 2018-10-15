@@ -8,8 +8,7 @@
 //	Version ..... : 1.0 du 19/09/2018
 //********************************************************
 
-	$RepSystemPay = $_SERVER["DOCUMENT_ROOT"].'/systempay_as/';
-	include_once($RepSystemPay.'configuration/sp_db_config.php');
+	include_once('configuration/sp_db_config.php');
 
 	//	class entièrement static
 	class sp_Outils
