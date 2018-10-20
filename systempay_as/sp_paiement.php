@@ -130,7 +130,7 @@
 			
 			if ($control == true)
 			{
-				$this->mSignature_Ok = MSG_SIGNATURE_VALIDE;
+				$this->mSignature_Ok = true;
 			}
 			else
 			{
