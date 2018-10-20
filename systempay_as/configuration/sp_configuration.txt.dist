@@ -293,7 +293,7 @@ vads_return_mode = POST
 ; This setting defines the duration before an automatic return to the shop if the payment is accepted
 ; (unit: seconds).
 
-vads_redirect_success_timeout = 1
+vads_redirect_success_timeout = 5
 
 ;-----------------------------
 ; vads_redirect_error_timeout 
@@ -307,7 +307,7 @@ vads_redirect_success_timeout = 1
 ; This setting defines the duration before an automatic return to the shop if the payment failed
 ; (unit: seconds).
 
-vads_redirect_error_timeout = 1
+vads_redirect_error_timeout = 5
 
 ;-----------------------------
 ; vads_contrib
