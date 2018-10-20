@@ -120,15 +120,15 @@ if(isset($_POST['valid']))
 						$mail = new GaletteMail();
 						if($followup4->statut_act == 1)
 							{
-							$mail->setSubject("[".$preferences->pref_nom."] inscription pour la section ".$group->getName()." validé");
+							$mail->setSubject("[".$preferences->pref_nom."] inscription pour la section ".$group->getName()." validée");
 							}
 						if($followup4->statut_act == 2)
 							{
-							$mail->setSubject("[".$preferences->pref_nom."] inscription pour la section ".$group->getName()." payé");
+							$mail->setSubject("[".$preferences->pref_nom."] inscription pour la section ".$group->getName()." payée");
 							}
 						if($followup4->statut_act == 3)
 							{
-							$mail->setSubject("[".$preferences->pref_nom."] inscription pour la section ".$group->getName()." refusé");
+							$mail->setSubject("[".$preferences->pref_nom."] inscription pour la section ".$group->getName()." refusée");
 							}
 						$mail->setRecipients(
 							array(

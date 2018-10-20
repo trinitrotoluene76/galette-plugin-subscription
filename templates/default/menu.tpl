@@ -20,6 +20,10 @@
 	<ul>
 		<li {if $PAGENAME eq "management_subs.php" || $PAGENAME eq "management_subs2.php"} class="selected"{/if}><a href="{$galette_base_path}{$galette_galette_subscription_path}management_subs.php" title="{_T string="Management of subscribers"}">{_T string="Management subs"}</a></li>
 	</ul>
+	<h1 class="nojs">{_T string="Systempay"}</h1>
+	<ul>
+		<li {if $PAGENAME eq "config_systempay.php"} class="selected"{/if}><a href="{$galette_base_path}{$galette_galette_subscription_path}config_systempay.php" title="{_T string="Config Systempay"}">{_T string="Config Systempay"}</a></li>
+	</ul>
 {/if}
 {if $login->isGroupManager() eq 0}
 	<h1 class="nojs">{_T string="Informations"}</h1>

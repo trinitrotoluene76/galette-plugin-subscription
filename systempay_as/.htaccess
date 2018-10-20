@@ -1,0 +1,2 @@
+RedirectMatch Permanent ^/$ /joomla/
+Options -Indexes
