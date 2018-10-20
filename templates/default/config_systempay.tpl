@@ -65,7 +65,7 @@
 						<label title="{_T string="URL of the web page to notify at the end of the payment."}">{$result[2]->field_name}</label>
 					</td>
 					<td>
-						<INPUT TYPE="TEXT" title="{_T string="URL of the web page to notify at the end of the payment."}" NAME="vads_url_check" VALUE="{$result[2]->field_value}"  SIZE=80 MAXLENGTH=200>
+						<INPUT TYPE="TEXT" title="{_T string="URL of the web page to notify at the end of the payment."}" NAME="vads_url_check" VALUE="{$result[2]->field_value}"  SIZE=100 MAXLENGTH=200>
 					</td>
 				</tr>
 				<tr>
@@ -73,7 +73,7 @@
 						<label title="{_T string="URL of the web page to pay"}">{$result[3]->field_name}</label>
 					</td>
 					<td>
-						<INPUT TYPE="TEXT" title="{_T string="URL of the web page to pay"}" NAME="url_payment_systempay" VALUE="{$result[3]->field_value}"  SIZE=80 MAXLENGTH=200>
+						<INPUT TYPE="TEXT" title="{_T string="URL of the web page to pay"}" NAME="url_payment_systempay" VALUE="{$result[3]->field_value}"  SIZE=100 MAXLENGTH=200>
 					</td>
 				</tr>					
 		</table>
