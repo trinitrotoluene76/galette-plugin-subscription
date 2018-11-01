@@ -1,6 +1,6 @@
-SELECT `tsp_ID` as `ID`, `test`.`FR` as `Test`, `signature`.`FR` as `Signature`, `statut_trans`.`FR` as `Statut`, `resultat`.`FR` as `Resultat`, `tsp_Montant`, `tsp_Montant_Effectif`, `paiement_conf`.`FR` as `Config`, 
+SELECT `tsp_ID` as `ID`, `test`.`FR` as `Test`, `a`.`prenom_adh`, `a`.`nom_adh`, `a`.`email_adh`,`signature`.`FR` as `Signature`, `statut_trans`.`FR` as `Statut`, `resultat`.`FR` as `Resultat`, `tsp_Montant`/100, `tsp_Montant_Effectif`/100, `paiement_conf`.`FR` as `Config`, 
 `tsp_Num_Sequence`, `autorisation`.`FR` as `Autorisation`, `garantie`.`FR` as `Garantie`, `threeds`.`FR` as `Threeds`, `tsp_Delai_Avant_Banque`, `mode_valid`.`FR` as `Validation`, `tsp_Numero_Transaction`, `tsp_Reference_Commande`, 
-`tsp_Date_Heure`, `tsp_Reference_Acheteur`, `tsp_Nom_Acheteur`, `tsp_Email`, `mod_type`.`FR` as `Mode_Type`, `tsp_Numero_Autorisation` as `N° Autorisation`, `tsp_order_info` as `Order_info`
+`tsp_Date_Heure`, `tsp_Reference_Acheteur`, `mod_type`.`FR` as `Mode_Type`, `tsp_Numero_Autorisation` as `N° Autorisation`, `tsp_order_info` as `Order_info`
 FROM `tb_systempay_oper` 
 inner join `tb_systempay_msg` as `test` on `tsp_Mode_Test_Prod`=`test`.`ID`
 inner join `tb_systempay_msg` as `signature` on `tsp_Signature_Ok`=`signature`.`ID`
@@ -12,3 +12,4 @@ inner join `tb_systempay_msg` as `garantie` on `tsp_Garantie`=`garantie`.`ID`
 inner join `tb_systempay_msg` as `threeds` on `tsp_Threeds`=`threeds`.`ID`
 inner join `tb_systempay_msg` as `mode_valid` on `tsp_Mode_Validation`=`mode_valid`.`ID`
 inner join `tb_systempay_msg` as `mod_type` on `tsp_Type`=`mod_type`.`ID`
+inner join `galette_adherents` as `a` on `tsp_Reference_Acheteur`=`a`.`id_adh`
