@@ -137,6 +137,7 @@
 		
 		public function CalculerIDCompte($CodeCompta, $CodeSection)
 		{
+			//fonction à modifier car particulière à notre asso et au nom raccourci des sections
 			$CodeRaccourci = $CodeCompta."_".$CodeSection;
 			
 			$Select = "SELECT `cat_ID_CatCompte` as `ID_CatCompte` FROM `cpt_CatCompte` where `cat_Raccourcis_CatCompte`='".$CodeRaccourci."'";
@@ -154,7 +155,7 @@
 					return $Row['ID_CatCompte'];
 				}
 			}
-			return null;
+			return 0;
 		}
 		
 		public function ConvertirTransactionCompta($Order_Info, $Date_Operation_vads, $Num_Transaction, $ID_Tiers, $ModeTest, $Statut)
