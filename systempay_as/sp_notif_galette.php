@@ -67,24 +67,19 @@ include_once('sp_retour_notification.php');
 				//on ajoute le membre dans le group correspondant
 				
 					//Extraction de l'identifiant de l'activité:
-						//nettoyage du champ vads_order_info= GA|8_Chorale_756_12,00/31_Boxe Française_756_55,00/|
+						//nettoyage du champ vads_order_info= GA|756_id_act_12,00/756_id_act_55,00/|
 						$vads_order_info=substr($_POST["vads_order_info"],0,-2);
 						$vads_order_info=substr($vads_order_info,3);
-					//comptage du nb d'activité
-					$nb_act=substr_count($vads_order_info,'/')+1;
-					$id_acts=array();
-					
+					$ListeVentil = explode("/", $vads_order_info);
 					$List_sections="";
-					for ($i = 0; $i < $nb_act; $i++) 
+					foreach ($ListeVentil as $keyValue)
 						{
-						$pos = strpos($vads_order_info, "_");
-						$id_acts[$i]=substr($vads_order_info,0,$pos);
-						$pos = strpos($vads_order_info, "/");
-						$vads_order_info=substr($vads_order_info,$pos+1);
+						$TransactionVentil = explode("_", $keyValue);
+						$id_act = $TransactionVentil[1];
 						
 						//copier coller d'une partie du code de management_subs2.php
 						$followup=new Followup;
-						$followup->id_act=$id_acts[$i];
+						$followup->id_act=$id_act;
 						$followup->id_adh=$id_adh;
 						$followup->id_abn=$id_abn;
 						$followup->getFollowup($followup);
@@ -112,7 +107,7 @@ include_once('sp_retour_notification.php');
 						
 						//récupération du nom des sections pour le mail
 						$group = new Group();
-						$group->load($id_acts[$i]);//value = id_group
+						$group->load($id_act);//value = id_group
 						$List_sections=$List_sections.$group->getName().",\n";
 						}//fin du for
 					
