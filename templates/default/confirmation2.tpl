@@ -124,7 +124,7 @@
 									<input type="hidden" name="vads_amount" value="{$total*100}">
 									<input type="hidden" name="vads_url_return" value="{$path_abs}?id_abn={$subscription->id_abn}">
 									<input type="hidden" name="vads_url_check" value="{$vads_url_check}">
-									<input type="hidden" name="vads_order_info" value="GA|{foreach from=$activities key=k item=activity}{if $followups[$k]->statut_act == 1}{$activity->id_group}_{$activity->group_name|escape|nl2br}_756_{if $category == 0}{$activity->price1|escape|nl2br}{/if}{if $category == 1}{$activity->price2|escape|nl2br}{/if}/{/if}{/foreach}|">
+									<input type="hidden" name="vads_order_info" value="GA|{foreach from=$activities key=k item=activity}{if $followups[$k]->statut_act == 1}756_{$activity->id_group}_{if $category == 0}{$activity->price1|escape|nl2br}{/if}{if $category == 1}{$activity->price2|escape|nl2br}{/if}/{/if}{/foreach}|">
 									<input type="submit" name="next" id="next" value="{_T string="Pay online"}"/>
 								</form>
 							{/if}
