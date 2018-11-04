@@ -872,7 +872,7 @@ CREATE TABLE `cpt_Operation` (
   `opr_ID_Tiers` int(11) DEFAULT NULL,
   `opr_NumOperation` int(11) DEFAULT NULL,
   `opr_Commentaire` text,
-  `opr_Montant` double DEFAULT NULL,
+  `opr_Montant` int(11) DEFAULT NULL,
   `opr_ID_Compte_Source` int(11) DEFAULT NULL,
   `opr_ID_Compte_Cible` int(11) DEFAULT NULL,
   `opr_Ventilation` int(11) DEFAULT NULL,
