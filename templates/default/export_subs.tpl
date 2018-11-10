@@ -2,6 +2,8 @@
 </br>
 <a href="{$galette_base_path}{$subscription_dir}get_export.php?file=liste_abn_appartenance_statut_{$id_act}.csv"  target="_blank">telecharger la liste des abonnements pour la section {$id_act}</a>
 </br>
+<a href="{$galette_base_path}{$subscription_dir}get_export.php?file=liste_abn_appartenance_statut_fichiers_{$id_act}.csv"  target="_blank">telecharger la liste des fichiers pour la section {$id_act}</a>
+</br>
 {if $login->isStaff()==1 || $login->isSuperAdmin()==1 || $login->isAdmin()==1}
 <a href="{$galette_base_path}{$subscription_dir}get_export.php?file=liste_abn_appartenance_statut_global.csv"  target="_blank">telecharger la liste globale des abonnements</a>
 {/if}
