@@ -105,7 +105,7 @@
 			$MonPaiement = new sp_Paiement();
 			$bSignature_Ok = $MonPaiement->Lire_Request();
 			
-			if ($bSignature_Ok == MSG_SIGNATURE_VALIDE)
+			if ($bSignature_Ok == true)
 			{
 				$this->AjouterPaiement($MonPaiement);
 
