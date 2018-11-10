@@ -66,7 +66,7 @@ $id_act=0;
 
 //Création des fichiers excel au chargement de cette page.
 
-//Liste des abonnements de la section concernée (avec l'appartenance et le statut de l'abn RAJOUTER données de l'objet subscription):
+//Liste des abonnements de la section concernée (avec l'appartenance et le statut de l'abn):
 //fichier nommé: liste_abn_appartenance_statut_'.$id_act.'.csv'
 
 $select = $zdb->select('subscription_followup', 'f2');
@@ -91,6 +91,54 @@ $select = $zdb->select('subscription_followup', 'f2');
 	array_unshift($result,array ('id_act','id_adh','id_abn (identifiant de l\'abonnement)','statut_act: 0=en cours, 1=validé, 2=payé, 3=refusé','feedback act','message adh act (Message de l\'abonné pour l\'activité)','feedback off','date de la demande d\'abonnement', 'total estimmé lors de l\'abonnement','message de l\'abonné concernant l\'abonnement','id_adh','item_id','field_id','field_form','val_index','id','Appartenance','id_statut','nom_adh','prenom_adh','pseudo','société','titre adh','date de naissance','sexe (0=non spécifié, 1=M, 2=F)','adresse','adresse2','code postal','ville','pays','tel','gsm','mail','url','icq','msn','jabber','info','info publique','profession','login','mdp','date de création du profil','date de modification du profil','activite_adh','bool admin','bool exempt','bool display','date echeance','pref lanque','lieu de naissance','gpgid','fingerprint','parent_id'));
         if ( $results->count() > 0 ) {
             $filename ='liste_abn_appartenance_statut_'.$id_act.'.csv';
+            $filepath = CsvOut::DEFAULT_DIRECTORY . $filename;
+            $fp = fopen($filepath, 'w');
+            if ( $fp ) {
+                $res = $csv->export(
+                    $result,
+					Csv::DEFAULT_SEPARATOR,
+                    Csv::DEFAULT_QUOTE,
+                    true,
+                    $fp
+                );
+                fclose($fp);
+                $written[] = array(
+                    'name' => $filename,
+                    'file' => $filepath
+                );
+            }
+		}
+
+//Liste des abonnements de la section concernée (avec l'appartenance et le statut de l'abn et les fichiers uploadé):
+//fichier nommé: liste_abn_appartenance_statut_fichiers'.$id_act.'.csv'
+
+$select = $zdb->select('subscription_followup', 'f2');
+            $select->join(array('s' => 'galette_subscription_subscriptions'),
+								's.id_abn=f2.id_abn');
+			$select->join(array('d' => 'galette_dynamic_fields'),
+								'd.item_id=f2.id_adh');
+			$select->join(array('f' => 'galette_field_contents_5'),
+								'f.id=d.field_val');
+			$select->join(array('a' => 'galette_adherents'),
+								'a.id_adh=f2.id_adh');
+			$select->join(array('fi' => 'galette_subscription_files'),
+								'fi.id_abn=f2.id_abn',
+								array('doc_name','description','emplacement','date_record'),
+								$select::JOIN_LEFT
+								);
+			$select->where(array('f2.id_act'=> $id_act,
+								 'd.field_id'=> '5'))//filtre sur l'activité concernée
+										  //filtre sur le champ dynamique 5 = appartenance
+				   ->order('a.nom_adh');
+			$results = $zdb->execute($select);
+			$result = array();
+			foreach ( $results as $row ) {
+				 $result[] = $row;
+            }
+//ajout des entetes
+	array_unshift($result,array ('id_act','id_adh','id_abn (identifiant de l\'abonnement)','statut_act: 0=en cours, 1=validé, 2=payé, 3=refusé','feedback act','message adh act (Message de l\'abonné pour l\'activité)','feedback off','date de la demande d\'abonnement', 'total estimmé lors de l\'abonnement','message de l\'abonné concernant l\'abonnement','id_adh','item_id','field_id','field_form','val_index','id','Appartenance','id_statut','nom_adh','prenom_adh','pseudo','société','titre adh','date de naissance','sexe (0=non spécifié, 1=M, 2=F)','adresse','adresse2','code postal','ville','pays','tel','gsm','mail','url','icq','msn','jabber','info','info publique','profession','login','mdp','date de création du profil','date de modification du profil','activite_adh','bool admin','bool exempt','bool display','date echeance','pref lanque','lieu de naissance','gpgid','fingerprint','parent_id',  'doc_name','description','emplacement', 'date_record'));
+        if ( $results->count() > 0 ) {
+            $filename ='liste_abn_appartenance_statut_fichiers_'.$id_act.'.csv';
             $filepath = CsvOut::DEFAULT_DIRECTORY . $filename;
             $fp = fopen($filepath, 'w');
             if ( $fp ) {
