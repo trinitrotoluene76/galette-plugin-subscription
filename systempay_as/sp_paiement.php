@@ -325,7 +325,7 @@
 			{
 				$this->mOrder_Info = "";
 			}
-			return $this->mSignature_Ok;
+			return ($this->mSignature_Ok === MSG_SIGNATURE_VALIDE);
 		}
 		//--------------------------------------------------------------------------------------------------------------------
 		//	Fonction => calcul de la signature
