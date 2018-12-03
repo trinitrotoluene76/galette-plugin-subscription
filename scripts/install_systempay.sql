@@ -39,7 +39,8 @@ INSERT INTO `galette_subscription_config_systempay` (`id_conf`, `field_name`, `f
 (1, 'global_enable', 0),
 (2, 'vads_ctx_mode', 0),
 (3, 'vads_url_check', 'http://my_url_notifier.fr/'),
-(4, 'url_payment_systempay', 'http://monsite/galette/plugins/galette-plugin-subscription/systempay_as/sp_form_paiement.php');
+(4, 'url_payment_systempay', 'http://monsite/galette/plugins/galette-plugin-subscription/systempay/sp_form_paiement.php'),
+(5, 'systempay_path', './systempay/');
 
 --
 -- Table structure for table `tb_systempay_oper`
@@ -48,7 +49,7 @@ INSERT INTO `galette_subscription_config_systempay` (`id_conf`, `field_name`, `f
 DROP TABLE IF EXISTS `tb_systempay_oper`;
 
 CREATE TABLE `tb_systempay_oper` (
-  `tsp_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `tsp_ID` int(11) NOT NULL,
   `tsp_Mode_Test_Prod` tinyint(4) NOT NULL,
   `tsp_Signature_Ok` tinyint(1) NOT NULL,
   `tsp_Statut_Transaction` tinyint(4) NOT NULL,
@@ -71,11 +72,8 @@ CREATE TABLE `tb_systempay_oper` (
   `tsp_Email` varchar(150) NOT NULL,
   `tsp_Type` tinyint(4) NOT NULL,
   `tsp_Numero_Autorisation` varchar(6) NOT NULL,
-  `tsp_order_info` varchar(256) NOT NULL,
-  PRIMARY KEY (`tsp_ID`),
-  UNIQUE KEY `tsp_Numero_Transaction` (`tsp_Numero_Transaction`),
-  KEY `tsp_Numero_Transaction_2` (`tsp_Numero_Transaction`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Liste des opérations effectuées par SystemPay et analysées';
+  `tsp_order_info` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Liste des opérations effectuées par SystemPay et analysées';
 
 --
 -- Structure de la table `tb_systempay_msg`
@@ -85,99 +83,100 @@ DROP TABLE IF EXISTS `tb_systempay_msg`;
 CREATE TABLE `tb_systempay_msg` (
   `ID` int(2) NOT NULL DEFAULT '0',
   `Cle_Msg` varchar(45) DEFAULT NULL,
-  `Fr` varchar(427) DEFAULT NULL,
-  `En` varchar(379) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `Cle_Msg` (`Cle_Msg`)
+  `fr` varchar(427) DEFAULT NULL,
+  `en` varchar(379) DEFAULT NULL,
+  `de` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `tb_systempay_msg`
 --
 
-INSERT INTO `tb_systempay_msg` (`ID`, `Cle_Msg`, `fr`, `en`) VALUES
-(0, 'MSG_NON_TROUVE', 'Valeur non trouvée', 'Not found value'),
-(1, 'MSG_PAIEMENT_ABANDONNE', 'Le paiement a été abandonné par le client. La transaction n’a pas été crée sur la plateforme de paiement et n’est donc pas visible dans le back office marchand.', 'The payment was abandonned by the customer. The transaction was not created on the gateway and therefore is not visible on the merchant back office.'),
-(2, 'MSG_PAIEMENT_ACCEPTE', 'Le paiement a été accepté et est en attente de remise en banque.', 'The payment is accepted and is waiting to be cashed.'),
-(3, 'MSG_PAIEMENT_ETE_REFUSE', 'Le paiement a été refusé.', 'The payment was refused.'),
-(4, 'MSG_TRANSACTION_ATTENTE_VALIDATION_MANUELLE', 'La transaction a été acceptée mais elle est en attente de validation manuelle. C''est à la charge du marchand de valider la transaction pour demander la remise en banque depuis le back office marchand ou par requête web service. La transaction pourra être validée tant que le délai de capture n’a pas été dépassé. Si ce délai est dépassé alors le paiement bascule dans le statut Expiré. Ce statut expiré est définitif.', 'The transaction is accepted but it is waiting to be manually validated. It is on the merchant responsability to validate the transaction in order that it can be cashed from the back office or by web service request. The transaction can be validated as long as the capture delay is not expired. If the delay expires the payment status change to Expired. This status is definitive.'),
-(5, 'MSG_TRANSACTION_ATTENTE_AUTORISATION', 'La transaction est en attente d’autorisation. Lors du paiement uniquement un prise d’empreinte a été réalisée car le délai de remise en banque est strictement supérieur à 7 jours. Par défaut la demande d’autorisation pour le montant global sera réalisée à j-2 avant la date de remise en banque.', 'The transaction is waiting for an authorisation. During the payment, just an imprint was made because the capture delay is higher than 7 days. By default the auhorisation demand for the global amount will be made 2 days before the bank deposit date.'),
-(6, 'MSG_TRANSACTION_EXPIREE', 'La transaction est expirée. Ce statut est définitif, la transaction ne pourra plus être remisée en banque. Une transaction expire dans le cas d''une transaction créée en validation manuelle ou lorsque le délai de remise en banque (capture delay) dépassé.', 'The transaction expired. This status is definitive, the transaction will not be able to be cashed. A transaction expires when it was created in manual validation or when the capture delay is passed.'),
-(7, 'MSG_TRANSACTION_ANNULEE', 'La transaction a été annulée au travers du back office marchand ou par une requête web service. Ce statut est définitif, la transaction ne sera jamais remise en banque.', 'The payment was cancelled through the merchant back offfice or by a web service request. This status is definitive, the transaction will never be cashed.'),
-(8, 'MSG_TRANSACTION_ATTENTE_AUTO_VALID', 'La transaction est en attente d’autorisation et en attente de validation manuelle. Lors du paiement uniquement un prise d’empreinte a été réalisée car le délai de remise en banque est strictement supérieur à 7 jours et le type de validation demandé est « validation manuelle ». Ce paiement ne pourra être remis en banque uniquement après une validation du marchand depuis le back office marchand ou par un requête web services.', 'The transaction is waiting for an authorisation and a manual validation. During the payment, just an imprint was made because the capture delay is higher than 7 days and the validation type is « manual validation ». This payment will be able to be cashed only after that the merchant validates it from the back office or by web service request.'),
-(9, 'MSG_TRANSACTION_REMISE_BANQUE', 'La transaction a été remise en banque. Ce statut est définitif.', 'The payment was cashed. This status is definitive.'),
-(10, 'MSG_PAIEMENT_REALISE_SUCCES', 'Paiement réalisé avec succès.', 'Payment successfully completed.'),
-(11, 'MSG_COMMERCANT_CONTACTER_BANQUE_PORTEUR', 'Le commerçant doit contacter la banque du porteur.', 'The merchant must contact the holder’s bank.'),
-(12, 'MSG_PAIEMENT_REFUSE', 'Paiement refusé.', 'Payment denied.'),
-(13, 'MSG_ANNULE_PAR_LE_CLIENT', 'Paiement annulé par le client.', 'Cancellation by customer.'),
-(14, 'MSG_ERREUR_FORMAT_RESULTAT', 'Erreur de format de la requête. A mettre en rapport avec la valorisation du champ vads_extra_result.', 'Request format error. To be linked with the value of the vads_extra_result field.'),
-(15, 'MSG_ERREUR_TECHNIQUE', 'Erreur technique lors du paiement.', 'Technical error occurred during payment.'),
-(16, 'MSG_PAIEMENT_SIMPLE', 'Paiement simple.', 'Unique Payment.'),
-(17, 'MSG_TRANSACTION_APPROUVEE', 'Transaction approuvée ou traitée avec succès.', 'Transaction approved or successfully treated.'),
-(18, 'MSG_CONTACTER_EMETTEUR', 'Contacter l’émetteur de carte.', 'Contact the card issuer.'),
-(19, 'MSG_ACCEPTEUR_INVALIDE', 'Accepteur_invalide.', 'Invalid acceptor.'),
-(20, 'MSG_CONSERVER_CARTE', 'Conserver la carte.', 'Keep the card.'),
-(21, 'MSG_NE_PAS_HONORER', 'Ne pas honorer.', 'Do not honor.'),
-(22, 'MSG_CONSERVER_CARTE_SPECIAL', 'Conserver la carte, conditions spéciales.', 'Keep the card, special conditions.'),
-(23, 'MSG_APPROUVER_APRES_IDENTIFICATION', 'Approuver après identification.', 'Approved after identification.'),
-(24, 'MSG_TRANSACTION_INVALIDE', 'Transaction invalide.', 'Invalid Transaction.'),
-(25, 'MSG_MONTANT_INVALIDE', 'Montant invalide.', 'Invalid Amount.'),
-(26, 'MSG_NUMERO_PORTEUR_INVALIDE', 'Numéro de porteur invalide.', 'Invalid holder number.'),
-(27, 'MSG_ERREUR_FORMAT_AUTH', 'Erreur de format.', 'Format error.'),
-(28, 'MSG_IDENTIFIANT_ORGANISME', 'Identifiant de l’organisme acquéreur inconnu.', 'Unknown buying organization identifier.'),
-(29, 'MSG_DATE_VALIDITE_DEPASSEE', 'Date de validité de la carte dépassée.', 'Expired card validity date.'),
-(30, 'MSG_SUSPICION_FRAUDE', 'Suspicion de fraude.', 'Fraud suspected.'),
-(31, 'MSG_CARTE_PERDUE', 'Carte perdue.', 'Lost card.'),
-(32, 'MSG_CARTE_VOLEE', 'Carte volée.', 'Stolen card.'),
-(33, 'MSG_PROVISION_INSUFFISANTE', 'Provision insuffisante ou crédit dépassé.', 'Insufficient provision or exceeds credit.'),
-(34, 'MSG_CARTE_ABSENTE', 'Carte absente du fichier.', 'Card not in database.'),
-(35, 'MSG_TRANSACTION_NON_PERMISE', 'Transaction non permise à ce porteur.', 'Transaction not allowed for this holder.'),
-(36, 'MSG_TRANSACTION_INTERDITE', 'Transaction interdite au terminal.', 'Transaction not allowed from this terminal.'),
-(37, 'MSG_DEBIT', 'Débit', 'Debit'),
-(38, 'MSG_ACCEPTEUR_DOIT_CONTACTER', 'L’accepteur de carte doit contacter l’acquéreur.', 'The card acceptor must contact buyer.'),
-(39, 'MSG_MONTANT_RETRAIT_HORS_LIMITE', 'Montant de retrait hors limite.', 'Amount over withdrawal limits.'),
-(40, 'MSG_REGLES_SECURITE_NON_RESPECTEES', 'Règles de sécurité non respectées.', 'Does not abide to security rules.'),
-(41, 'MSG_REPONSE_NON_PARVENUE', 'Réponse non parvenue ou reçue trop tard.', 'Response not received or received too late.'),
-(42, 'MSG_ARRET_MOMENTANE', 'Arrêt momentané du système.', 'System temporarily stopped.'),
-(43, 'MSG_EMETTEUR_INACCESSIBLE', 'Emetteur de cartes inaccessible.', 'Inaccessible card issuer.'),
-(44, 'MSG_MAUVAIS_FONCTIONNEMENT', 'Mauvais fonctionnement du système.', 'Faulty system.'),
-(45, 'MSG_TRANSACTION_DUPLIQUEE', 'Transaction dupliquée.', 'Duplicated transaction.'),
-(46, 'MSG_ECHEANCE_TEMPORISATION', 'Echéance de la temporisation de surveillance globale.', 'Global surveillance time out expired.'),
-(47, 'MSG_SERVEUR_INDISPONIBLE', 'Serveur indisponible routage réseau demandé à nouveau.', 'Unavailable server, repeat network routing requested.'),
-(48, 'MSG_INCIDENT_DOMAINE_INITIATEUR', 'Incident domaine initiateur.', 'Instigator domain incident.'),
-(49, 'MSG_PAIEMENT_GARANTI', 'Le paiement est garanti.', 'Payment is guaranteed.'),
-(50, 'MSG_PAIEMENT_NON_GARANTI', 'Le paiement n’est pas garanti.', 'Payment is not guaranteed.'),
-(51, 'MSG_SUITE_A_ERREUR', 'Suite à une erreur technique, le paiement ne peut pas être garanti.', 'Payment cannot be guaranteed, due to a technical error.'),
-(52, 'MSG_GARANTIE_NON_APPLICABLE', 'Garantie de paiement non applicable.', 'Payment guarantee not applicable.'),
-(53, 'MSG_AUTHENTIFIE_3DS', 'Authentifié 3DS.', '3DS Authentified.'),
-(54, 'MSG_ERREUR_AUTHENTIFICATION', 'Erreur Authentification.', 'Authentification Error.'),
-(55, 'MSG_AUTHENTIFICATION_IMPOSSIBLE', 'Authentification impossible.', 'Authentification Impossible.'),
-(56, 'MSG_ESSAI_AUTHENTIFICATION', 'Essai d’authentification.', 'Try to authenticate.'),
-(57, 'MSG_NON_RENSEIGNE', 'Non renseigné.', 'Non valued.'),
-(58, 'MSG_VALIDATION_MANUELLE', 'Validation Manuelle', 'Manual Validation'),
-(59, 'MSG_VALIDATION_AUTOMATIQUE', 'Validation Automatique', 'Automatic Validation'),
-(60, 'MSG_CONFIGURATION_DEFAUT_BACK_OFFICE_MARCHAND', 'Configuration par défaut du back office marchand', 'Default configuration of the merchant back office'),
-(61, 'MSG_ERREUR_CONFIGURATION_PARA', 'Erreur de configuration. Le fichier conf.txt n''est pas correctement paramétré. Vérifier l''identifiant boutique, votre certificat et l''URL de retour.', 'CONFIGURATION ERROR!</u></b></p><p><b>The conf.txt file is not properly set. Please check your shop ID, your certificate and your return URL.'),
-(62, 'MSG_SIGNATURE_VALIDE', 'Signature Valide', 'Valid Signature'),
-(63, 'MSG_SIGNATURE_INVALIDE', 'Signature Invalide - ne pas prendre en compte le résultat de ce paiement', 'Invalid Signature - do not take this payment result in account'),
-(64, 'MSG_TRANSACTION_DEBIT', 'La transaction est un débit ayant comme caractéristiques', 'The transaction is a debit with the following details'),
-(65, 'MSG_STATUT', 'Statut', 'Status'),
-(66, 'MSG_RESULTAT', 'Résultat', 'Result'),
-(67, 'MSG_IDENTIFIANT', 'Identifiant', 'ID'),
-(68, 'MSG_MONTANT', 'Montant', 'Account'),
-(69, 'MSG_MONTANT_EFFECTIF', 'Montant Effectif', 'Effective Account'),
-(70, 'MSG_TYPE_DE_PAIEMENT', 'Type de paiement', 'Payment Type'),
-(71, 'MSG_NUMERO_SEQUENCE', 'Numéro de séquence', 'Sequence Number'),
-(72, 'MSG_RESULTAT_AUTORISATION', 'Résultat d''autorisation', 'Authorisation Result'),
-(73, 'MSG_GARANTIE_PAIEMENT', 'Garantie de paiement', 'Payment Warranty'),
-(74, 'MSG_STATUT_3DS', 'Statut 3DS', 'Statut 3DS'),
-(75, 'MSG_DELAI_AVANT_REMISE_EN_BANQUE', 'Délai avant Remise en Banque', 'Capture delay'),
-(76, 'MSG_MODE_VALIDATION', 'Mode de Validation', 'Validation Mode'),
-(77, 'MSG_REDIRECTION_PLATEFORME', 'Redirection vers la plateforme de paiement', 'Payment gateway redirection'),
-(78, 'MSG_TEST', 'Test', 'Test'),
-(79, 'MSG_PRODUCTION', 'Production', 'Production'),
-(80, 'MSG_REDIRECT_SUCCES', 'Paiement réalisé avec succès. Redirection vers la boutique dans quelques instants.', 'Payment successfully completed.'),
-(81, 'MSG_REDIRECT_ERREUR', 'Le paiement a été refusé. Redirection vers le site asnexter.fr dans quelques instants.', 'Payment has been refused. Redirection to the site asnexter.fr');
+INSERT INTO `tb_systempay_msg` (`ID`, `Cle_Msg`, `fr`, `en`, `de`) VALUES
+(0, 'MSG_NON_TROUVE', 'Valeur non trouvée', 'Not found value', 'Wert nicht gefunden'),
+(1, 'MSG_PAIEMENT_ABANDONNE', 'Le paiement a été abandonné par le client. La transaction n’a pas été crée sur la plateforme de paiement et n’est donc pas visible dans le back office marchand.', 'The payment was abandonned by the customer. The transaction was not created on the gateway and therefore is not visible on the merchant back office.', 'Die Zahlung wurde vom Kunden aufgegeben. Die Transaktion wurde nicht auf der Zahlungsplattform erstellt und ist daher nicht im Händler-Back-Office sichtbar.'),
+(2, 'MSG_PAIEMENT_ACCEPTE', 'Le paiement a été accepté et est en attente de remise en banque.', 'The payment is accepted and is waiting to be cashed.', 'Die Zahlung wurde akzeptiert und steht noch aus.'),
+(3, 'MSG_PAIEMENT_ETE_REFUSE', 'Le paiement a été refusé.', 'The payment was refused.', 'Zahlung wurde abgelehnt'),
+(4, 'MSG_TRANSACTION_ATTENTE_VALIDATION_MANUELLE', 'La transaction a été acceptée mais elle est en attente de validation manuelle. C\'est à la charge du marchand de valider la transaction pour demander la remise en banque depuis le back office marchand ou par requête web service. La transaction pourra être validée tant que le délai de capture n’a pas été dépassé. Si ce délai est dépassé alors le paiement bascule dans le statut Expiré. Ce statut expiré est définitif.', 'The transaction is accepted but it is waiting to be manually validated. It is on the merchant responsability to validate the transaction in order that it can be cashed from the back office or by web service request. The transaction can be validated as long as the capture delay is not expired. If the delay expires the payment status change to Expired. This status is definitive.', 'Die Transaktion wurde akzeptiert, muss jedoch noch manuell validiert werden. Es liegt in der Verantwortung des Händlers, die Transaktion zu bestätigen, um die Bank vom Back-Office-Händler anzufordern oder einen Webservice anzufordern. Die Transaktion kann validiert werden, solange die Erfassungszeit nicht überschritten wurde. Wenn diese Zeit überschritten wird, wechselt die Zahlung in den Status \"Abgelaufen\". Dieser abgelaufene Status ist endgültig.'),
+(5, 'MSG_TRANSACTION_ATTENTE_AUTORISATION', 'La transaction est en attente d’autorisation. Lors du paiement uniquement un prise d’empreinte a été réalisée car le délai de remise en banque est strictement supérieur à 7 jours. Par défaut la demande d’autorisation pour le montant global sera réalisée à j-2 avant la date de remise en banque.', 'The transaction is waiting for an authorisation. During the payment, just an imprint was made because the capture delay is higher than 7 days. By default the auhorisation demand for the global amount will be made 2 days before the bank deposit date.', 'Die Transaktion steht noch aus. Bei der Bezahlung wurde nur ein Eindruck gemacht, da die Frist für das Bankgeschäft strikt länger als 7 Tage ist. Standardmäßig erfolgt die Autorisierungsanfrage für den Gesamtbetrag am Tag 2 vor dem Datum der Bankeinzahlung.'),
+(6, 'MSG_TRANSACTION_EXPIREE', 'La transaction est expirée. Ce statut est définitif, la transaction ne pourra plus être remisée en banque. Une transaction expire dans le cas d\'une transaction créée en validation manuelle ou lorsque le délai de remise en banque (capture delay) dépassé.', 'The transaction expired. This status is definitive, the transaction will not be able to be cashed. A transaction expires when it was created in manual validation or when the capture delay is passed.', 'Die Transaktion ist abgelaufen. Dieser Status ist endgültig, die Transaktion kann nicht mehr in der Bank gespeichert werden. Eine Transaktion verfällt, wenn eine Transaktion bei der manuellen Validierung erstellt wurde oder die Erfassungsverzögerung abgelaufen ist.'),
+(7, 'MSG_TRANSACTION_ANNULEE', 'La transaction a été annulée au travers du back office marchand ou par une requête web service. Ce statut est définitif, la transaction ne sera jamais remise en banque.', 'The payment was cancelled through the merchant back offfice or by a web service request. This status is definitive, the transaction will never be cashed.', 'Die Transaktion wurde über das Back-Office des Händlers oder über eine Webservice-Anfrage abgebrochen. Dieser Status ist endgültig, die Transaktion wird niemals in die Bank gesetzt.'),
+(8, 'MSG_TRANSACTION_ATTENTE_AUTO_VALID', 'La transaction est en attente d’autorisation et en attente de validation manuelle. Lors du paiement uniquement un prise d’empreinte a été réalisée car le délai de remise en banque est strictement supérieur à 7 jours et le type de validation demandé est « validation manuelle ». Ce paiement ne pourra être remis en banque uniquement après une validation du marchand depuis le back office marchand ou par un requête web services.', 'The transaction is waiting for an authorisation and a manual validation. During the payment, just an imprint was made because the capture delay is higher than 7 days and the validation type is « manual validation ». This payment will be able to be cashed only after that the merchant validates it from the back office or by web service request.', 'Die Transaktion steht vor der Autorisierung und wartet auf die manuelle Validierung. Beim Bezahlen wurde nur ein Eindruck gemacht, weil die Zeit des Bankierens strikt länger als 7 Tage ist und die Art der Validierung \"manuelle Validierung\" ist. Diese Zahlung kann nur nach einer Bestätigung des Händlers im Backoffice des Händlers oder durch eine Anforderung von Webservices in Bank bezahlt werden.'),
+(9, 'MSG_TRANSACTION_REMISE_BANQUE', 'La transaction a été remise en banque. Ce statut est définitif.', 'The payment was cashed. This status is definitive.', 'Die Transaktion wurde abgewickelt. Dieser Status ist endgültig.'),
+(10, 'MSG_PAIEMENT_REALISE_SUCCES', 'Paiement réalisé avec succès.', 'Payment successfully completed.', 'Zahlung erfolgreich abgeschlossen'),
+(11, 'MSG_COMMERCANT_CONTACTER_BANQUE_PORTEUR', 'Le commerçant doit contacter la banque du porteur.', 'The merchant must contact the holder’s bank.', 'Der Händler muss sich an die Bank des Inhabers wenden.'),
+(12, 'MSG_PAIEMENT_REFUSE', 'Paiement refusé.', 'Payment denied.', 'Zahlung abgelehnt.'),
+(13, 'MSG_ANNULE_PAR_LE_CLIENT', 'Paiement annulé par le client.', 'Cancellation by customer.', 'Zahlung vom Kunden storniert.'),
+(14, 'MSG_ERREUR_FORMAT_RESULTAT', 'Erreur de format de la requête. A mettre en rapport avec la valorisation du champ vads_extra_result.', 'Request format error. To be linked with the value of the vads_extra_result field.', 'Abfrageformatfehler In Verbindung mit der Aufwertung des Feldes vads_extra_result.'),
+(15, 'MSG_ERREUR_TECHNIQUE', 'Erreur technique lors du paiement.', 'Technical error occurred during payment.', 'Technischer Fehler während der Zahlung.'),
+(16, 'MSG_PAIEMENT_SIMPLE', 'Paiement simple.', 'Unique Payment.', 'Einfache Bezahlung'),
+(17, 'MSG_TRANSACTION_APPROUVEE', 'Transaction approuvée ou traitée avec succès.', 'Transaction approved or successfully treated.', 'Transaktion genehmigt oder erfolgreich bearbeitet.'),
+(18, 'MSG_CONTACTER_EMETTEUR', 'Contacter l’émetteur de carte.', 'Contact the card issuer.', 'Wenden Sie sich an den Kartenaussteller.'),
+(19, 'MSG_ACCEPTEUR_INVALIDE', 'Accepteur_invalide.', 'Invalid acceptor.', 'Accepteur_invalide.'),
+(20, 'MSG_CONSERVER_CARTE', 'Conserver la carte.', 'Keep the card.', 'Bewahren Sie die Karte auf.'),
+(21, 'MSG_NE_PAS_HONORER', 'Ne pas honorer.', 'Do not honor.', 'Ehre nicht'),
+(22, 'MSG_CONSERVER_CARTE_SPECIAL', 'Conserver la carte, conditions spéciales.', 'Keep the card, special conditions.', 'Behalten Sie die Karte, Sonderkonditionen.'),
+(23, 'MSG_APPROUVER_APRES_IDENTIFICATION', 'Approuver après identification.', 'Approved after identification.', 'Genehmigen Sie nach der Identifizierung.'),
+(24, 'MSG_TRANSACTION_INVALIDE', 'Transaction invalide.', 'Invalid Transaction.', 'Ungültige Transaktion'),
+(25, 'MSG_MONTANT_INVALIDE', 'Montant invalide.', 'Invalid Amount.', 'Betrag ungültig'),
+(26, 'MSG_NUMERO_PORTEUR_INVALIDE', 'Numéro de porteur invalide.', 'Invalid holder number.', 'Ungültige Frachtführernummer'),
+(27, 'MSG_ERREUR_FORMAT_AUTH', 'Erreur de format.', 'Format error.', 'Formatierungsfehler'),
+(28, 'MSG_IDENTIFIANT_ORGANISME', 'Identifiant de l’organisme acquéreur inconnu.', 'Unknown buying organization identifier.', 'Kennung der unbekannten erwerbenden Organisation.'),
+(29, 'MSG_DATE_VALIDITE_DEPASSEE', 'Date de validité de la carte dépassée.', 'Expired card validity date.', 'Gültigkeitsdatum der Karte überschritten.'),
+(30, 'MSG_SUSPICION_FRAUDE', 'Suspicion de fraude.', 'Fraud suspected.', 'Verdacht auf Betrug.'),
+(31, 'MSG_CARTE_PERDUE', 'Carte perdue.', 'Lost card.', 'Verlorene Karte'),
+(32, 'MSG_CARTE_VOLEE', 'Carte volée.', 'Stolen card.', 'Gestohlene Karte'),
+(33, 'MSG_PROVISION_INSUFFISANTE', 'Provision insuffisante ou crédit dépassé.', 'Insufficient provision or exceeds credit.', 'Unzureichende Bereitstellung oder Gutschrift überschritten.'),
+(34, 'MSG_CARTE_ABSENTE', 'Carte absente du fichier.', 'Card not in database.', 'Karte nicht in der Datei.'),
+(35, 'MSG_TRANSACTION_NON_PERMISE', 'Transaction non permise à ce porteur.', 'Transaction not allowed for this holder.', 'Transaktion für diesen Inhaber nicht zulässig.'),
+(36, 'MSG_TRANSACTION_INTERDITE', 'Transaction interdite au terminal.', 'Transaction not allowed from this terminal.', 'Transaktion am Terminal verboten.'),
+(37, 'MSG_DEBIT', 'Débit', 'Debit', 'Soll'),
+(38, 'MSG_ACCEPTEUR_DOIT_CONTACTER', 'L’accepteur de carte doit contacter l’acquéreur.', 'The card acceptor must contact buyer.', 'Der Kartenakzeptor muss sich an den Erwerber wenden.'),
+(39, 'MSG_MONTANT_RETRAIT_HORS_LIMITE', 'Montant de retrait hors limite.', 'Amount over withdrawal limits.', 'Auszahlungsbetrag außerhalb des Limits.'),
+(40, 'MSG_REGLES_SECURITE_NON_RESPECTEES', 'Règles de sécurité non respectées.', 'Does not abide to security rules.', 'Sicherheitsregeln nicht beachtet.'),
+(41, 'MSG_REPONSE_NON_PARVENUE', 'Réponse non parvenue ou reçue trop tard.', 'Response not received or received too late.', 'Antwort nicht oder zu spät erhalten.'),
+(42, 'MSG_ARRET_MOMENTANE', 'Arrêt momentané du système.', 'System temporarily stopped.', 'Kurzzeitiges Herunterfahren des Systems.'),
+(43, 'MSG_EMETTEUR_INACCESSIBLE', 'Emetteur de cartes inaccessible.', 'Inaccessible card issuer.', 'Kartenaussteller nicht erreichbar.'),
+(44, 'MSG_MAUVAIS_FONCTIONNEMENT', 'Mauvais fonctionnement du système.', 'Faulty system.', 'Fehlfunktion des Systems.'),
+(45, 'MSG_TRANSACTION_DUPLIQUEE', 'Transaction dupliquée.', 'Duplicated transaction.', 'Doppelte Transaktion'),
+(46, 'MSG_ECHEANCE_TEMPORISATION', 'Echéance de la temporisation de surveillance globale.', 'Global surveillance time out expired.', 'Frist für den globalen Überwachungstimer.'),
+(47, 'MSG_SERVEUR_INDISPONIBLE', 'Serveur indisponible routage réseau demandé à nouveau.', 'Unavailable server, repeat network routing requested.', 'Server nicht verfügbares Netzwerkrouting erneut angefordert.'),
+(48, 'MSG_INCIDENT_DOMAINE_INITIATEUR', 'Incident domaine initiateur.', 'Instigator domain incident.', 'Incident-Initiator-Domäne'),
+(49, 'MSG_PAIEMENT_GARANTI', 'Le paiement est garanti.', 'Payment is guaranteed.', 'Zahlung ist garantiert'),
+(50, 'MSG_PAIEMENT_NON_GARANTI', 'Le paiement n’est pas garanti.', 'Payment is not guaranteed.', 'Zahlung ist nicht garantiert.'),
+(51, 'MSG_SUITE_A_ERREUR', 'Suite à une erreur technique, le paiement ne peut pas être garanti.', 'Payment cannot be guaranteed, due to a technical error.', 'Aufgrund eines technischen Fehlers kann die Zahlung nicht garantiert werden.'),
+(52, 'MSG_GARANTIE_NON_APPLICABLE', 'Garantie de paiement non applicable.', 'Payment guarantee not applicable.', 'Zahlungsgarantie nicht anwendbar.'),
+(53, 'MSG_AUTHENTIFIE_3DS', 'Authentifié 3DS.', '3DS Authentified.', 'Authentifizierte 3DS.'),
+(54, 'MSG_ERREUR_AUTHENTIFICATION', 'Erreur Authentification.', 'Authentification Error.', 'Authentifizierungsfehler'),
+(55, 'MSG_AUTHENTIFICATION_IMPOSSIBLE', 'Authentification impossible.', 'Authentification Impossible.', 'Kann sich nicht authentifizieren.'),
+(56, 'MSG_ESSAI_AUTHENTIFICATION', 'Essai d’authentification.', 'Try to authenticate.', 'Authentifizierungstest'),
+(57, 'MSG_NON_RENSEIGNE', 'Non renseigné.', 'Non valued.', 'Nicht informiert'),
+(58, 'MSG_VALIDATION_MANUELLE', 'Validation Manuelle', 'Manual Validation', 'Manuelle Validierung'),
+(59, 'MSG_VALIDATION_AUTOMATIQUE', 'Validation Automatique', 'Automatic Validation', 'Automatische Validierung'),
+(60, 'MSG_CONFIGURATION_DEFAUT_BACK_OFFICE_MARCHAND', 'Configuration par défaut du back office marchand', 'Default configuration of the merchant back office', 'Standardkonfiguration des Händler-Backoffice'),
+(61, 'MSG_ERREUR_CONFIGURATION_PARA', 'Erreur de configuration. Le fichier conf.txt n\'est pas correctement paramétré. Vérifier l\'identifiant boutique, votre certificat et l\'URL de retour.', 'CONFIGURATION ERROR!</u></b></p><p><b>The conf.txt file is not properly set. Please check your shop ID, your certificate and your return URL.', 'Konfigurationsfehler Die Datei conf.txt ist nicht richtig eingestellt. Überprüfen Sie die Geschäfts-ID, Ihr Zertifikat und die Rückgabe-URL.'),
+(62, 'MSG_SIGNATURE_VALIDE', 'Signature Valide', 'Valid Signature', 'Unterschrift gültig'),
+(63, 'MSG_SIGNATURE_INVALIDE', 'Signature Invalide - ne pas prendre en compte le résultat de ce paiement', 'Invalid Signature - do not take this payment result in account', 'Unterschrift ungültig - das Ergebnis dieser Zahlung nicht berücksichtigen'),
+(64, 'MSG_TRANSACTION_DEBIT', 'La transaction est un débit ayant comme caractéristiques', 'The transaction is a debit with the following details', 'Die Transaktion ist eine Belastung mit Merkmalen'),
+(65, 'MSG_STATUT', 'Statut', 'Status', 'Status'),
+(66, 'MSG_RESULTAT', 'Résultat', 'Result', 'Ergebnis'),
+(67, 'MSG_IDENTIFIANT', 'Identifiant', 'ID', 'Login'),
+(68, 'MSG_MONTANT', 'Montant', 'Account', 'Betrag'),
+(69, 'MSG_MONTANT_EFFECTIF', 'Montant Effectif', 'Effective Account', 'Effektiver Betrag'),
+(70, 'MSG_TYPE_DE_PAIEMENT', 'Type de paiement', 'Payment Type', 'Art der Zahlung'),
+(71, 'MSG_NUMERO_SEQUENCE', 'Numéro de séquence', 'Sequence Number', 'Folgenummer'),
+(72, 'MSG_RESULTAT_AUTORISATION', 'Résultat d\'autorisation', 'Authorisation Result', 'Autorisierungsergebnis'),
+(73, 'MSG_GARANTIE_PAIEMENT', 'Garantie de paiement', 'Payment Warranty', 'Zahlungsgarantie'),
+(74, 'MSG_STATUT_3DS', 'Statut 3DS', 'Statut 3DS', '3DS-Status'),
+(75, 'MSG_DELAI_AVANT_REMISE_EN_BANQUE', 'Délai avant Remise en Banque', 'Capture delay', 'Frist vor Bankzustellung'),
+(76, 'MSG_MODE_VALIDATION', 'Mode de Validation', 'Validation Mode', 'Validierungsmodus'),
+(77, 'MSG_REDIRECTION_PLATEFORME', 'Redirection vers la plateforme de paiement', 'Payment gateway redirection', 'Umleitung auf die Zahlungsplattform'),
+(78, 'MSG_TEST', 'Test', 'Test', 'Test'),
+(79, 'MSG_PRODUCTION', 'Production', 'Production', 'Produktion'),
+(80, 'MSG_REDIRECT_SUCCES', 'Paiement réalisé avec succès. Redirection vers la boutique dans quelques instants.', 'Payment successfully completed.', 'Zahlung erfolgreich abgeschlossen In wenigen Augenblicken in den Laden umleiten.'),
+(81, 'MSG_REDIRECT_ERREUR', 'Le paiement a été refusé. Redirection vers le site asnexter.fr dans quelques instants.', 'Payment has been refused. Redirection to the site asnexter.fr', 'Zahlung wurde abgelehnt Umleitung zur Site asnexter.fr in wenigen Augenblicken.'),
+(82, 'MSG_PRESIGNATURE_VALIDE', 'Pré-Signature valide', 'Valid Pre-Signature', 'Pre-Signature gültig'),
+(83, 'MSG_PRESIGNATURE_INVALIDE', 'Pré-Signature Invalide - ne pas prendre en compte la demande de paiement', 'Invalid Pre-Signature - do not take into account the payment request', 'Pre-Signature Invalid - Die Zahlungsanforderung nicht berücksichtigen ');
 
 -- Ajout des tables comptables
 -- --------------------------------------------------------
@@ -200,13 +199,14 @@ CREATE TABLE `cpt_CatCompte` (
   `cat_Niveau` int(11) DEFAULT NULL,
   `cat_Virtuel` int(11) DEFAULT NULL,
   `cat_Visible` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient tous les comptes ou catégories.';
 
 --
 -- Déchargement des données de la table `cpt_CatCompte`
 --
 
 INSERT INTO `cpt_CatCompte` (`cat_ID_CatCompte`, `cat_Chemin_CatCompte`, `cat_Nom_CatCompte`, `cat_Commentaire`, `cat_ID_CatCompte_Parent`, `cat_Raccourcis_CatCompte`, `cat_Nom_CatCompte_Parent`, `cat_Type_CatCompte`, `cat_Num_Tag_Associes`, `cat_Niveau`, `cat_Virtuel`, `cat_Visible`) VALUES
+(0, '', 'Inexistant', 'Catégorie inexistante', 0, '0', '0', 0, 0, 0, 0, 0),
 (1, '', '0_Racine', 'Racine', 0, '0', '-1', 1, 0, 1, 1, 1),
 (2, '', '1_Capitaux propres', 'Capitaux propres', 1, '1', '0', 2, 0, 2, 1, 1),
 (3, '', '10_Fonds associatifs et réserves', 'Fonds associatifs et réserves', 2, '10', '1', 2, 0, 3, 1, 1),
@@ -818,7 +818,7 @@ CREATE TABLE `cpt_CompteBancaire` (
   `cpt_BIC` text,
   `cpt_TypeCompte` int(11) DEFAULT NULL,
   `cpt_Archive` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient toutes les informations relatives aux comptes bancaires';
 
 --
 -- Déchargement des données de la table `cpt_CompteBancaire`
@@ -839,7 +839,7 @@ DROP TABLE IF EXISTS `cpt_Mode`;
 CREATE TABLE `cpt_Mode` (
   `mod_ID_Mode` int(11) DEFAULT NULL,
   `mod_Mode` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient tous les modes d''opérations pouvant être réalisés, carte, retrait, chèque ...';
 
 --
 -- Déchargement des données de la table `cpt_Mode`
@@ -886,9 +886,10 @@ CREATE TABLE `cpt_Operation` (
   `opr_ViaInternet` tinyint(1) DEFAULT NULL,
   `opr_Transfert` tinyint(1) DEFAULT NULL,
   `opr_Estimation` tinyint(1) DEFAULT NULL,
-  `opr_Proprietaire` varchar(2) DEFAULT NULL,
-  `opr_ModeTest` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `opr_Proprietaire` varchar(10) DEFAULT NULL,
+  `opr_ModeTest` tinyint(1) NOT NULL,
+  `opr_OperationVentilleValide` tinyint(1) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient toutes les opérations, pour tous les comptes (montants en centimes)';
 
 -- --------------------------------------------------------
 
@@ -905,7 +906,7 @@ CREATE TABLE `cpt_OperationPlanifiee` (
   `opf_Montant` double DEFAULT NULL,
   `opf_Description` text,
   `opf_Date_Prochain` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient la liste des opérations planifiées';
 
 -- --------------------------------------------------------
 
@@ -918,7 +919,7 @@ CREATE TABLE `cpt_Tag` (
   `tag_ID_Tag` int(11) NOT NULL,
   `tag_Nom_Tag` text,
   `tag_ID_Tag_Parent` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient la liste des Tags utilisés pour les opérations';
 
 -- --------------------------------------------------------
 
@@ -931,7 +932,7 @@ CREATE TABLE `cpt_Tag_Associe` (
   `taa_ID_Tag_Associe` int(11) NOT NULL,
   `taa_Num_Tag_Associe` int(11) NOT NULL,
   `taa_ID_Tag` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ML : Description à faire';
 
 -- --------------------------------------------------------
 
@@ -946,7 +947,7 @@ CREATE TABLE `cpt_Tiers` (
   `tie_Nom_sur_CB` text,
   `tie_Raccourcis_Tiers` text,
   `tie_Visible` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient la liste des tiers';
 
 -- --------------------------------------------------------
 
@@ -960,7 +961,7 @@ CREATE TABLE `cpt_TypeCatCompte` (
   `tcc_Nom_CatCompte` text,
   `tcc_Description_CatCompte` text,
   `tcc_ID_CatCompte_Parent` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient le type de la catégorie ou du compte, débit, crédit ...';
 
 --
 -- Déchargement des données de la table `cpt_TypeCatCompte`
@@ -982,6 +983,55 @@ INSERT INTO `cpt_TypeCatCompte` (`tcc_ID_CatCompte`, `tcc_Nom_CatCompte`, `tcc_D
 (13, 'Paiement en ligne', 'SystemPay', 6);
 
 --
+-- Structure de la table `cpt_CodeActivite`
+--
+DROP TABLE IF EXISTS `cpt_CodeActivite`;
+
+CREATE TABLE `cpt_CodeActivite` (
+  `ca_id_group` int(10) NOT NULL,
+  `ca_code` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `ca_group_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Déchargement des données de la table `cpt_CodeActivite`
+--
+
+INSERT INTO `cpt_CodeActivite` (`ca_id_group`, `ca_code`, `ca_group_name`) VALUES
+(5, 'AS', 'Adhésion AS'),
+(7, 'CP', 'Course à pied'),
+(8, 'CH', 'Chorale'),
+(9, 'CY', 'Cyclotourisme'),
+(10, 'ES', 'Escalade'),
+(11, 'FO', 'Football'),
+(12, 'GO', 'Golf'),
+(13, 'GY', 'Gym-entretien'),
+(14, 'KM', 'Krav Maga'),
+(16, 'MU', 'Musculation'),
+(17, 'PE', 'Peinture-dessin'),
+(18, 'NL', 'Nage Libre PLO'),
+(19, 'PL1', 'Plongée PL1'),
+(20, 'PL2', 'Plongée PL2'),
+(22, 'ST', 'Stretching'),
+(23, 'TE', 'Tennis'),
+(24, 'TI', 'Tir'),
+(25, 'TA', 'Tir à l\'arc'),
+(26, 'ZU', 'Zumba'),
+(28, 'RC', 'Rétro-Cars'),
+(29, 'MN', 'Marche Nordique'),
+(30, 'DS', 'Danse Sportive'),
+(31, 'BO', 'Boxe Française'),
+(32, 'PA', 'Padel'),
+(33, 'PI1', 'Pilates 17h15'),
+(34, 'PI2', 'Pilates 18h15'),
+(35, 'BA', 'Badminton'),
+(36, 'VO', 'Volley'),
+(37, 'TT', 'Tennis de table'),
+(38, 'RO', 'Robotique'),
+(39, 'YO', 'Yoga'),
+(40, 'PI3', 'Pilates 19h15');
+
+--
 -- Index pour les tables déchargées
 --
 
@@ -991,6 +1041,13 @@ INSERT INTO `cpt_TypeCatCompte` (`tcc_ID_CatCompte`, `tcc_Nom_CatCompte`, `tcc_D
 ALTER TABLE `cpt_CatCompte`
   ADD PRIMARY KEY (`cat_ID_CatCompte`),
   ADD UNIQUE KEY `cat_ID_CatCompte` (`cat_ID_CatCompte`);
+
+--
+-- Index pour la table `cpt_CodeActivite`
+--
+ALTER TABLE `cpt_CodeActivite`
+  ADD PRIMARY KEY (`ca_id_group`),
+  ADD UNIQUE KEY `ca_code` (`ca_code`);
 
 --
 -- Index pour la table `cpt_CompteBancaire`
@@ -1042,6 +1099,21 @@ ALTER TABLE `cpt_TypeCatCompte`
   ADD UNIQUE KEY `tcc_ID_CatCompte` (`tcc_ID_CatCompte`);
 
 --
+-- Index pour la table `tb_systempay_msg`
+--
+ALTER TABLE `tb_systempay_msg`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `Cle_Msg` (`Cle_Msg`);
+
+--
+-- Index pour la table `tb_systempay_oper`
+--
+ALTER TABLE `tb_systempay_oper`
+  ADD PRIMARY KEY (`tsp_ID`),
+  ADD UNIQUE KEY `tsp_Numero_Transaction` (`tsp_Numero_Transaction`),
+  ADD KEY `tsp_Numero_Transaction_2` (`tsp_Numero_Transaction`);
+
+--
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
@@ -1054,12 +1126,12 @@ ALTER TABLE `cpt_CatCompte`
 -- AUTO_INCREMENT pour la table `cpt_CompteBancaire`
 --
 ALTER TABLE `cpt_CompteBancaire`
-  MODIFY `cpt_ID_Compte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cpt_ID_Compte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `cpt_Operation`
 --
 ALTER TABLE `cpt_Operation`
-  MODIFY `opr_ID_Operation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `opr_ID_Operation` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `cpt_OperationPlanifiee`
 --
@@ -1079,4 +1151,9 @@ ALTER TABLE `cpt_Tiers`
 -- AUTO_INCREMENT pour la table `cpt_TypeCatCompte`
 --
 ALTER TABLE `cpt_TypeCatCompte`
-  MODIFY `tcc_ID_CatCompte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;COMMIT;
+  MODIFY `tcc_ID_CatCompte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT pour la table `tb_systempay_oper`
+--
+ALTER TABLE `tb_systempay_oper`
+  MODIFY `tsp_ID` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
