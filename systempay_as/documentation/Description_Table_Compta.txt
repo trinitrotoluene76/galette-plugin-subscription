@@ -1,0 +1,11 @@
+Description des tables de la Compta
+
+cpt_CatCompte : Contient tous les comptes ou catégories.
+cpt_CompteBancaire : Contient toutes les informations relatives aux comptes bancaires
+cpt_Mode : Contient tous les modes dopérations pouvant être réalisés, carte, retrait, chèque ...
+cpt_Operation : Contient toutes les opérations, pour tous les comptes
+cpt_OperationPlanifiee : Contient la liste des opérations planifiées
+cpt_Tag : Contient la liste des Tags utilisés pour les opérations
+cpt_Tag_Associe : 
+cpt_Tiers : Contient la liste des tiers
+cpt_TypeCatCompte : Contient le type de la catégorie ou du compte, débit, crédit ...

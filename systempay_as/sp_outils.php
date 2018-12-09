@@ -20,12 +20,17 @@
 			{
 				$fp = fopen(sNomFichierLog, 'a+');
 				// écriture/fermeture/Fin du lock
-				fputs($fp, $sMsg."\r\n");
+				fwrite($fp, $sMsg."\n");
 				fclose($fp);
 			}
 		}
 		
-		public static function EnvoyerMail($Destinataire, $Message)
+		protected static function ChercherBaliseHTML($Message)
+		{
+			return (stristr($Message, 'html') !== false); 
+		}
+		
+		public static function EnvoyerMail($Destinataire, $Message, $bSilence = false)
 		//	Fonction EnvoyerMail : envoyer un message à un destinataire, utilisé notamment pour envoyer les messages d'erreurs rencontrées 
 		//	Si bModeSilence est défini à true, la fonction n'affiche aucun message d'erreur si le mail n'a pas pu être envoyé.
 		{
@@ -37,15 +42,22 @@
 
 			$sujet = "Notification de paiement SystemPay - $jour $heure";
 
-			$contenu = "";
-			$contenu .= "<html> \n";
-			$contenu .= "<head> \n";
-			$contenu .= "<title> Subject </title> \n";
-			$contenu .= "</head> \n";
-			$contenu .= "<body> \n";
-			$contenu .= "<br>$Message<br> \n";
-			$contenu .= "</body> \n";
-			$contenu .= "</HTML> \n";
+			if (self::ChercherBaliseHTML($Message))
+			{
+				$contenu = $Message;
+			}
+			else
+			{
+				$contenu = "";
+				$contenu .= "<html> \n";
+				$contenu .= "<head> \n";
+				$contenu .= "<title> Subject </title> \n";
+				$contenu .= "</head> \n";
+				$contenu .= "<body> \n";
+				$contenu .= "<br>$Message<br> \n";
+				$contenu .= "</body> \n";
+				$contenu .= "</HTML> \n";
+			}
 
 			$headers  = "MIME-Version: 1.0 \n";
 			$headers .= "Content-Transfer-Encoding: 8bit \n";
@@ -55,7 +67,7 @@
 			$verif_envoi_mail = TRUE;
 
 			$verif_envoi_mail = @mail($to, $sujet, $contenu, $headers);
-			 
+				
 			if ($verif_envoi_mail === FALSE) 
 			{
 				if (!bModeSilence)
@@ -67,7 +79,7 @@
 			}
 			else
 			{
-				if (!bModeSilence)
+				if ((!bModeSilence) && ($bSilence === false))
 				{
 					echo "Envoi du Mail - avec succ&egrave;s de ".$from." vers ".$to." <br> sujet: ".$sujet." \n"; 
 				}

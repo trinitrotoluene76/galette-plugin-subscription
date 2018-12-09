@@ -66,7 +66,7 @@
 */
 		}
 
-		public function AjouterPaiement($Date_Operation, $Num_Transaction, $ID_Tiers, $Commentaire, $Montant, $ID_Compte_Source, $ID_Compte_Cible, $NumVentilation, $Operation_Ventilee, $Proprietaire, $ModeTest)
+		public function AjouterPaiement($Date_Operation, $Num_Transaction, $ID_Tiers, $Commentaire, $Montant, $ID_Compte_Source, $ID_Compte_Cible, $NumVentilation, $Operation_Ventilee, $Proprietaire, $ModeTest, $bOperationVentileeValide)
 		{
 			$sp_Outils = new sp_Outils();
 			if ($ModeTest == MSG_TEST)
@@ -78,7 +78,7 @@
 				$bModeTest = false;
 			}
 
-			//	exemple : vads_order_info = ga|756_BF_45/756_AS_24|Ligne de commentaire
+			//	exemple : vads_order_info = ga|756_BF_4500/756_AS_2400|Ligne de commentaire
 			//	Vérifier que l'enregistrement n'a pas déjà été écrit.
 			if (!$this->Existe_Transaction('0'))
 			{
@@ -98,10 +98,12 @@
 				//	Insertion d'un paiement
 				$InsertPaiement = "INSERT INTO `cpt_Operation` (`opr_Date_Operation`, `opr_Date_Valeur`, `opr_Date_Saisie`, `opr_Num_Transaction`, `opr_ID_Mode`, `opr_ID_Tiers`, ".
 					"`opr_NumOperation`, `opr_Commentaire`, `opr_Montant`, `opr_ID_Compte_Source`, `opr_ID_Compte_Cible`, `opr_Ventilation`,  `opr_Operation_Ventilee`, `opr_Pointage`, ".
-					"`opr_Date_Pointage`, `opr_Assurer_Suivi`, `opr_ID_Tag`, `opr_OperationAnnulee`, `opr_OperationGeneree`, `opr_ViaInternet`, `opr_Transfert`, `opr_Estimation`, `opr_Proprietaire`, `opr_ModeTest`) VALUES (";
+					"`opr_Date_Pointage`, `opr_Assurer_Suivi`, `opr_ID_Tag`, `opr_OperationAnnulee`, `opr_OperationGeneree`, `opr_ViaInternet`, `opr_Transfert`, `opr_Estimation`, `opr_Proprietaire`, `opr_ModeTest`, `opr_OperationVentilleValide`) VALUES (";
 				$InsertPaiement .= "'".$Date_Operation."', '".$Date_Valeur."', '".$Date_Saisie."', '".$Num_Transaction."', ".$ID_Mode.", ".$ID_Tiers.", ".
 					$NumOperation.", '".$Commentaire."', ".$Montant.", ".$ID_Compte_Source.", ".$ID_Compte_Cible.", ".$NumVentilation.", ".$Operation_Ventilee.", '".$Pointage."', '".
-					$Date_Pointage."', ".$Assurer_Suivi.", ".$ID_Tag.", ".$OperationAnnulee.", ".$OperationGeneree.", ".$ViaInternet.", ".$Transfert.", ".$Estimation.", '".$Proprietaire."', ".$bModeTest.")";
+					$Date_Pointage."', ".$Assurer_Suivi.", ".$ID_Tag.", ".$OperationAnnulee.", ".$OperationGeneree.", ".$ViaInternet.", ".$Transfert.", ".$Estimation.", '".$Proprietaire."', ".$bModeTest.", ".$bOperationVentileeValide.")";
+
+				//	$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."InsertPaiement : ".$InsertPaiement);
 			
 				$Result = $this->mysqli->query($InsertPaiement);
 				if ($Result === false)
@@ -137,7 +139,7 @@
 		
 		public function CalculerIDCompte($CodeCompta, $CodeSection)
 		{
-			//fonction à modifier car particulière à notre asso et au nom raccourci des sections
+			//	TODO : ML : Fonction à modifier car particulière à notre asso et au nom raccourci des sections
 			$CodeRaccourci = $CodeCompta."_".$CodeSection;
 			
 			$Select = "SELECT `cat_ID_CatCompte` as `ID_CatCompte` FROM `cpt_CatCompte` where `cat_Raccourcis_CatCompte`='".$CodeRaccourci."'";
@@ -158,38 +160,95 @@
 			return 0;
 		}
 		
-		public function ConvertirTransactionCompta($Order_Info, $Date_Operation_vads, $Num_Transaction, $ID_Tiers, $ModeTest, $Statut)
+		public function GetCodeActivite($Numcode)
 		{
+			//	Ce mécanisme sera mis en oeuvre, si desgénérations de transactions intempestives ont lieu.
+			//	Par exemple, renvoi de la notification à partir du Backend Systempay
+			$this->MsgErreur = '';
+			//	Code de l'activité en fonction de son ID sous Galette
+			$Select = 'SELECT `ca_code` FROM `cpt_CodeActivite` where `ca_id_group`='.$Numcode;
+			$Result = $this->mysqli->query($Select);
+			if ($Result === false)
+			{
+				$this->MsgErreur .= 'Fonction GetCodeActivite en échec ('.$Select.') : '.$this->mysqli->error."<BR>\n";
+			}
+			while ($row = $Result->fetch_assoc())
+			{
+				return $row['ca_code']; 
+			}
+			return 'ADU'.$Numcode;
+		}
+
+		public function ConvertirTransactionCompta($Order_Info, $Date_Operation_vads, $Num_Transaction, $ID_Tiers, $ModeTest, $Statut, $MontantTotal)
+		{
+			$sp_Outils = new sp_Outils();
+
 			if ($Statut != MSG_PAIEMENT_ACCEPTE)
 			{
 				return false;
 			}
 			
-			//	exemple : vads_order_info = ga|756_BX_45/756_AS_24|Ligne de commentaire
+			//	Remplir $Order_Info si la variable est vide
+			if (isset($Order_Info))
+			{
+				$Order_Info = trim($Order_Info);
+			}
+			else
+				$Order_Info = '';
+			
+			if (strlen($Order_Info) == 0)
+			{
+				$Order_Info = 'NC|001_ADU_'.$MontantTotal.'|';
+			}
+			
+			//	exemple : vads_order_info = ga|756_BX_4500/756_AS_2400|Ligne de commentaire
 			$Info = explode("|", $Order_Info);
-			$Proprietaire = $Info[0]; //	ga ou jo (Galette ou Joomla)
+			$Proprietaire = $Info[0]; //	ga ou jo ou test (Galette ou Joomla)
 			if (isset($Info[1]))
 				$Ventilation = $Info[1];	//	Lignes ventilées
+
+			//	Affecte par défaut un code comptable vide et le montant total
+			if ((!isset($Ventilation)) || ((isset($Ventilation)) && (strlen($Ventilation) == 0)))
+				$Ventilation = '001_ADU_'.$MontantTotal;
+
 			if (isset($Info[2]))
 				$Commentaire = $Info[2];
 			$ListeVentil = explode("/", $Ventilation);
-			echo $Provenance.'<BR>';
-			echo $Commentaire.'<BR>';
 			
+			//	Convertit la date de type SystemPay en une date de type MySQL
 			$Date_Operation = $this->Convertir_vadsDate($Date_Operation_vads);
+			//	Récupère un nouveau numéro de ventilation, 
 			$NumVentilation = $this->GetNumVentilation();
 			$Operation_Ventilee = (count($ListeVentil)> 1) ? 1 : 0;
+			$MontantTotalCalcule = 0;
+			$iIndice = 0;
+			$bOperationVentileeValide = 1;
 			
 			foreach ($ListeVentil as $keyValue)
 			{
 				$TransactionVentil = explode("_", $keyValue);
 				$CodeCompta = $TransactionVentil[0];
 				$CodeSection = $TransactionVentil[1];
+				//	Si $CodeSection est composé de lettres, je le conserve, s'il est composé de chiffres, il s'agit d'un code d'activité Galette, je le convertis
+				if (is_numeric($CodeSection))
+				{
+					$CodeSection = $this->GetCodeActivite($CodeSection);
+				}
 				$Montant = $TransactionVentil[2];
-				echo  'Code compta : '.$CodeCompta.'code Section : '.$CodeSection.'    Montant : '.$Montant.'<BR>';
+				$MontantTotalCalcule += $Montant;
+				
+				//	TODO : ML : passer ces valeurs en configuration ou paramètre
 				$ID_Compte_Source = 560;	//	Compte courant
 				$ID_Compte_Cible = $this->CalculerIDCompte($CodeCompta, $CodeSection);
-				$this->AjouterPaiement($Date_Operation, $Num_Transaction, $ID_Tiers, $Commentaire, $Montant, $ID_Compte_Source, $ID_Compte_Cible, $NumVentilation, $Operation_Ventilee, $Proprietaire, $ModeTest);
+				
+				//	Si la somme des opérations ventilées n'est pas égale à la somme totale de l'opération, il faut écrire l'erreur en BdD
+				if (($MontantTotalCalcule != $MontantTotal) && ($iIndice == count($ListeVentil)-1))
+				{
+					$bOperationVentileeValide = 0;
+				}
+
+				$this->AjouterPaiement($Date_Operation, $Num_Transaction, $ID_Tiers, $Commentaire, $Montant, $ID_Compte_Source, $ID_Compte_Cible, $NumVentilation, $Operation_Ventilee, $Proprietaire, $ModeTest, $bOperationVentileeValide);
+				$iIndice++;
 			}
 			return true;
 		}

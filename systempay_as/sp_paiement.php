@@ -15,7 +15,6 @@
 	{
 		public $mID;
 		public $mMode_Test_Prod;
-		public $mPreSignature_Ok;
 		public $mSignature_Ok;
 		public $mStatut_Transaction;
 		public $mResultat;
@@ -44,7 +43,7 @@
 		}
 		
 		//	Lit les paramètres en entrée de sp_form_paiement, envoyés par le logiciel et destinés à être envoyés à SystemPay
-		//	Vérifie le paramètre Presignature (équivalent de Signature lors de l'envoi à SystemPay)
+		//	Vérifie la signature
 		public function Lire_Param()
 		{ 
 			$this->mID = 0;
@@ -53,17 +52,6 @@
 			// --------------------------------------------------------------------------------------
 
 			$conf_txt = parse_ini_file(sp_configuration);
-			if ($conf_txt['vads_ctx_mode'] == "TEST")
-			{
-				$MonCertificat = $conf_txt['TEST_key'];
-			}
-			else
-			{
-				if ($conf_txt['vads_ctx_mode'] == "PRODUCTION")
-				{
-					$MonCertificat = $conf_txt['PROD_key'];
-				}
-			}
 
 			// --------------------------------------------------------------------------------------
 			// Contrôle de la signature reçue
@@ -74,21 +62,21 @@
 				//	 Je prends en compte en priorité le mode défini en passage de paramètre
 				$this->mMode_Test_Prod = $_REQUEST['vads_ctx_mode'];
 			}
-
-			$control = false;
-			if (isset($_REQUEST['Presignature']))
-			{
-				$control = $this->Check_Signature($_REQUEST, $MonCertificat);
-			}
 			
-			if ($control == true)
+			$this->mMode_Test_Prod = strtoupper($this->mMode_Test_Prod);
+			if ($this->mMode_Test_Prod == "TEST")
 			{
-				$this->mPreSignature_Ok = MSG_PRESIGNATURE_VALIDE;
+				$MonCertificat = $conf_txt['TEST_key'];
 			}
 			else
 			{
-				$this->mPreSignature_Ok = MSG_PRESIGNATURE_INVALIDE;
+				if ($this->mMode_Test_Prod == "PRODUCTION")
+				{
+					$MonCertificat = $conf_txt['PROD_key'];
+				}
 			}
+
+			$control = $this->Check_Signature($_REQUEST, $MonCertificat);
 			return $control;
 		}
 		
@@ -120,6 +108,15 @@
 			{
 				//	 Je prends en compte en priorité le mode défini en passage de paramètre
 				$this->mMode_Test_Prod = $_REQUEST['vads_ctx_mode'];
+			}
+
+			if (isset($_REQUEST['EuroCts']))
+			{
+				$bEnEuro = (strtoupper($_REQUEST['EuroCts']) === 'EURO');
+			}
+			else
+			{
+				$bEnEuro = false;
 			}
 
 			$control = false;
@@ -158,6 +155,12 @@
 			if (isset($_REQUEST['vads_amount']))
 			{
 				$this->mMontant = $_REQUEST['vads_amount'];
+				$bEnEuro = (strtoupper($_REQUEST['EuroCts']) === 'EURO');
+				if ($bEnEuro)
+				{
+					$this->mMontant = str_replace(',', '.', $this->mMontant);
+					$this->mMontant = (string) (100 * intval($this->mMontant));
+				}
 			}
 			else
 			{

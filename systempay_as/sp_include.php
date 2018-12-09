@@ -93,7 +93,4 @@
 	
 	define("MSG_REDIRECT_SUCCES", 80);
 	define("MSG_REDIRECT_ERREUR", 81);
-
-	define("MSG_PRESIGNATURE_VALIDE", 82);
-	define("MSG_PRESIGNATURE_INVALIDE", 83);
 ?>

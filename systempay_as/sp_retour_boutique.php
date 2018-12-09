@@ -10,6 +10,7 @@
 //	Version ..... : 1.0 du 19/09/2018
 //********************************************************
 
+	include_once('sp_include.php');
 	include_once('sp_outils.php');
 	include_once('sp_paiement.php');
 
@@ -18,59 +19,104 @@
 		function __construct()
 		{
 		}
+
+		public static function Lire_Fichier_html($sNomFichierHtml)
+		{
+			// Ouverture du fichier de Log en mode Ajout
+			if (file_exists($sNomFichierHtml)) 
+			{
+				$handle = fopen ($sNomFichierHtml, "r");
+				$contents = fread ($handle, filesize ($sNomFichierHtml));
+				fclose ($handle);			
+				return $contents;
+			}
+			else
+			{
+				return "";
+			}
+		}
 		
+		protected  function Remplacer($PageHTML, $sNomValeursDebug, $ValeursDebug)
+		{
+			return str_replace('%'.$sNomValeursDebug.'%', $ValeursDebug, $PageHTML);
+		}
+
 		public function Generer_Page_html($MonPaiement)
 		{
-			$PageHTML = '<html>';
-			$PageHTML .= '<head>';
-			$PageHTML .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-			$PageHTML .= '<title>Redirection_vers_la_boutique</title>';
-			$PageHTML .= '<link href="style.css" rel="stylesheet" type="text/css"/>';
-			$PageHTML .= '</head>';
-			$PageHTML .= '<body>';
-			$PageHTML .= '<div id="container">';
-			$PageHTML .= '<div class="header_title">Retour à la boutique<br/><br/></div>';
-			$PageHTML .= '<div id="Info">';
-			$PageHTML .= '<br/><br/><b>Liste des parametres receptionnes :</b><br/>';
-
-			$PageHTML .= 'Mode Test / Production = '.$MonPaiement->mMode_Test_Prod.'<br/>';
-			$PageHTML .= 'Validité signature = '.$MonPaiement->mSignature_Ok.'<br/>';
-			$PageHTML .= 'Statut transaction = '.$MonPaiement->mStatut_Transaction.'<br/>';
-			$PageHTML .= 'Résultat = '.$MonPaiement->mResultat.'<br/>';
-			$PageHTML .= 'Montant = '.$MonPaiement->mMontant.'<br/>';
-			$PageHTML .= 'Montant effectif = '.$MonPaiement->mMontant_Effectif.'<br/>';
-			$PageHTML .= 'Paiement config = '.$MonPaiement->mPaiement_Config.'<br/>';
-			$PageHTML .= 'Numéro séquence = '.$MonPaiement->mNum_Sequence.'<br/>';
-			$PageHTML .= 'Autorisation = '.$MonPaiement->mAutorisation.'<br/>';
-			$PageHTML .= 'Garantie = '.$MonPaiement->mGarantie.'<br/>';
-			$PageHTML .= '3D Secure = '.$MonPaiement->mThreeds.'<br/>';
-			$PageHTML .= 'Délai avant banque = '.$MonPaiement->mDelai_Avant_Banque.'<br/>';
-			$PageHTML .= 'Mode validation = '.$MonPaiement->mMode_Validation.'<br/>';
-			$PageHTML .= 'Numéro transaction = '.$MonPaiement->mNumero_Transaction.'<br/>';
-			$PageHTML .= 'Référence commande = '.$MonPaiement->mReference_Commande.'<br/>';
-			$PageHTML .= 'Date = '.$MonPaiement->mDate_Heure.'<br/>';
-			$PageHTML .= 'Référence acheteur = '.$MonPaiement->mReference_Acheteur.'<br/>';
-			$PageHTML .= 'Nom acheteur = '.$MonPaiement->mNom_Acheteur.'<br/>';
-			$PageHTML .= 'Prénom acheteur = '.$MonPaiement->mPrenom_Acheteur.'<br/>';
-			$PageHTML .= 'Mail = '.$MonPaiement->mEmail.'<br/>';
-			$PageHTML .= 'Type = '.$MonPaiement->mType.'<br/>';
-			$PageHTML .= 'Numéro autorisation = '.$MonPaiement->mNumero_Autorisation.'<br/>';
-			$PageHTML .= 'Order info = '.$MonPaiement->mOrder_Info.'<br/>';
-			$PageHTML .= 'Signature = '.$_REQUEST['signature'].'<br/>';
-			if (isset($_REQUEST['langue']))
+			$PageHTML = '';
+			if (isset($_REQUEST['vads_language']))
 			{
-				$PageHTML .= 'Langue = '.$_REQUEST['langue'].'<br/>';
+				$Langue = '_'.strtolower($_REQUEST['vads_language']);
 			}
-			$PageHTML .= '<br/><br/>';
+			else
+			{
+				$Langue = '_fr';
+			}
+			if (($MonPaiement->mSignature_Ok === MSG_SIGNATURE_VALIDE) && ($MonPaiement->mStatut_Transaction === MSG_PAIEMENT_ACCEPTE))
+			{
+				if (!file_exists('retour_boutique_valide'.$Langue.'.html'))
+				{
+					$Langue = '_fr';
+				}
+				$PageHTML = $this->Lire_Fichier_html('retour_boutique_valide'.$Langue.'.html');
+			}
+			else
+			{
+				if (!file_exists('retour_boutique_abandon'.$Langue.'.html'))
+				{
+					$Langue = '_fr';
+				}
+				$PageHTML = $this->Lire_Fichier_html('retour_boutique_abandon'.$Langue.'.html');
+			}
+
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_last_name', $MonPaiement->mNom_Acheteur);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_first_name', $MonPaiement->mPrenom_Acheteur);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_email', $MonPaiement->mEmail);
+			$sMontant = (string) (((double) $MonPaiement->mMontant)/100.0);
+			$sMontant = str_replace('.',',',$sMontant);
+			$sMontant .= ' €';
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_amount', $sMontant);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_sequence_number', $MonPaiement->mNum_Sequence);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_trans_id', $MonPaiement->mNumero_Transaction);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_order_id', $MonPaiement->mReference_Commande);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_trans_date', $MonPaiement->mDate_Heure);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_auth_number', $MonPaiement->mNumero_Autorisation);
+			$PageHTML = $this->Remplacer($PageHTML, 'vads_order_info', $MonPaiement->mOrder_Info);
+
+			if (isset($_REQUEST['vads_cust_id']))
+			{
+				$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_id', $_REQUEST['vads_cust_id']);
+			}
+			if (isset($_REQUEST['vads_cust_address']))
+			{
+				$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_address', $_REQUEST['vads_cust_address']);
+			}
+			if (isset($_REQUEST['vads_cust_zip']))
+			{
+				$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_zip', $_REQUEST['vads_cust_zip']);
+			}
+			if (isset($_REQUEST['vads_cust_city']))
+			{
+				$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_city', $_REQUEST['vads_cust_city']);
+			}
+			if (isset($_REQUEST['vads_cust_country']))
+			{
+				$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_country', $_REQUEST['vads_cust_country']);
+			}
+			if (isset($_REQUEST['vads_cust_phone']))
+			{
+				$PageHTML = $this->Remplacer($PageHTML, 'vads_cust_phone', $_REQUEST['vads_cust_phone']);
+			}
+
+			$ValeursDebug = '';
 			foreach ($_REQUEST as $nom => $valeur)
 			{
 				if(substr($nom,0,5) == "vads_")
 				{
-					$PageHTML .= $nom.' = '.$valeur.' <br/>';	
+					$ValeursDebug .= '<br>'.$nom.' = '.$valeur.'<br/>';	
 				}
 			}
-
-			$PageHTML .= '</div></div></body></html>';
+			$PageHTML = $this->Remplacer($PageHTML, 'ValeursDebug', $ValeursDebug);
 			return $PageHTML;
 		}
 	}
@@ -80,5 +126,5 @@
 	
 	$MonRetourBoutique = new sp_Retour_Boutique();
 	$PageHTML = $MonRetourBoutique->Generer_Page_html($MonPaiement);
-	echo ($PageHTML);
+	echo ($PageHTML);	
 ?>

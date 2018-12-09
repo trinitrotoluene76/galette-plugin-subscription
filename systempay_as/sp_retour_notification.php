@@ -102,7 +102,9 @@
 		
 		public function TraiterNotification()
 		{
+			$sp_Outils = new sp_Outils();
 			$MonPaiement = new sp_Paiement();
+
 			$bSignature_Ok = $MonPaiement->Lire_Request();
 			
 			if ($bSignature_Ok == true)
@@ -110,75 +112,27 @@
 				$this->AjouterPaiement($MonPaiement);
 
 				$MaCompta = new sp_Compta();
-				if ($MaCompta->ConvertirTransactionCompta($MonPaiement->mOrder_Info, $MonPaiement->mDate_Heure, $MonPaiement->mNumero_Transaction, $MonPaiement->mReference_Acheteur, $MonPaiement->mMode_Test_Prod, $MonPaiement->mStatut_Transaction) ===false)
+				if ($MaCompta->ConvertirTransactionCompta($MonPaiement->mOrder_Info, $MonPaiement->mDate_Heure, $MonPaiement->mNumero_Transaction, $MonPaiement->mReference_Acheteur, $MonPaiement->mMode_Test_Prod, $MonPaiement->mStatut_Transaction, $MonPaiement->mMontant))
+				{
+					//	$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."ConvertirTransactionCompta Ok.");
+				}
+				else
 				{
 					//	Le paiement n'est pas au statut Accepté
-					return false;
+					$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."ConvertirTransactionCompta est en erreur.");
 				}
 			}
 			else
 			{
-				$sp_Outils = new sp_Outils();
-				$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."Signature invalide");
+				//	$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."Signature invalide");
 			}
 			return $bSignature_Ok;
 		}
-		
-		/*
-		public function FormNotificationFinale($URL_Finale)
-		{
-			// -----------------------------------------------------------------------------------------------------
-			// Création de la forme
-			// -----------------------------------------------------------------------------------------------------
-			$form .= '<form name="urlFinale" method="POST"  TARGET="_BLANK" action="'.$URL_Finale.'">';	// sp_retour_boutique.php
- 			// -----------------------------------------------------------------------------------------------------
-			// Trie le tableau $params suivant les clés, puis place les valeurs dans la forme
-			// -----------------------------------------------------------------------------------------------------
-
-			if (ksort($_REQUEST))
-			{
-				foreach ($_REQUEST as $nom => $valeur)
-				{
-					$form.='<input type="hidden" name="' . $nom . '" value="' . $valeur . '" />';	
-				}
-			}
-			
-			// Redirection vers la page de paiement
-			$form.= '</form>';
-			$form.= '<script language="JavaScript">document.urlFinale.submit();</script>';
-			return $form;
-		}
-		*/
 	}
 
 	//	Lignes à appeler par le retour de notification
 	//	$Retour_Notif = new sp_Retour_Notification();
 	//	$Retour_Notif->TraiterNotification();
-
-	/*
-	$sp_Outils = new sp_Outils();
-	if (isset($_REQUEST['vads_order_info3']) && (strlen($_REQUEST['vads_order_info3'])>1))
-	{
-		$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."Order info3 valide : ".$_REQUEST['vads_order_info3']);
-		//	L'appel de la Form ne foctionne pas
-		$URL_Finale = $_REQUEST['vads_order_info3'];	// Joomla ou Galette
-		$FormNotifFinale = $Retour_Notif->FormNotificationFinale($URL_Finale);
-		echo $FormNotifFinale;
-		
-		$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."Order info3 la form envoyée : ".$FormNotifFinale);
-	}
-	else
-	{
-		$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t"."vads_order_info3 n'a pas été défini.");
-	}
-	
-	if (strlen($Retour_Notif->MsgErreur) > 0)
-	{
-		$sp_Outils::Ecrire_Log($sp_Outils::getNow(false)."\t".$Retour_Notif->MsgErreur);
-		$sp_Outils::EnvoyerMsgErreurParMail($Retour_Notif->MsgErreur);
-	}
-	*/
-
 ?>
 
 

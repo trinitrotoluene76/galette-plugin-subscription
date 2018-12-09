@@ -57,9 +57,12 @@
 			{
 				$this->MsgErreur .= 'Fonction EcrireToutesSubscriptionsPayees en échec ('.$Select.') : '.$this->mysqli->error."<BR>\n";
 			}
-			while ($row = $Result->fetch_assoc())
+			else
 			{
-				return $row[$this->mLang]; 
+				while ($row = $Result->fetch_assoc())
+				{
+					return $row[$this->mLang]; 
+				}
 			}
 			return "Msg non trouvé / Msg not found : ".$sCle;
 		}

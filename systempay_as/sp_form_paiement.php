@@ -65,37 +65,13 @@
 			// Chargement de la clé
 			// -----------------------------------------------------------------------------------------------------
 			$conf_txt = parse_ini_file(sp_configuration);
-			if ($conf_txt['vads_ctx_mode'] == "TEST")
-			{
-				$MonCertificat = $conf_txt['TEST_key'];
-			}
-			else
-			{
-				if ($conf_txt['vads_ctx_mode'] == "PRODUCTION")
-				{
-					$MonCertificat = $conf_txt['PROD_key'];
-				}
-			}
-
-			// -----------------------------------------------------------------------------------------------------
-			// Vérification de la configuration et affichage d'une erreur si sp_configuration.txt n'est pas configuré
-			// -----------------------------------------------------------------------------------------------------
-
-			if (($conf_txt['vads_site_id'] == "11111111") || 
-				($conf_txt['vads_site_id'] == "") || 
-				($MonCertificat == "2222222222222222") || 
-				($MonCertificat == "3333333333333333") || 
-				($MonCertificat == "") || 
-				($conf_txt['vads_url_return'] == ""))
-			{
-				return false;
-			}
 			
 			// -----------------------------------------------------------------------------------------------------
 			// Renseignement de $field avec la configuration, écrase les éventuelles valeurs de $_REQUEST
 			// -----------------------------------------------------------------------------------------------------
 			$params = array();
 
+			//	Recopie de toutes les valeurs lues en fichier de configuration dans le tableau params
 			foreach ($conf_txt as $nom => $valeur)
 			{
 				if(substr($nom,0,5) == 'vads_')
@@ -111,13 +87,53 @@
 			$Lire_bd = new sp_Lire_Msg_bd($this->mLang);
 			$params['vads_redirect_success_message'] = $Lire_bd->Lire_Message("MSG_REDIRECT_SUCCES");
 			$params['vads_redirect_error_message'] = $Lire_bd->Lire_Message("MSG_REDIRECT_ERREUR");
-
+			
+			//	Recopie de toutes les valeurs passées en paramètre dans le tableau params
 			foreach ($field as $nom => $valeur)
 			{
 				if(substr($nom,0,5) == 'vads_')
 				{
 					$params[$nom] = $valeur;
 				}
+			}
+			
+			$params['vads_ctx_mode'] = strtoupper($params['vads_ctx_mode']);
+			if ($params['vads_ctx_mode'] == "TEST")
+			{
+				$MonCertificat = $conf_txt['TEST_key'];
+			}
+			else
+			{
+				if ($params['vads_ctx_mode'] == "PRODUCTION")
+				{
+					$MonCertificat = $conf_txt['PROD_key'];
+				}
+			}
+
+			if (isset($_REQUEST['EuroCts']))
+			{
+				$bEnEuro = (strtoupper($_REQUEST['EuroCts']) === 'EURO');
+				if ($bEnEuro)
+				{
+					$Montant = $_REQUEST['vads_amount'];
+					$Montant = str_replace(',', '.', $Montant);
+					$Montant = intval(100 * $Montant);
+					$params['vads_amount'] = (string) $Montant;
+				}
+			}
+
+			// -----------------------------------------------------------------------------------------------------
+			// Vérification de la configuration et affichage d'une erreur si sp_configuration.txt n'est pas configuré
+			// -----------------------------------------------------------------------------------------------------
+
+			if (($conf_txt['vads_site_id'] == "11111111") || 
+				($conf_txt['vads_site_id'] == "") || 
+				($MonCertificat == "2222222222222222") || 
+				($MonCertificat == "3333333333333333") || 
+				($MonCertificat == "") || 
+				($params['vads_url_return'] == ""))
+			{
+				return false;
 			}
 
 			$params['vads_trans_id'] = $this->get_Trans_id();
@@ -164,9 +180,9 @@
 		public function Envoyer_Form_Paiement($field)
 		{
 			$form = "";
-			//	 Avant de générer la Form de paiement qui sera envoyée à Systempay, je vérifie la signature des paramètres en entrée			
+			//	 Avant de générer la Form de paiement qui sera envoyée à Systempay, je vérifie la signature des paramètres en entrée
 			$MonPaiement = new sp_Paiement();
-			//	Lit les paramètres du $_REQUEST et vérifie la Presignature
+			//	Lit les paramètres du $_REQUEST et vérifie la signature
 			$bSignature_Ok = $MonPaiement->Lire_Param();
 			$bSignature_Ok = true;
 			if ($bSignature_Ok == true)

@@ -1,0 +1,209 @@
+<html>
+<head>
+	<meta  content="text/html; charset=UTF-8" http-equiv="Content-Type">
+	<title>Retour boutique SystemPay AS Nexter</title>
+	<style type="text/css">
+
+	label
+	{
+		display: block;
+		width: 150px;
+		float: left;
+		font-size:12px;
+	}
+	input
+	{
+		font-size:12px;
+	}
+	body
+	{
+		margin-top: 20px;
+		margin-bottom: 0;
+		margin-right: auto;
+		margin-left: auto;
+		text-align:justify;
+		font-family:Helvetica, Arial, Verdana, sans-serif;
+		background-color: #fff;
+		color: black;/*#555753;*/
+		font: 75% arial,sans-serif;
+		
+		padding:30px;
+		background-color: #FFFFFF;
+		border:1px solid #d2d7dc;
+		border-radius:0px;
+		-moz-border-radius:12px;
+		box-shadow:0 0 6px rgba(0,0,0,.25);
+		-moz-box-shadow:0 0 6px rgba(0,0,0,.25);
+		-webkit-box-shadow:0 0 6px rgba(0,0,0,.25);
+	}
+
+	form
+	{
+		margin-right:0;
+		padding:0;
+	}
+
+	.title_array 
+	{
+		background-color:#003E98;
+		color:white;
+	   
+		font-size: 12px;
+		text-align:left;
+	}
+	.field_mandatory
+	{
+		color:red;
+		font-weight: bold;
+		font-size: 12px;
+		text-align:left;
+		background-color:#E6E6E6;
+	}
+	.field_readonly
+	{
+		background-color:#E6E6E6;
+		font-style: italic;
+	}
+	.field_warning
+	{
+		color:white;
+		font-weight: bold;
+		font-size: 12px;
+		text-align:left;
+		background-color:red;
+	}
+
+	.header_title
+	{
+		color:#003E98;
+		font-weight: bold;
+		font-size: 14px;
+		text-align:center;
+		margin-bottom:20px;
+	}
+
+	.validationButton
+	{
+		background: #ED0116;
+		background: -moz-linear-gradient(top, #003E98 0%, #3768AD 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#003E98), color-stop(100%,#3768AD));
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#003E98', endColorstr='#3768AD',GradientType=0 );
+		border:1px solid black;
+		border-radius:5px;
+		-moz-border-radius:5px;
+		-webkit-border-radius:5px;
+		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+		-moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+		-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+		color:#fff;
+		cursor:pointer;
+		display:inline-block;
+		font:12px bold arial,sans-serif;
+		font-weight:bold;
+		margin:0 auto 10px;
+		padding:5px 20px;
+		text-shadow: 1px 1px 2px #444444;
+		
+		margin-right:5px;
+		margin-top:15px;
+	}
+	.validationButton em
+	{
+		font-style:normal;
+	}
+	.para_marge
+	{
+		margin-bottom:8px;
+	}
+	</style>
+
+
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0"
+width="100%">
+<tbody>
+<tr>
+<td width="20">&nbsp;</td>
+<!-- le logo pointe vers le site asnexter.fr --> 
+<td align="center">
+<a href="https://www.asnexter.fr" target="_blank"><img alt="Logo AS NEXTER" src="https://asnexter.fr/joomla/_documents_ajoutes/docs_mails/gabarits_phplist/gabarit_base/images/logo.jpg" style="display: block;" border="0" height="102" width="137"> </a>
+</td>
+<!-- marge à droite du logo --> <td width="50">&nbsp;</td>
+<!-- Titre principal AS NEXTER --> 
+<td
+style="font-family: Verdana,Arial,Gotham,sans-serif; font-size: 25px; line-height: 25px; color: rgb(153, 155, 158);" valign="middle"><strong><span style="color: rgb(237, 33, 35);" valign="middle">A</span>rts et <span style="color: rgb(237, 33, 35);">S</span>ports Ne<span style="color: rgb(237, 33, 35);">X</span>ter</strong>
+</td>
+<td width="20">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td style="line-height: 15px;" height="15">&nbsp;</td>
+</tr>
+<tr>
+<td>
+<table border="0" cellpadding="0" cellspacing="0"
+width="100%">
+<tbody>
+<tr>
+<!-- marge --> <td width="20">&nbsp;</td>
+<!-- Objet du mail, nom de la section, sous titre --> <td
+style="font-family: Verdana,Arial,Gotham,sans-serif; font-size: 24px; text-align: center; line-height: 28px; color: rgb(153, 155, 158); font-weight: bold;"
+align="center" valign="middle">Confirmation de paiement</td>
+<!-- marge --> <td width="20">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<span style="font-family: Arial;">
+<br>
+<br>
+%vads_cust_first_name%, nous vous remercions pour le paiement que vous avez effectu&eacute; sur le site AS Nexter.<br>
+<br>Vous recevrez un message confirmant la transaction effectu&eacute;e, mais si vous souhaitez une facture, veuillez en faire la demande aupr&eacute;s de notre tr&eacute;sorier : tresorier@asnexter.fr.<br>
+<br>
+<br>
+
+	<p class="para_marge"><label for="vads_cust_first_name">Pr&eacute;nom : </label>
+	<input type="visible" readonly class="field_readonly" id="prenom" name="vads_cust_first_name" value="%vads_cust_first_name%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_last_name">Nom : </label>
+	<input type="visible" readonly class="field_readonly" id="nom" name="vads_cust_last_name" value="%vads_cust_last_name%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_email">Email : </label>
+	<input type="visible" readonly class="field_readonly" id="email" name="vads_cust_email" value="%vads_cust_email%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_address">Address : </label>
+	<input type="visible" readonly class="field_readonly" id="adresse" name="vads_cust_address" value="%vads_cust_address%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_zip">Code postal : </label>
+	<input type="visible" readonly class="field_readonly" id="cp" name="vads_cust_zip" value="%vads_cust_zip%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_city">Ville : </label>
+	<input type="visible" readonly class="field_readonly" id="ville" name="vads_cust_city" value="%vads_cust_city%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_country">Pays : </label>
+	<input type="visible" readonly class="field_readonly" id="pays" name="vads_cust_country" value="%vads_cust_country%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_phone">T&eacute;l&eacute;phone : </label>
+	<input type="visible" readonly class="field_readonly" id="tel" name="vads_cust_phone" value="%vads_cust_phone%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_amount">Montant : </label>
+	<input type="visible" readonly class="field_mandatory" id="montant" name="vads_amount" value="%vads_amount%" style="width:200px; "/><BR></p>
+	<p class="para_marge"><label for="vads_order_info">Order info : </label>
+	<input type="visible" readonly class="field_readonly" id="orderinfo" name="vads_order_info" value="%vads_order_info%" style="width:500px; "/></p>
+	<p class="para_marge"><label for="vads_cust_id">Num&eacute;ro client : </label>
+	<input type="visible" readonly class="field_readonly" id="id_client" name="vads_cust_id" value="%vads_cust_id%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_order_id">Num&eacute;ro commande : </label>
+	<input type="visible" readonly class="field_readonly" id="id_cmde" name="vads_order_id" value="%vads_order_id%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_trans_id">Num&eacute;ro de transaction : </label>
+	<input type="visible" readonly class="field_readonly" id="id_cmde" name="vads_trans_id" value="%vads_trans_id%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_trans_date">Date de transaction : </label>
+	<input type="visible" readonly class="field_readonly" id="id_cmde" name="vads_trans_date" value="%vads_trans_date%" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_auth_number">Num&eacute;ro de transaction : </label>
+	<input type="visible" readonly class="field_readonly" id="id_cmde" name="vads_auth_number" value="%vads_auth_number%" style="width:200px; "/></p>
+	<br>
+	<div id="divDebug" style="display: none;"> <!-- style="display: visible;" ou style="display: none;" -->
+	<br>
+		Valeurs de la transaction :
+	<br>
+	%ValeursDebug%
+	</div>
+
+<br>
+</span>
+</body>
+</html>
