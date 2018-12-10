@@ -55,3 +55,5 @@ Temporary Items
 
 #Backup files
 *~
+systempay/configuration/sp_db_config.php
+systempay/configuration/sp_configuration.txt
