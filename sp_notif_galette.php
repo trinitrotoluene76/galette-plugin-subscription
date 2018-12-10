@@ -29,7 +29,17 @@ use Galette\Core\GaletteMail as GaletteMail;
 use Galette\Entity\Contribution as Contribution;
 require_once '_config.inc.php';
 
-$path_module_commun="../../../systempay_as/";
+//récupération du chemin du répertoire systempay:	
+	$table="subscription_config_systempay";
+	$select = $zdb->select($table);
+	$select->where(array('field_name'=> 'systempay_path'))
+						->limit(1);
+	$results = $zdb->execute($select);
+	$result = array();
+	foreach ( $results as $row ) {
+		$result[] = $row;
+	}
+	$path_module_commun=$result[0]->field_value;
 include_once($path_module_commun.'sp_outils.php');
 include_once($path_module_commun.'sp_include.php');
 include_once($path_module_commun.'configuration/sp_db_config.php');
