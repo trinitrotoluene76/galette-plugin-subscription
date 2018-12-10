@@ -53,6 +53,7 @@ if(isset($_POST['global_enable']))
 	$mode=$_POST['mode'];
 	$vads_url_check=$_POST['vads_url_check'];
 	$url_payment_systempay=$_POST['url_payment_systempay'];
+	$systempay_path=$_POST['systempay_path'];
 	
 	//Enregistrement
 	$update = $zdb->update($table);
@@ -73,6 +74,11 @@ if(isset($_POST['global_enable']))
 	$update = $zdb->update($table);
     $update->set(array('field_value'=> $url_payment_systempay));
     $update->where(array('field_name'=> 'url_payment_systempay'));
+	$edit = $zdb->execute($update);
+	
+	$update = $zdb->update($table);
+    $update->set(array('field_value'=> $systempay_path));
+    $update->where(array('field_name'=> 'systempay_path'));
 	$edit = $zdb->execute($update);
 	}
 
