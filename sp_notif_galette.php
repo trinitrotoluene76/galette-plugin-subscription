@@ -21,20 +21,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Galette. If not, see <http://www.gnu.org/licenses/>.
  */
-define('GALETTE_BASE_PATH', '../../../');
+define('GALETTE_BASE_PATH', '../../');
 require_once GALETTE_BASE_PATH . 'includes/galette.inc.php';
 use Galette\Entity\Adherent as Adherent;
 use Galette\Entity\Group as Group;
 use Galette\Core\GaletteMail as GaletteMail;
 use Galette\Entity\Contribution as Contribution;
-require_once '../_config.inc.php';
- 
-include_once('sp_outils.php');
-include_once('sp_include.php');
-include_once('configuration/sp_db_config.php');
-include_once('sp_paiement.php');
-include_once('sp_compta.php');
-include_once('sp_retour_notification.php');
+require_once '_config.inc.php';
+
+$path_module_commun="../../../systempay_as/";
+include_once($path_module_commun.'sp_outils.php');
+include_once($path_module_commun.'sp_include.php');
+include_once($path_module_commun.'configuration/sp_db_config.php');
+include_once($path_module_commun.'sp_paiement.php');
+include_once($path_module_commun.'sp_compta.php');
+include_once($path_module_commun.'sp_retour_notification.php');
 
 	//activation du traitement si notification du serveur https://paiement.systempay.fr/vads-payment/
 	if (isset($_POST["vads_trans_status"]))
