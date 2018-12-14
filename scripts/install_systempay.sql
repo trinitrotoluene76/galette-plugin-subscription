@@ -1,6 +1,5 @@
--- Objet: création de la table de configuration du module de paiement en ligne
--- fichier à intégrer une fois finalisé dans mysql.sql
-
+-- Objet: création et configuration des tables de configuration du module de paiement en ligne
+-- Fichier install_systempay.sql
 -- Auteur: Amaury Froment
 -- Version du serveur MySQL:  5.7.21
 -- Version de PHP :  7.1.16
@@ -38,7 +37,7 @@ CREATE TABLE `galette_subscription_config_systempay` (
 INSERT INTO `galette_subscription_config_systempay` (`id_conf`, `field_name`, `field_value`) VALUES
 (1, 'global_enable', 0),
 (2, 'vads_ctx_mode', 0),
-(3, 'vads_url_check', 'http://my_url_notifier.fr/'),
+(3, 'vads_url_check', 'http://monsite/galette/plugins/galette-plugin-subscription/sp_notif_galette.php'),
 (4, 'url_payment_systempay', 'http://monsite/galette/plugins/galette-plugin-subscription/systempay/sp_form_paiement.php'),
 (5, 'systempay_path', './systempay/');
 
