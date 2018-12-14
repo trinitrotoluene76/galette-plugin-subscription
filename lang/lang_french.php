@@ -1,5 +1,5 @@
 <?php
-// This file was automatically generated on Sat Oct 20 17:58:18 2018 (GMT)
+// This file was automatically generated on Fri Dec 14 20:57:58 2018 (GMT)
 // Don't modify it by hand, rather use the target lang from the Makefile.
 
 
@@ -54,8 +54,8 @@ $lang['followup.group.AJOUT ECHEC'] = '';
 // ../templates/default/new_subscription.tpl:2 
 $lang['Please, add a picture to your profile before subscribe'] = 'Ajoutez une photo de profil avant de souscire à un abonnement s\'il vous plait';
 
-// ../templates/default/management_subs2.tpl:14 ../templates/default/management_subs2.tpl:16 
-$lang['Follow up the request'] = 'Suivi de la demande';
+// ../send_files_standalone.php:133 
+$lang['Add File'] = 'Ajouter un fichier';
 
 // ../templates/default/management_groups.tpl:36 ../templates/default/management_groups.tpl:49 ../templates/default/management_subs2.tpl:105 ../templates/default/view_activity.tpl:27 
 $lang['Price 1'] = 'Tarif 1 (€)';
@@ -86,6 +86,9 @@ $lang['Auto validation'] = 'Auto validation';
 
 // ../templates/default/send_files.tpl:322 
 $lang['Add a message for subscription'] = 'Ajouter un message lié à l\'abonnement';
+
+// ../templates/default/management_subs2.tpl:14 ../templates/default/management_subs2.tpl:16 
+$lang['Follow up the request'] = 'Suivi de la demande';
 
 // ../templates/default/confirmation_reset_saison.tpl:1 
 $lang['Do you really want to delete subscriptions for this activity only, files of subscribers for this activity, contributions and remove subscribers from the group?'] = 'Voulez vous vraiment supprimer les abonnements, les fichiers des adhérents et les contributions concernant cette activité et retirer les adhérents de ce groupe?';
@@ -126,6 +129,9 @@ $lang['At least one activity is on progress or validated but not payed'] = 'Au m
 // ../templates/default/menu.tpl:10 ../templates/default/menu.tpl:36 
 $lang['Follow up'] = 'Suivi de mes abonnements';
 
+// ../templates/default/config_systempay.tpl:65 ../templates/default/config_systempay.tpl:68 
+$lang['Absolute URL of the web page to notify at the end of the payment.'] = 'URL absolue de la page web de notification à la fin du paiement';
+
 // ../templates/default/send_files_standalone.tpl:10 
 $lang['Add file by fill up this panel for the group:'] = 'Ajoutez un fichier en remplissant cette page pour le groupe:';
 
@@ -141,7 +147,7 @@ $lang['Do you really want to delete this files?'] = 'Voulez vous vraiment suppri
 // ../templates/default/follow_up_subs.tpl:10 ../templates/default/menu.tpl:7 ../templates/default/menu.tpl:19 ../templates/default/menu.tpl:33 ../templates/default/send_files.tpl:310 ../templates/default/send_files_standalone.tpl:133 ../templates/default/subs_confirmation.tpl:12 
 $lang['Subscription'] = 'Abonnement';
 
-// ../export_subs.php:199 
+// ../export_subs.php:247 
 $lang['Export'] = 'Export';
 
 // ../templates/default/confirmation_clean_adh.tpl:4 ../templates/default/confirmation_clean_adh.tpl:49 ../templates/default/confirmation_clean_file.tpl:9 ../templates/default/confirmation_clean_file.tpl:15 ../templates/default/confirmation_reset_saison.tpl:3 ../templates/default/management_subs2.tpl:166 ../templates/default/send_files_standalone.tpl:56 
@@ -188,9 +194,6 @@ $lang['file.AJOUT ECHEC'] = '';
 
 // ../templates/default/send_files.tpl:33 
 $lang['File name to fill up'] = 'Nom du fichier à remplir';
-
-// ../templates/default/config_systempay.tpl:73 ../templates/default/config_systempay.tpl:76 
-$lang['URL of the web page to pay'] = 'URL de la page web de paiement';
 
 // ../view_activity.php:55 
 $lang['View Activity'] = 'Voir l\'Activité';
@@ -336,9 +339,6 @@ $lang['Delete subscriptions for this activity only, files of subscribers for thi
 // ../templates/default/management_subs.tpl:130 
 $lang['View follow up & modify'] = 'Voir le suivi et modifier';
 
-// ../templates/default/config_systempay.tpl:65 ../templates/default/config_systempay.tpl:68 
-$lang['URL of the web page to notify at the end of the payment.'] = 'URL de la page web de notification à la fin du paiement';
-
 // ../templates/default/management_subs.tpl:9 
 $lang['Clean adh DB'] = 'Clean adh bdd';
 
@@ -429,8 +429,8 @@ $lang['Subscriber added to group:'] = 'Abonné ajouté au groupe:';
 // ../templates/default/about_group.tpl:12 ../templates/default/new_subscription.tpl:19 
 $lang['Price* (&euro;)'] = 'Tarif* (&euro;)';
 
-// ../send_files_standalone.php:133 
-$lang['Add File'] = 'Ajouter un fichier';
+// ../templates/default/config_systempay.tpl:73 ../templates/default/config_systempay.tpl:76 
+$lang['Absolute URL of the web page to pay'] = 'URL absolue de la page web de paiement';
 
 // ../templates/default/send_files_standalone.tpl:43 
 $lang['3. Form to fill up?'] = '3. Formulaire à remplir?';
@@ -450,7 +450,7 @@ $lang['View follow up details and modify fields'] = 'Voir le détail du suivi et
 // ../templates/default/menu.tpl:4 ../templates/default/menu.tpl:31 
 $lang['About groups'] = 'A propos des groupes';
 
-// ../config_systempay.php:87 
+// ../config_systempay.php:93 
 $lang['Configuration of Systempay'] = 'Configuration de Systempay';
 
 // ../templates/default/config_systempay.tpl:11 
@@ -468,7 +468,7 @@ $lang['Your file hasn\'t been found'] = 'Votre fichier n\'a pas été trouvé';
 // ../templates/default/config_systempay.tpl:4 
 $lang['Parameters of online payment'] = 'Paramètres du paiement en ligne';
 
-// ../templates/default/export_subs.tpl:9 ../templates/default/view_activity.tpl:94 ../templates/default/view_files.tpl:67 
+// ../templates/default/export_subs.tpl:11 ../templates/default/view_activity.tpl:94 ../templates/default/view_files.tpl:67 
 $lang['Close'] = 'Fermer';
 
 // ../templates/default/confirmation_clean_adh.tpl:24 
@@ -543,7 +543,7 @@ $lang['Activities'] = 'Activités';
 // ../classes/subscription.class.php:143 
 $lang['Subscription.AJOUT insert ECHEC'] = '';
 
-// ../templates/default/config_systempay.tpl:82 ../templates/default/management_groups.tpl:124 ../templates/default/management_subs2.tpl:170 ../templates/default/send_files_standalone.tpl:57 
+// ../templates/default/config_systempay.tpl:90 ../templates/default/management_groups.tpl:124 ../templates/default/management_subs2.tpl:170 ../templates/default/send_files_standalone.tpl:57 
 $lang['Save'] = 'Enregistrer';
 
 // ../templates/default/confirmation_clean_file.tpl:37 ../templates/default/confirmation_clean_file.tpl:73 ../templates/default/confirmation_clean_file.tpl:109 ../templates/default/send_files_standalone.tpl:74 ../templates/default/send_files_standalone.tpl:126 
@@ -617,6 +617,9 @@ $lang['View subscriber to modify informations & photo'] = 'Voir l\'abonné pour 
 
 // ../templates/default/management_subs.tpl:6 ../templates/default/management_subs.tpl:213 
 $lang['All'] = 'Tout';
+
+// ../templates/default/config_systempay.tpl:81 ../templates/default/config_systempay.tpl:84 
+$lang['Relative URL of the folder systempay'] = '';
 
 // ../templates/default/management_subs2.tpl:113 
 $lang['Estimated Total'] = 'Total estimé';
