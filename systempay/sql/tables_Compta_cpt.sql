@@ -1,367 +1,15 @@
--- Objet: Fichier d'installation de la bdd du plugin subscription
--- https://github.com/trinitrotoluene76/galette-plugin-subcription
--- fichier: mysql.sql
--- détails: ce fichier est à placer dans le répertoire "scripts" du plugin subscription. 
--- 			Il faut le renommer en "mysql.sql" et cliquer sur le bouton bdd (configuration/plugin) pour qu'il soit pris en compte
---			ce fichier est un copier coller des fichiers:
---				galette_amaury_config_0.8.x.sql
---				subscription_tables.sql
---				bdd_test_sql_0.8.x.sql
---				install_systempay.sql
+-- phpMyAdmin SQL Dump
+-- version 4.7.3
+-- https://www.phpmyadmin.net/
 --
--- Auteur: Amaury Froment
--- Généré le :  29/01/17
--- Version du serveur :  5.6.17
--- Version de PHP :  5.5.12
-
--- Objet: Fichier de configuration pour que Galette fonctionne avec le plugin Subscription
--- https://github.com/trinitrotoluene76/galette-plugin-subcription
--- fichier: galette_amaury_config_0.8.x_170129.sql
--- détails: ce fichier est à placer dans le répertoire "scripts" du plugin subscription. 
--- 			Il faut le renommer en "mysql.sql" et cliquer sur le bouton bdd (configuration/plugin) pour qu'il soit pris en compte
---			C'est la configuration minimale de galette (version officielle) pour ne pas rencontrer de soucis. Nécessite galette 0.8.3.3 minimum
---
--- Auteur: Amaury Froment
--- Généré le :  29/01/17
--- Version du serveur :  5.6.17
--- Version de PHP :  5.5.12
+-- Hôte : mysql51-122.perso
+-- Généré le :  Dim 21 oct. 2018 à 08:44
+-- Version du serveur :  5.5.55-0+deb7u1-log
+-- Version de PHP :  5.6.36-0+deb8u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `galette_fields_config`
---
-
-CREATE TABLE IF NOT EXISTS `galette_fields_config` (
-  `table_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `field_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `required` tinyint(1) NOT NULL,
-  `visible` tinyint(1) NOT NULL,
-  `position` int(2) NOT NULL,
-  `id_field_category` int(2) NOT NULL,
-  PRIMARY KEY (`table_name`,`field_id`),
-  KEY `id_field_category` (`id_field_category`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Contenu de la table `galette_fields_config`
--- Ces champs sont utilisés par le plugin (vérifications de doublons mail, date de naissance erronnée, privilèges suivant le statut...)
-UPDATE `galette_fields_config` SET `required` = '0', `visible` = '2', `position`='6', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'date_modif_adh';
-UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='5', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'ddn_adh';
-UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='7', `id_field_category`='3'WHERE `galette_fields_config`.`field_id` = 'email_adh';
-UPDATE `galette_fields_config` SET `required` = '0', `visible` = '2', `position`='0', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'id_statut';
-UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='3', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'login_adh';
-UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='4', `id_field_category`='2'WHERE `galette_fields_config`.`field_id` = 'mdp_adh';
-UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='0', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'nom_adh';
-UPDATE `galette_fields_config` SET `required` = '1', `visible` = '1', `position`='1', `id_field_category`='1'WHERE `galette_fields_config`.`field_id` = 'prenom_adh';
-
--- --------------------------------------------------------
-
---
--- Structure de la table `galette_field_contents_5`
---
-
-CREATE TABLE IF NOT EXISTS `galette_field_contents_5` (
-  `id` int(11) NOT NULL,
-  `val` varchar(55) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Contenu de la table `galette_field_contents_5`
--- Nécessaire à la gestion des tarifs par le plugin
-
-INSERT INTO `galette_field_contents_5` (`id`, `val`) VALUES
-(0, 'Nexter - Personnel'),
-(1, 'Nexter - Conjoint ou Enfant'),
-(2, 'Nexter -  Prestataire'),
-(3, 'Nexter -  intérimaire, stagiaire'),
-(4, 'Nexter -  Filiales TNS MArs,  Nexter Training, Nexter Robotics'),
-(5, 'Extérieur - Retraité Nexter ou conjoint'),
-(6, 'Extérieur');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `galette_field_types`
---
-
-CREATE TABLE IF NOT EXISTS `galette_field_types` (
-  `field_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `field_form` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `field_index` int(10) NOT NULL DEFAULT '0',
-  `field_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `field_perm` int(10) NOT NULL DEFAULT '0',
-  `field_type` int(10) NOT NULL DEFAULT '0',
-  `field_required` tinyint(1) NOT NULL DEFAULT '0',
-  `field_pos` int(10) NOT NULL DEFAULT '0',
-  `field_width` int(10) DEFAULT NULL,
-  `field_height` int(10) DEFAULT NULL,
-  `field_size` int(10) DEFAULT NULL,
-  `field_repeat` int(10) DEFAULT NULL,
-  `field_layout` int(10) DEFAULT NULL,
-  PRIMARY KEY (`field_id`),
-  KEY `field_form` (`field_form`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
-
---
--- Contenu de la table `galette_field_types`
---
-
-INSERT INTO `galette_field_types` (`field_id`, `field_form`, `field_index`, `field_name`, `field_perm`, `field_type`, `field_required`, `field_pos`, `field_width`, `field_height`, `field_size`, `field_repeat`, `field_layout`) VALUES
-(5, 'adh', 1, 'Appartenance', 0, 3, 1, 0, NULL, NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
--- Contenu de la table `galette_dynamic_fields` président=nexter, responsable 2=famille nexter, responsable 1=extérieur
-INSERT INTO `galette_dynamic_fields` (`item_id`, `field_id`, `field_form`, `val_index`, `field_val`) VALUES
-(9, 5, 'adh', 1, 0),
-(10, 5,'adh', 1, 1),
-(11, 5, 'adh', 1, 5);
--- --------------------------------------------------------
-
---
--- Structure de la table `galette_groups`
---
-
-CREATE TABLE IF NOT EXISTS `galette_groups` (
-  `id_group` int(10) NOT NULL AUTO_INCREMENT,
-  `group_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `creation_date` datetime NOT NULL,
-  `parent_group` int(10) DEFAULT NULL,
-  PRIMARY KEY (`id_group`),
-  UNIQUE KEY `name` (`group_name`),
-  KEY `parent_group` (`parent_group`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=29 ;
-
---
--- Contenu de la table `galette_groups`
---
-
-INSERT INTO `galette_groups` (`id_group`, `group_name`, `creation_date`, `parent_group`) VALUES
-(5, 'Mon groupe parent', '2014-03-28 19:31:28', NULL),
-(6, 'Groupe 1', '2014-03-28 19:37:40', 5),
-(7, 'Groupe 2', '2014-03-28 19:37:59', 5);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `galette_statuts`
---
-
-CREATE TABLE IF NOT EXISTS `galette_statuts` (
-  `id_statut` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `libelle_statut` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `priorite_statut` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_statut`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18 ;
-
---
--- Contenu de la table `galette_statuts`
--- Ajout du responsable de section/ de groupe
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 1;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 2;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 3;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 4;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 5;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 6;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 7;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 8;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 9;
-DELETE FROM `galette_statuts` WHERE `galette_statuts`.`id_statut` = 10;
-
-INSERT INTO `galette_statuts` (`id_statut`, `libelle_statut`, `priorite_statut`) VALUES
-(1, 'President', 0),
-(2, 'Treasurer', 10),
-(3, 'Secretary', 20),
-(4, 'Active member', 30),
-(7, 'Old-timer', 60),
-(9, 'Non-member', 80),
-(10, 'Vice-president', 5),
-(11, 'Trésorier adjoint', 10),
-(12, 'Encadrant', 99),
-(13, 'Membre d''honneur', 99),
-(14, 'Responsable section', 99),
-(16, 'Secrétaire adjoint', 20);
-
--- Objet: Fichier d'installation des tables du plugin Subscription
--- https://github.com/trinitrotoluene76/galette-plugin-subcription
--- fichier: subscription_tables.sql
--- détails: ce fichier est à placer dans le répertoire "scripts" du plugin subscription. 
--- 			Prérequis: avoir installé galette et éxécuté le fichier de configuration "galette_amaury_config_0.8.x_170129.sql" avant
--- 			Il faut le renommer en "mysql.sql" et cliquer sur le bouton bdd (configuration/plugin) pour qu'il soit pris en compte
---			Installation des tables du plugin et des contraintes.
---
--- Auteur: Amaury Froment
--- Généré le :  29/01/17
--- Version du serveur :  5.6.17
--- Version de PHP :  5.5.12
-
-SET FOREIGN_KEY_CHECKS=0;
-
---
--- Table structure for table `galette_subscription_activities`
---
-
-DROP TABLE IF EXISTS `galette_subscription_activities`;
-
-CREATE TABLE `galette_subscription_activities` (
-  `id_group` int(10) NOT NULL DEFAULT '0',
-  `price1` decimal(15,2) unsigned DEFAULT '0.00',
-  `price2` decimal(15,2) unsigned DEFAULT '0.00',
-  `lieu` text COLLATE utf8_unicode_ci NOT NULL,
-  `jours` text COLLATE utf8_unicode_ci NOT NULL,
-  `horaires` text COLLATE utf8_unicode_ci,
-  `renseignements` text COLLATE utf8_unicode_ci,
-  `complet` int(10) DEFAULT NULL,
-  `autovalidation` int(10) DEFAULT NULL,
-  PRIMARY KEY (`id_group`),
-  CONSTRAINT `galette_subscription_activities_ibfk_1` FOREIGN KEY (`id_group`) REFERENCES `galette_groups` (`id_group`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
---
--- Table structure for table `galette_subscription_files`
---
-
-DROP TABLE IF EXISTS `galette_subscription_files`;
-
-CREATE TABLE `galette_subscription_files` (
-  `id_doc` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_act` int(10) DEFAULT NULL,
-  `id_adh` int(10) unsigned DEFAULT NULL,
-  `id_abn` int(10) unsigned DEFAULT NULL,
-  `doc_name` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  `emplacement` varchar(200) COLLATE utf8_unicode_ci DEFAULT '',
-  `date_record` date NOT NULL DEFAULT '1901-01-01',
-  `vierge` int(10) DEFAULT NULL,
-  `return_file` int(10) DEFAULT NULL,
-  PRIMARY KEY (`id_doc`),
-  KEY `galette_subscription_files_ibfk_1` (`id_act`),
-  KEY `galette_subscription_files_ibfk_2` (`id_adh`),
-  KEY `galette_subscription_files_ibfk_3` (`id_abn`),
-  CONSTRAINT `galette_subscription_files_ibfk_1` FOREIGN KEY (`id_act`) REFERENCES `galette_groups` (`id_group`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `galette_subscription_files_ibfk_2` FOREIGN KEY (`id_adh`) REFERENCES `galette_adherents` (`id_adh`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `galette_subscription_files_ibfk_3` FOREIGN KEY (`id_abn`) REFERENCES `galette_subscription_subscriptions` (`id_abn`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-
---
--- Table structure for table `galette_subscription_followup`
---
-
-DROP TABLE IF EXISTS `galette_subscription_followup`;
-
-CREATE TABLE `galette_subscription_followup` (
-  `id_act` int(10) NOT NULL,
-  `id_adh` int(10) unsigned NOT NULL,
-  `id_abn` int(10) unsigned NOT NULL,
-  `statut_act` int(10) unsigned DEFAULT '0',
-  `feedback_act` text COLLATE utf8_unicode_ci,
-  `message_adh_act` text COLLATE utf8_unicode_ci,
-  `feedback_act_off` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id_act`,`id_adh`,`id_abn`),
-  KEY `id_adh` (`id_adh`),
-  KEY `id_abn` (`id_abn`),
-  CONSTRAINT `galette_subscription_followup_ibfk_1` FOREIGN KEY (`id_act`) REFERENCES `galette_groups` (`id_group`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `galette_subscription_followup_ibfk_2` FOREIGN KEY (`id_adh`) REFERENCES `galette_adherents` (`id_adh`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `galette_subscription_followup_ibfk_3` FOREIGN KEY (`id_abn`) REFERENCES `galette_subscription_subscriptions` (`id_abn`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-
---
--- Table structure for table `galette_subscription_subscriptions`
---
-
-DROP TABLE IF EXISTS `galette_subscription_subscriptions`;
-
-CREATE TABLE `galette_subscription_subscriptions` (
-  `id_abn` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_adh` int(10) unsigned NOT NULL,
-  `date_demande` date NOT NULL DEFAULT '1901-01-01',
-  `total_estimme` decimal(15,2) unsigned DEFAULT '0.00',
-  `message_abn` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id_abn`),
-  KEY `id_adh` (`id_adh`),
-  CONSTRAINT `galette_subscription_subscriptions_ibfk_1` FOREIGN KEY (`id_adh`) REFERENCES `galette_adherents` (`id_adh`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-	
-SET FOREIGN_KEY_CHECKS=1;
-
--- Objet: Fichier permettant d'avoir un exemple de 3 personnes
--- https://github.com/trinitrotoluene76/galette-plugin-subcription
--- fichier: bdd_test_sql_0.8.x.sql
--- détails: ce fichier est à placer dans le répertoire "scripts" du plugin subscription. 
--- 			Prérequis: avoir installé galette et éxécuté le fichier de configuration "galette_amaury_config_0.8.x_170129.sql" +"subscription_tables.sql" avant
--- 			Il faut le renommer en "mysql.sql" et cliquer sur le bouton bdd (configuration/plugin) pour qu'il soit pris en compte
---			Hydratation de la base de donnée avec un président, 2 responsables de section/groupes
---				président: login president mdp président
---				responsable de sous groupe: login responsable1 mot de passe: responsable1
---				responsable de sous groupe: login responsable2 mot de passe: responsable2
---
--- Auteur: Amaury Froment
--- Généré le :  29/01/17
--- Version du serveur :  5.6.17
--- Version de PHP :  5.5.12
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
--- --------------------------------------------------------
---
--- Contenu de la table `galette_adherents`
---
-
-INSERT INTO `galette_adherents` (`id_adh`, `id_statut`, `nom_adh`, `prenom_adh`, `pseudo_adh`, `societe_adh`, `titre_adh`, `ddn_adh`, `sexe_adh`, `adresse_adh`, `adresse2_adh`, `cp_adh`, `ville_adh`, `pays_adh`, `tel_adh`, `gsm_adh`, `email_adh`, `url_adh`, `icq_adh`, `msn_adh`, `jabber_adh`, `info_adh`, `info_public_adh`, `prof_adh`, `login_adh`, `mdp_adh`, `date_crea_adh`, `date_modif_adh`, `activite_adh`, `bool_admin_adh`, `bool_exempt_adh`, `bool_display_info`, `date_echeance`, `pref_lang`, `lieu_naissance`, `gpgid`, `fingerprint`) VALUES
-(9, 1, 'nm_president', 'pr_president', '', '', NULL, '1959-12-28', 1, '13 ruexxxx', '', '58963', 'Maurepas', '', '', '', 'fcfgdg@gmail.fr', '', '', '', '', '', '', '', 'president', '$2y$10$5w/I8dxnpNL6fwedezahKeezmaTJE9MU1WGFUJXVYkokxjiL21mBO', '2014-03-28', '2015-09-14', 1, 1, 0, 1, NULL, 'fr_FR', 'xxx', '', ''),
-(10, 14, 'Smith2', 'John2', '', '', NULL, '1968-04-18', 1, '1 bis xxxxx', '', '54236', 'cccc', '', '', '', 'dfdf@gmail.fr', '', '', '', '', '', '', 'Ingénieur', 'responsable2', '$2y$10$LVUc2Sc68p2sAVJrQsjnBu/6mpR0Q7zHKZUO9jKfDwyiIkLnOnsha', '2014-06-02', '2015-09-14', 1, 0, 0, 0, NULL, 'fr_FR', 'xxxx', '', ''),
-(11, 14, 'Smith', 'John', '', '', NULL, '1956-07-05', 1, '6 route xxxx', '', '59648', 'xxx', '', '', '', 'xfgf@club-internet.fr', '', '', '', '', '', '', 'assistant', 'responsable1', '$2y$10$s9pu9yMmuQ2A9c9v0wlL9.IdZGA.bFDgmBxxe9sLbndTCQUAEFyYW', '2014-06-02', '2015-09-14', 1, 0, 0, 0, NULL, 'fr_FR', 'england', '', '');
-
--- --------------------------------------------------------
---
--- Contenu de la table `galette_groups_managers`
---
-
-INSERT INTO `galette_groups_managers` (`id_group`, `id_adh`) VALUES
-(5, 9),
-(7, 10),
-(6, 11);
-
--- --------------------------------------------------------
---
--- Contenu de la table `galette_subscription_activities`
---
-
-INSERT INTO `galette_subscription_activities` (`id_group`, `price1`, `price2`, `lieu`, `jours`, `horaires`, `renseignements`, `complet`, `autovalidation`) VALUES
-(5, '22.00', '11.00', '', '', '', 'Obligatoire pour toute adhésion lors d\'une première activité et pour les tournois inter services.\r\nPaiement de l\'adhésion AS à  faire avec une des autres sections sélectionnées.\r\nPar contre le paiement des adhésions des sections se fait auprès de chaque responsable de section avec un paiement séparé.', 0, 0),
-(6, '12.00', '6.00', 'Gymnase de la base de soutien', 'Lundi midi\r\nMercredi et Jeudi soir\r\nSamedi matin', '11h30 à  13h30\r\n20h00 à  22h00\r\n08h00 à  12h00', 'Pratique en salle de modèle électrique - Initiation à  l\'activité', 0, 0),
-(7, '12.00', '6.00', 'Bâtiment 220', 'Mardi & Vendredi midi', '', 'Répétitions en salle pour travail en pupitre le mardi et en tutti le vendredi', 0, 0);
-
--- Objet: création et configuration des tables de configuration du module de paiement en ligne
--- Fichier install_systempay.sql
--- Auteur: Amaury Froment
--- Version du serveur MySQL:  5.7.21
--- Version de PHP :  7.1.16
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -377,170 +25,8 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `galette_subscription_config_systempay`
---
-DROP TABLE IF EXISTS `galette_subscription_config_systempay`;
-
-CREATE TABLE `galette_subscription_config_systempay` (
-  `id_conf` int(10) UNSIGNED NOT NULL,
-  `field_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `field_value` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_conf`),
-  KEY `id_conf` (`id_conf`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
-INSERT INTO `galette_subscription_config_systempay` (`id_conf`, `field_name`, `field_value`) VALUES
-(1, 'global_enable', 0),
-(2, 'vads_ctx_mode', 0),
-(3, 'vads_url_check', 'http://monsite/galette/plugins/galette-plugin-subscription/sp_notif_galette.php'),
-(4, 'url_payment_systempay', 'http://monsite/galette/plugins/galette-plugin-subscription/systempay/sp_form_paiement.php'),
-(5, 'systempay_path', './systempay/');
-
---
--- Table structure for table `tb_systempay_oper`
---
-
-DROP TABLE IF EXISTS `tb_systempay_oper`;
-
-CREATE TABLE `tb_systempay_oper` (
-  `tsp_ID` int(11) NOT NULL,
-  `tsp_Mode_Test_Prod` tinyint(4) NOT NULL,
-  `tsp_Signature_Ok` tinyint(1) NOT NULL,
-  `tsp_Statut_Transaction` tinyint(4) NOT NULL,
-  `tsp_Resultat` tinyint(4) NOT NULL,
-  `tsp_Montant` int(11) NOT NULL,
-  `tsp_Montant_Effectif` int(11) NOT NULL,
-  `tsp_Paiement_Config` tinyint(4) NOT NULL,
-  `tsp_Num_Sequence` smallint(6) NOT NULL,
-  `tsp_Autorisation` tinyint(4) NOT NULL,
-  `tsp_Garantie` tinyint(4) NOT NULL,
-  `tsp_Threeds` int(11) NOT NULL,
-  `tsp_Delai_Avant_Banque` int(11) NOT NULL,
-  `tsp_Mode_Validation` tinyint(4) NOT NULL,
-  `tsp_Numero_Transaction` int(11) NOT NULL,
-  `tsp_Reference_Commande` varchar(64) NOT NULL,
-  `tsp_Date_Heure` datetime NOT NULL,
-  `tsp_Reference_Acheteur` int(11) NOT NULL,
-  `tsp_Nom_Acheteur` varchar(63) NOT NULL,
-  `tsp_Prenom_Acheteur` varchar(63) NOT NULL,
-  `tsp_Email` varchar(150) NOT NULL,
-  `tsp_Type` tinyint(4) NOT NULL,
-  `tsp_Numero_Autorisation` varchar(6) NOT NULL,
-  `tsp_order_info` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Liste des opérations effectuées par SystemPay et analysées';
-
---
--- Structure de la table `tb_systempay_msg`
---
-DROP TABLE IF EXISTS `tb_systempay_msg`;
-
-CREATE TABLE `tb_systempay_msg` (
-  `ID` int(2) NOT NULL DEFAULT '0',
-  `Cle_Msg` varchar(45) DEFAULT NULL,
-  `fr` varchar(427) DEFAULT NULL,
-  `en` varchar(379) DEFAULT NULL,
-  `de` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `tb_systempay_msg`
---
-
-INSERT INTO `tb_systempay_msg` (`ID`, `Cle_Msg`, `fr`, `en`, `de`) VALUES
-(0, 'MSG_NON_TROUVE', 'Valeur non trouvée', 'Not found value', 'Wert nicht gefunden'),
-(1, 'MSG_PAIEMENT_ABANDONNE', 'Le paiement a été abandonné par le client. La transaction n’a pas été crée sur la plateforme de paiement et n’est donc pas visible dans le back office marchand.', 'The payment was abandonned by the customer. The transaction was not created on the gateway and therefore is not visible on the merchant back office.', 'Die Zahlung wurde vom Kunden aufgegeben. Die Transaktion wurde nicht auf der Zahlungsplattform erstellt und ist daher nicht im Händler-Back-Office sichtbar.'),
-(2, 'MSG_PAIEMENT_ACCEPTE', 'Le paiement a été accepté et est en attente de remise en banque.', 'The payment is accepted and is waiting to be cashed.', 'Die Zahlung wurde akzeptiert und steht noch aus.'),
-(3, 'MSG_PAIEMENT_ETE_REFUSE', 'Le paiement a été refusé.', 'The payment was refused.', 'Zahlung wurde abgelehnt'),
-(4, 'MSG_TRANSACTION_ATTENTE_VALIDATION_MANUELLE', 'La transaction a été acceptée mais elle est en attente de validation manuelle. C\'est à la charge du marchand de valider la transaction pour demander la remise en banque depuis le back office marchand ou par requête web service. La transaction pourra être validée tant que le délai de capture n’a pas été dépassé. Si ce délai est dépassé alors le paiement bascule dans le statut Expiré. Ce statut expiré est définitif.', 'The transaction is accepted but it is waiting to be manually validated. It is on the merchant responsability to validate the transaction in order that it can be cashed from the back office or by web service request. The transaction can be validated as long as the capture delay is not expired. If the delay expires the payment status change to Expired. This status is definitive.', 'Die Transaktion wurde akzeptiert, muss jedoch noch manuell validiert werden. Es liegt in der Verantwortung des Händlers, die Transaktion zu bestätigen, um die Bank vom Back-Office-Händler anzufordern oder einen Webservice anzufordern. Die Transaktion kann validiert werden, solange die Erfassungszeit nicht überschritten wurde. Wenn diese Zeit überschritten wird, wechselt die Zahlung in den Status \"Abgelaufen\". Dieser abgelaufene Status ist endgültig.'),
-(5, 'MSG_TRANSACTION_ATTENTE_AUTORISATION', 'La transaction est en attente d’autorisation. Lors du paiement uniquement un prise d’empreinte a été réalisée car le délai de remise en banque est strictement supérieur à 7 jours. Par défaut la demande d’autorisation pour le montant global sera réalisée à j-2 avant la date de remise en banque.', 'The transaction is waiting for an authorisation. During the payment, just an imprint was made because the capture delay is higher than 7 days. By default the auhorisation demand for the global amount will be made 2 days before the bank deposit date.', 'Die Transaktion steht noch aus. Bei der Bezahlung wurde nur ein Eindruck gemacht, da die Frist für das Bankgeschäft strikt länger als 7 Tage ist. Standardmäßig erfolgt die Autorisierungsanfrage für den Gesamtbetrag am Tag 2 vor dem Datum der Bankeinzahlung.'),
-(6, 'MSG_TRANSACTION_EXPIREE', 'La transaction est expirée. Ce statut est définitif, la transaction ne pourra plus être remisée en banque. Une transaction expire dans le cas d\'une transaction créée en validation manuelle ou lorsque le délai de remise en banque (capture delay) dépassé.', 'The transaction expired. This status is definitive, the transaction will not be able to be cashed. A transaction expires when it was created in manual validation or when the capture delay is passed.', 'Die Transaktion ist abgelaufen. Dieser Status ist endgültig, die Transaktion kann nicht mehr in der Bank gespeichert werden. Eine Transaktion verfällt, wenn eine Transaktion bei der manuellen Validierung erstellt wurde oder die Erfassungsverzögerung abgelaufen ist.'),
-(7, 'MSG_TRANSACTION_ANNULEE', 'La transaction a été annulée au travers du back office marchand ou par une requête web service. Ce statut est définitif, la transaction ne sera jamais remise en banque.', 'The payment was cancelled through the merchant back offfice or by a web service request. This status is definitive, the transaction will never be cashed.', 'Die Transaktion wurde über das Back-Office des Händlers oder über eine Webservice-Anfrage abgebrochen. Dieser Status ist endgültig, die Transaktion wird niemals in die Bank gesetzt.'),
-(8, 'MSG_TRANSACTION_ATTENTE_AUTO_VALID', 'La transaction est en attente d’autorisation et en attente de validation manuelle. Lors du paiement uniquement un prise d’empreinte a été réalisée car le délai de remise en banque est strictement supérieur à 7 jours et le type de validation demandé est « validation manuelle ». Ce paiement ne pourra être remis en banque uniquement après une validation du marchand depuis le back office marchand ou par un requête web services.', 'The transaction is waiting for an authorisation and a manual validation. During the payment, just an imprint was made because the capture delay is higher than 7 days and the validation type is « manual validation ». This payment will be able to be cashed only after that the merchant validates it from the back office or by web service request.', 'Die Transaktion steht vor der Autorisierung und wartet auf die manuelle Validierung. Beim Bezahlen wurde nur ein Eindruck gemacht, weil die Zeit des Bankierens strikt länger als 7 Tage ist und die Art der Validierung \"manuelle Validierung\" ist. Diese Zahlung kann nur nach einer Bestätigung des Händlers im Backoffice des Händlers oder durch eine Anforderung von Webservices in Bank bezahlt werden.'),
-(9, 'MSG_TRANSACTION_REMISE_BANQUE', 'La transaction a été remise en banque. Ce statut est définitif.', 'The payment was cashed. This status is definitive.', 'Die Transaktion wurde abgewickelt. Dieser Status ist endgültig.'),
-(10, 'MSG_PAIEMENT_REALISE_SUCCES', 'Paiement réalisé avec succès.', 'Payment successfully completed.', 'Zahlung erfolgreich abgeschlossen'),
-(11, 'MSG_COMMERCANT_CONTACTER_BANQUE_PORTEUR', 'Le commerçant doit contacter la banque du porteur.', 'The merchant must contact the holder’s bank.', 'Der Händler muss sich an die Bank des Inhabers wenden.'),
-(12, 'MSG_PAIEMENT_REFUSE', 'Paiement refusé.', 'Payment denied.', 'Zahlung abgelehnt.'),
-(13, 'MSG_ANNULE_PAR_LE_CLIENT', 'Paiement annulé par le client.', 'Cancellation by customer.', 'Zahlung vom Kunden storniert.'),
-(14, 'MSG_ERREUR_FORMAT_RESULTAT', 'Erreur de format de la requête. A mettre en rapport avec la valorisation du champ vads_extra_result.', 'Request format error. To be linked with the value of the vads_extra_result field.', 'Abfrageformatfehler In Verbindung mit der Aufwertung des Feldes vads_extra_result.'),
-(15, 'MSG_ERREUR_TECHNIQUE', 'Erreur technique lors du paiement.', 'Technical error occurred during payment.', 'Technischer Fehler während der Zahlung.'),
-(16, 'MSG_PAIEMENT_SIMPLE', 'Paiement simple.', 'Unique Payment.', 'Einfache Bezahlung'),
-(17, 'MSG_TRANSACTION_APPROUVEE', 'Transaction approuvée ou traitée avec succès.', 'Transaction approved or successfully treated.', 'Transaktion genehmigt oder erfolgreich bearbeitet.'),
-(18, 'MSG_CONTACTER_EMETTEUR', 'Contacter l’émetteur de carte.', 'Contact the card issuer.', 'Wenden Sie sich an den Kartenaussteller.'),
-(19, 'MSG_ACCEPTEUR_INVALIDE', 'Accepteur_invalide.', 'Invalid acceptor.', 'Accepteur_invalide.'),
-(20, 'MSG_CONSERVER_CARTE', 'Conserver la carte.', 'Keep the card.', 'Bewahren Sie die Karte auf.'),
-(21, 'MSG_NE_PAS_HONORER', 'Ne pas honorer.', 'Do not honor.', 'Ehre nicht'),
-(22, 'MSG_CONSERVER_CARTE_SPECIAL', 'Conserver la carte, conditions spéciales.', 'Keep the card, special conditions.', 'Behalten Sie die Karte, Sonderkonditionen.'),
-(23, 'MSG_APPROUVER_APRES_IDENTIFICATION', 'Approuver après identification.', 'Approved after identification.', 'Genehmigen Sie nach der Identifizierung.'),
-(24, 'MSG_TRANSACTION_INVALIDE', 'Transaction invalide.', 'Invalid Transaction.', 'Ungültige Transaktion'),
-(25, 'MSG_MONTANT_INVALIDE', 'Montant invalide.', 'Invalid Amount.', 'Betrag ungültig'),
-(26, 'MSG_NUMERO_PORTEUR_INVALIDE', 'Numéro de porteur invalide.', 'Invalid holder number.', 'Ungültige Frachtführernummer'),
-(27, 'MSG_ERREUR_FORMAT_AUTH', 'Erreur de format.', 'Format error.', 'Formatierungsfehler'),
-(28, 'MSG_IDENTIFIANT_ORGANISME', 'Identifiant de l’organisme acquéreur inconnu.', 'Unknown buying organization identifier.', 'Kennung der unbekannten erwerbenden Organisation.'),
-(29, 'MSG_DATE_VALIDITE_DEPASSEE', 'Date de validité de la carte dépassée.', 'Expired card validity date.', 'Gültigkeitsdatum der Karte überschritten.'),
-(30, 'MSG_SUSPICION_FRAUDE', 'Suspicion de fraude.', 'Fraud suspected.', 'Verdacht auf Betrug.'),
-(31, 'MSG_CARTE_PERDUE', 'Carte perdue.', 'Lost card.', 'Verlorene Karte'),
-(32, 'MSG_CARTE_VOLEE', 'Carte volée.', 'Stolen card.', 'Gestohlene Karte'),
-(33, 'MSG_PROVISION_INSUFFISANTE', 'Provision insuffisante ou crédit dépassé.', 'Insufficient provision or exceeds credit.', 'Unzureichende Bereitstellung oder Gutschrift überschritten.'),
-(34, 'MSG_CARTE_ABSENTE', 'Carte absente du fichier.', 'Card not in database.', 'Karte nicht in der Datei.'),
-(35, 'MSG_TRANSACTION_NON_PERMISE', 'Transaction non permise à ce porteur.', 'Transaction not allowed for this holder.', 'Transaktion für diesen Inhaber nicht zulässig.'),
-(36, 'MSG_TRANSACTION_INTERDITE', 'Transaction interdite au terminal.', 'Transaction not allowed from this terminal.', 'Transaktion am Terminal verboten.'),
-(37, 'MSG_DEBIT', 'Débit', 'Debit', 'Soll'),
-(38, 'MSG_ACCEPTEUR_DOIT_CONTACTER', 'L’accepteur de carte doit contacter l’acquéreur.', 'The card acceptor must contact buyer.', 'Der Kartenakzeptor muss sich an den Erwerber wenden.'),
-(39, 'MSG_MONTANT_RETRAIT_HORS_LIMITE', 'Montant de retrait hors limite.', 'Amount over withdrawal limits.', 'Auszahlungsbetrag außerhalb des Limits.'),
-(40, 'MSG_REGLES_SECURITE_NON_RESPECTEES', 'Règles de sécurité non respectées.', 'Does not abide to security rules.', 'Sicherheitsregeln nicht beachtet.'),
-(41, 'MSG_REPONSE_NON_PARVENUE', 'Réponse non parvenue ou reçue trop tard.', 'Response not received or received too late.', 'Antwort nicht oder zu spät erhalten.'),
-(42, 'MSG_ARRET_MOMENTANE', 'Arrêt momentané du système.', 'System temporarily stopped.', 'Kurzzeitiges Herunterfahren des Systems.'),
-(43, 'MSG_EMETTEUR_INACCESSIBLE', 'Emetteur de cartes inaccessible.', 'Inaccessible card issuer.', 'Kartenaussteller nicht erreichbar.'),
-(44, 'MSG_MAUVAIS_FONCTIONNEMENT', 'Mauvais fonctionnement du système.', 'Faulty system.', 'Fehlfunktion des Systems.'),
-(45, 'MSG_TRANSACTION_DUPLIQUEE', 'Transaction dupliquée.', 'Duplicated transaction.', 'Doppelte Transaktion'),
-(46, 'MSG_ECHEANCE_TEMPORISATION', 'Echéance de la temporisation de surveillance globale.', 'Global surveillance time out expired.', 'Frist für den globalen Überwachungstimer.'),
-(47, 'MSG_SERVEUR_INDISPONIBLE', 'Serveur indisponible routage réseau demandé à nouveau.', 'Unavailable server, repeat network routing requested.', 'Server nicht verfügbares Netzwerkrouting erneut angefordert.'),
-(48, 'MSG_INCIDENT_DOMAINE_INITIATEUR', 'Incident domaine initiateur.', 'Instigator domain incident.', 'Incident-Initiator-Domäne'),
-(49, 'MSG_PAIEMENT_GARANTI', 'Le paiement est garanti.', 'Payment is guaranteed.', 'Zahlung ist garantiert'),
-(50, 'MSG_PAIEMENT_NON_GARANTI', 'Le paiement n’est pas garanti.', 'Payment is not guaranteed.', 'Zahlung ist nicht garantiert.'),
-(51, 'MSG_SUITE_A_ERREUR', 'Suite à une erreur technique, le paiement ne peut pas être garanti.', 'Payment cannot be guaranteed, due to a technical error.', 'Aufgrund eines technischen Fehlers kann die Zahlung nicht garantiert werden.'),
-(52, 'MSG_GARANTIE_NON_APPLICABLE', 'Garantie de paiement non applicable.', 'Payment guarantee not applicable.', 'Zahlungsgarantie nicht anwendbar.'),
-(53, 'MSG_AUTHENTIFIE_3DS', 'Authentifié 3DS.', '3DS Authentified.', 'Authentifizierte 3DS.'),
-(54, 'MSG_ERREUR_AUTHENTIFICATION', 'Erreur Authentification.', 'Authentification Error.', 'Authentifizierungsfehler'),
-(55, 'MSG_AUTHENTIFICATION_IMPOSSIBLE', 'Authentification impossible.', 'Authentification Impossible.', 'Kann sich nicht authentifizieren.'),
-(56, 'MSG_ESSAI_AUTHENTIFICATION', 'Essai d’authentification.', 'Try to authenticate.', 'Authentifizierungstest'),
-(57, 'MSG_NON_RENSEIGNE', 'Non renseigné.', 'Non valued.', 'Nicht informiert'),
-(58, 'MSG_VALIDATION_MANUELLE', 'Validation Manuelle', 'Manual Validation', 'Manuelle Validierung'),
-(59, 'MSG_VALIDATION_AUTOMATIQUE', 'Validation Automatique', 'Automatic Validation', 'Automatische Validierung'),
-(60, 'MSG_CONFIGURATION_DEFAUT_BACK_OFFICE_MARCHAND', 'Configuration par défaut du back office marchand', 'Default configuration of the merchant back office', 'Standardkonfiguration des Händler-Backoffice'),
-(61, 'MSG_ERREUR_CONFIGURATION_PARA', 'Erreur de configuration. Le fichier conf.txt n\'est pas correctement paramétré. Vérifier l\'identifiant boutique, votre certificat et l\'URL de retour.', 'CONFIGURATION ERROR!</u></b></p><p><b>The conf.txt file is not properly set. Please check your shop ID, your certificate and your return URL.', 'Konfigurationsfehler Die Datei conf.txt ist nicht richtig eingestellt. Überprüfen Sie die Geschäfts-ID, Ihr Zertifikat und die Rückgabe-URL.'),
-(62, 'MSG_SIGNATURE_VALIDE', 'Signature Valide', 'Valid Signature', 'Unterschrift gültig'),
-(63, 'MSG_SIGNATURE_INVALIDE', 'Signature Invalide - ne pas prendre en compte le résultat de ce paiement', 'Invalid Signature - do not take this payment result in account', 'Unterschrift ungültig - das Ergebnis dieser Zahlung nicht berücksichtigen'),
-(64, 'MSG_TRANSACTION_DEBIT', 'La transaction est un débit ayant comme caractéristiques', 'The transaction is a debit with the following details', 'Die Transaktion ist eine Belastung mit Merkmalen'),
-(65, 'MSG_STATUT', 'Statut', 'Status', 'Status'),
-(66, 'MSG_RESULTAT', 'Résultat', 'Result', 'Ergebnis'),
-(67, 'MSG_IDENTIFIANT', 'Identifiant', 'ID', 'Login'),
-(68, 'MSG_MONTANT', 'Montant', 'Account', 'Betrag'),
-(69, 'MSG_MONTANT_EFFECTIF', 'Montant Effectif', 'Effective Account', 'Effektiver Betrag'),
-(70, 'MSG_TYPE_DE_PAIEMENT', 'Type de paiement', 'Payment Type', 'Art der Zahlung'),
-(71, 'MSG_NUMERO_SEQUENCE', 'Numéro de séquence', 'Sequence Number', 'Folgenummer'),
-(72, 'MSG_RESULTAT_AUTORISATION', 'Résultat d\'autorisation', 'Authorisation Result', 'Autorisierungsergebnis'),
-(73, 'MSG_GARANTIE_PAIEMENT', 'Garantie de paiement', 'Payment Warranty', 'Zahlungsgarantie'),
-(74, 'MSG_STATUT_3DS', 'Statut 3DS', 'Statut 3DS', '3DS-Status'),
-(75, 'MSG_DELAI_AVANT_REMISE_EN_BANQUE', 'Délai avant Remise en Banque', 'Capture delay', 'Frist vor Bankzustellung'),
-(76, 'MSG_MODE_VALIDATION', 'Mode de Validation', 'Validation Mode', 'Validierungsmodus'),
-(77, 'MSG_REDIRECTION_PLATEFORME', 'Redirection vers la plateforme de paiement', 'Payment gateway redirection', 'Umleitung auf die Zahlungsplattform'),
-(78, 'MSG_TEST', 'Test', 'Test', 'Test'),
-(79, 'MSG_PRODUCTION', 'Production', 'Production', 'Produktion'),
-(80, 'MSG_REDIRECT_SUCCES', 'Paiement réalisé avec succès. Redirection vers la boutique dans quelques instants.', 'Payment successfully completed.', 'Zahlung erfolgreich abgeschlossen In wenigen Augenblicken in den Laden umleiten.'),
-(81, 'MSG_REDIRECT_ERREUR', 'Le paiement a été refusé. Redirection vers le site asnexter.fr dans quelques instants.', 'Payment has been refused. Redirection to the site asnexter.fr', 'Zahlung wurde abgelehnt Umleitung zur Site asnexter.fr in wenigen Augenblicken.'),
-(82, 'MSG_PRESIGNATURE_VALIDE', 'Pré-Signature valide', 'Valid Pre-Signature', 'Pre-Signature gültig'),
-(83, 'MSG_PRESIGNATURE_INVALIDE', 'Pré-Signature Invalide - ne pas prendre en compte la demande de paiement', 'Invalid Pre-Signature - do not take into account the payment request', 'Pre-Signature Invalid - Die Zahlungsanforderung nicht berücksichtigen ');
-
--- Ajout des tables comptables
--- --------------------------------------------------------
-
---
 -- Structure de la table `cpt_CatCompte`
 --
-DROP TABLE IF EXISTS `cpt_CatCompte`;
 
 CREATE TABLE `cpt_CatCompte` (
   `cat_ID_CatCompte` int(11) NOT NULL,
@@ -562,7 +48,6 @@ CREATE TABLE `cpt_CatCompte` (
 --
 
 INSERT INTO `cpt_CatCompte` (`cat_ID_CatCompte`, `cat_Chemin_CatCompte`, `cat_Nom_CatCompte`, `cat_Commentaire`, `cat_ID_CatCompte_Parent`, `cat_Raccourcis_CatCompte`, `cat_Nom_CatCompte_Parent`, `cat_Type_CatCompte`, `cat_Num_Tag_Associes`, `cat_Niveau`, `cat_Virtuel`, `cat_Visible`) VALUES
-(0, '', 'Inexistant', 'Catégorie inexistante', 0, '0', '0', 0, 0, 0, 0, 0),
 (1, '', '0_Racine', 'Racine', 0, '0', '-1', 1, 0, 1, 1, 1),
 (2, '', '1_Capitaux propres', 'Capitaux propres', 1, '1', '0', 2, 0, 2, 1, 1),
 (3, '', '10_Fonds associatifs et réserves', 'Fonds associatifs et réserves', 2, '10', '1', 2, 0, 3, 1, 1),
@@ -1164,7 +649,6 @@ INSERT INTO `cpt_CatCompte` (`cat_ID_CatCompte`, `cat_Chemin_CatCompte`, `cat_No
 --
 -- Structure de la table `cpt_CompteBancaire`
 --
-DROP TABLE IF EXISTS `cpt_CompteBancaire`;
 
 CREATE TABLE `cpt_CompteBancaire` (
   `cpt_ID_Compte` int(11) NOT NULL,
@@ -1190,7 +674,6 @@ INSERT INTO `cpt_CompteBancaire` (`cpt_ID_Compte`, `cpt_Nom`, `cpt_IBAN`, `cpt_N
 --
 -- Structure de la table `cpt_Mode`
 --
-DROP TABLE IF EXISTS `cpt_Mode`;
 
 CREATE TABLE `cpt_Mode` (
   `mod_ID_Mode` int(11) DEFAULT NULL,
@@ -1216,7 +699,6 @@ INSERT INTO `cpt_Mode` (`mod_ID_Mode`, `mod_Mode`) VALUES
 --
 -- Structure de la table `cpt_Operation`
 --
-DROP TABLE IF EXISTS `cpt_Operation`;
 
 CREATE TABLE `cpt_Operation` (
   `opr_ID_Operation` int(11) NOT NULL,
@@ -1228,7 +710,7 @@ CREATE TABLE `cpt_Operation` (
   `opr_ID_Tiers` int(11) DEFAULT NULL,
   `opr_NumOperation` int(11) DEFAULT NULL,
   `opr_Commentaire` text,
-  `opr_Montant` int(11) DEFAULT NULL,
+  `opr_Montant` double DEFAULT NULL,
   `opr_ID_Compte_Source` int(11) DEFAULT NULL,
   `opr_ID_Compte_Cible` int(11) DEFAULT NULL,
   `opr_Ventilation` int(11) DEFAULT NULL,
@@ -1242,17 +724,29 @@ CREATE TABLE `cpt_Operation` (
   `opr_ViaInternet` tinyint(1) DEFAULT NULL,
   `opr_Transfert` tinyint(1) DEFAULT NULL,
   `opr_Estimation` tinyint(1) DEFAULT NULL,
-  `opr_Proprietaire` varchar(10) DEFAULT NULL,
-  `opr_ModeTest` tinyint(1) NOT NULL,
-  `opr_OperationVentilleValide` tinyint(1) DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient toutes les opérations, pour tous les comptes (montants en centimes)';
+  `opr_Proprietaire` varchar(2) DEFAULT NULL,
+  `opr_ModeTest` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contient toutes les opérations, pour tous les comptes';
+
+--
+-- Déchargement des données de la table `cpt_Operation`
+--
+
+INSERT INTO `cpt_Operation` (`opr_ID_Operation`, `opr_Date_Operation`, `opr_Date_Valeur`, `opr_Date_Saisie`, `opr_Num_Transaction`, `opr_ID_Mode`, `opr_ID_Tiers`, `opr_NumOperation`, `opr_Commentaire`, `opr_Montant`, `opr_ID_Compte_Source`, `opr_ID_Compte_Cible`, `opr_Ventilation`, `opr_Operation_Ventilee`, `opr_Pointage`, `opr_Date_Pointage`, `opr_Assurer_Suivi`, `opr_ID_Tag`, `opr_OperationAnnulee`, `opr_OperationGeneree`, `opr_ViaInternet`, `opr_Transfert`, `opr_Estimation`, `opr_Proprietaire`, `opr_ModeTest`) VALUES
+(1, '2018-08-26 19:59:31', '2018-08-26', '2018-08-26', '000091', 3, 654321, 0, 'Ligne de commentaire', 45, 560, 455, 1, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1),
+(2, '2018-08-26 19:59:31', '2018-08-26', '2018-08-26', '000091', 3, 654321, 0, 'Ligne de commentaire', 24, 560, 452, 1, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1),
+(3, '2018-08-27 06:55:05', '2018-08-27', '2018-08-27', '000095', 3, 654321, 0, 'Ligne de commentaire', 45, 560, 455, 2, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1),
+(4, '2018-08-27 06:55:05', '2018-08-27', '2018-08-27', '000095', 3, 654321, 0, 'Ligne de commentaire', 24, 560, 452, 2, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1),
+(5, '2018-08-31 19:53:00', '2018-08-31', '2018-08-31', '000096', 3, 654321, 0, 'Ligne de commentaire', 45, 560, 455, 3, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1),
+(6, '2018-08-31 19:53:00', '2018-08-31', '2018-08-31', '000096', 3, 654321, 0, 'Ligne de commentaire', 24, 560, 452, 3, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1),
+(7, '2018-08-31 19:55:11', '2018-08-31', '2018-08-31', '000097', 3, 654321, 0, 'Ligne de commentaire', 45, 560, 455, 4, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1),
+(8, '2018-08-31 19:55:11', '2018-08-31', '2018-08-31', '000097', 3, 654321, 0, 'Ligne de commentaire', 24, 560, 452, 4, 1, '', '0000-00-00', 0, 0, 0, 1, 1, 0, 0, 'ga', 1);
 
 -- --------------------------------------------------------
 
 --
 -- Structure de la table `cpt_OperationPlanifiee`
 --
-DROP TABLE IF EXISTS `cpt_OperationPlanifiee`;
 
 CREATE TABLE `cpt_OperationPlanifiee` (
   `opf_ID_Operation_Planifiee` int(11) NOT NULL,
@@ -1269,7 +763,6 @@ CREATE TABLE `cpt_OperationPlanifiee` (
 --
 -- Structure de la table `cpt_Tag`
 --
-DROP TABLE IF EXISTS `cpt_Tag`;
 
 CREATE TABLE `cpt_Tag` (
   `tag_ID_Tag` int(11) NOT NULL,
@@ -1282,20 +775,18 @@ CREATE TABLE `cpt_Tag` (
 --
 -- Structure de la table `cpt_Tag_Associe`
 --
-DROP TABLE IF EXISTS `cpt_Tag_Associe`;
 
 CREATE TABLE `cpt_Tag_Associe` (
   `taa_ID_Tag_Associe` int(11) NOT NULL,
   `taa_Num_Tag_Associe` int(11) NOT NULL,
   `taa_ID_Tag` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ML : Description à faire';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
 -- Structure de la table `cpt_Tiers`
 --
-DROP TABLE IF EXISTS `cpt_Tiers`;
 
 CREATE TABLE `cpt_Tiers` (
   `tie_ID_Tiers` int(11) NOT NULL,
@@ -1310,7 +801,6 @@ CREATE TABLE `cpt_Tiers` (
 --
 -- Structure de la table `cpt_TypeCatCompte`
 --
-DROP TABLE IF EXISTS `cpt_TypeCatCompte`;
 
 CREATE TABLE `cpt_TypeCatCompte` (
   `tcc_ID_CatCompte` int(11) NOT NULL,
@@ -1339,55 +829,6 @@ INSERT INTO `cpt_TypeCatCompte` (`tcc_ID_CatCompte`, `tcc_Nom_CatCompte`, `tcc_D
 (13, 'Paiement en ligne', 'SystemPay', 6);
 
 --
--- Structure de la table `cpt_CodeActivite`
---
-DROP TABLE IF EXISTS `cpt_CodeActivite`;
-
-CREATE TABLE `cpt_CodeActivite` (
-  `ca_id_group` int(10) NOT NULL,
-  `ca_code` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `ca_group_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `cpt_CodeActivite`
---
-
-INSERT INTO `cpt_CodeActivite` (`ca_id_group`, `ca_code`, `ca_group_name`) VALUES
-(5, 'AS', 'Adhésion AS'),
-(7, 'CP', 'Course à pied'),
-(8, 'CH', 'Chorale'),
-(9, 'CY', 'Cyclotourisme'),
-(10, 'ES', 'Escalade'),
-(11, 'FO', 'Football'),
-(12, 'GO', 'Golf'),
-(13, 'GY', 'Gym-entretien'),
-(14, 'KM', 'Krav Maga'),
-(16, 'MU', 'Musculation'),
-(17, 'PE', 'Peinture-dessin'),
-(18, 'NL', 'Nage Libre PLO'),
-(19, 'PL1', 'Plongée PL1'),
-(20, 'PL2', 'Plongée PL2'),
-(22, 'ST', 'Stretching'),
-(23, 'TE', 'Tennis'),
-(24, 'TI', 'Tir'),
-(25, 'TA', 'Tir à l\'arc'),
-(26, 'ZU', 'Zumba'),
-(28, 'RC', 'Rétro-Cars'),
-(29, 'MN', 'Marche Nordique'),
-(30, 'DS', 'Danse Sportive'),
-(31, 'BO', 'Boxe Française'),
-(32, 'PA', 'Padel'),
-(33, 'PI1', 'Pilates 17h15'),
-(34, 'PI2', 'Pilates 18h15'),
-(35, 'BA', 'Badminton'),
-(36, 'VO', 'Volley'),
-(37, 'TT', 'Tennis de table'),
-(38, 'RO', 'Robotique'),
-(39, 'YO', 'Yoga'),
-(40, 'PI3', 'Pilates 19h15');
-
---
 -- Index pour les tables déchargées
 --
 
@@ -1397,13 +838,6 @@ INSERT INTO `cpt_CodeActivite` (`ca_id_group`, `ca_code`, `ca_group_name`) VALUE
 ALTER TABLE `cpt_CatCompte`
   ADD PRIMARY KEY (`cat_ID_CatCompte`),
   ADD UNIQUE KEY `cat_ID_CatCompte` (`cat_ID_CatCompte`);
-
---
--- Index pour la table `cpt_CodeActivite`
---
-ALTER TABLE `cpt_CodeActivite`
-  ADD PRIMARY KEY (`ca_id_group`),
-  ADD UNIQUE KEY `ca_code` (`ca_code`);
 
 --
 -- Index pour la table `cpt_CompteBancaire`
@@ -1455,21 +889,6 @@ ALTER TABLE `cpt_TypeCatCompte`
   ADD UNIQUE KEY `tcc_ID_CatCompte` (`tcc_ID_CatCompte`);
 
 --
--- Index pour la table `tb_systempay_msg`
---
-ALTER TABLE `tb_systempay_msg`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `Cle_Msg` (`Cle_Msg`);
-
---
--- Index pour la table `tb_systempay_oper`
---
-ALTER TABLE `tb_systempay_oper`
-  ADD PRIMARY KEY (`tsp_ID`),
-  ADD UNIQUE KEY `tsp_Numero_Transaction` (`tsp_Numero_Transaction`),
-  ADD KEY `tsp_Numero_Transaction_2` (`tsp_Numero_Transaction`);
-
---
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
@@ -1482,12 +901,12 @@ ALTER TABLE `cpt_CatCompte`
 -- AUTO_INCREMENT pour la table `cpt_CompteBancaire`
 --
 ALTER TABLE `cpt_CompteBancaire`
-  MODIFY `cpt_ID_Compte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `cpt_ID_Compte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `cpt_Operation`
 --
 ALTER TABLE `cpt_Operation`
-  MODIFY `opr_ID_Operation` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `opr_ID_Operation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT pour la table `cpt_OperationPlanifiee`
 --
@@ -1507,11 +926,8 @@ ALTER TABLE `cpt_Tiers`
 -- AUTO_INCREMENT pour la table `cpt_TypeCatCompte`
 --
 ALTER TABLE `cpt_TypeCatCompte`
-  MODIFY `tcc_ID_CatCompte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
---
--- AUTO_INCREMENT pour la table `tb_systempay_oper`
---
-ALTER TABLE `tb_systempay_oper`
-  MODIFY `tsp_ID` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
+  MODIFY `tcc_ID_CatCompte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;COMMIT;
 
--- fin du fichier mysql.sql
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

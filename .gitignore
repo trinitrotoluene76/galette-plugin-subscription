@@ -1,3 +1,10 @@
+# /systempay_as/configuration/
+/systempay_as/configuration/sp_configuration.txt*
+!/systempay_as/configuration/sp_configuration.txt.dist
+/systempay_as/configuration/sp_db_config.php*
+!/systempay_as/configuration/sp_db_config.php.dist
+
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -48,3 +55,5 @@ Temporary Items
 
 #Backup files
 *~
+systempay/configuration/sp_db_config.php
+systempay/configuration/sp_configuration.txt

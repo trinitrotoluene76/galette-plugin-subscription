@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--file:///d:/Utilisateurs/Marc/Desktop/systempay_as/test/index.html?admin=1&prenom=Martin&nom=Martine&email=martin@gmail.com&adresse=1%20rue%20Saint-Martin&cp=01000&ville=Martinville&montant=125,99&pays=FR&tel=0606060606&orderinfo=aa&motif=Weekend-->
+<html>
+<head>
+	<meta  content="text/html; charset=UTF-8" http-equiv="Content-Type">
+	<title>Test de paiement simple SystemPay</title>
+	<style type="text/css">
+
+	label
+	{
+		display: block;
+		width: 150px;
+		float: left;
+		font-size:12px;
+	}
+	input
+	{
+		font-size:12px;
+	}
+	body
+	{
+		margin-top: 20px;
+		margin-bottom: 0;
+		margin-right: auto;
+		margin-left: auto;
+		text-align:justify;
+		font-family:Helvetica, Arial, Verdana, sans-serif;
+		background-color: #fff;
+		color: black;/*#555753;*/
+		font: 75% arial,sans-serif;
+		
+		padding:30px;
+		background-color: #FFFFFF;
+		border:1px solid #d2d7dc;
+		border-radius:0px;
+		-moz-border-radius:12px;
+		box-shadow:0 0 6px rgba(0,0,0,.25);
+		-moz-box-shadow:0 0 6px rgba(0,0,0,.25);
+		-webkit-box-shadow:0 0 6px rgba(0,0,0,.25);
+	}
+
+	form
+	{
+		margin-right:0;
+		padding:0;
+	}
+
+	.title_array 
+	{
+		background-color:#003E98;
+		color:white;
+	   
+		font-size: 12px;
+		text-align:left;
+	}
+	.field_mandatory
+	{
+		color:red;
+		font-weight: bold;
+		font-size: 12px;
+		text-align:left;
+		background-color:#E6E6E6;
+	}
+	.field_readonly
+	{
+		background-color:#E6E6E6;
+		font-style: italic;
+	}
+	.field_warning
+	{
+		color:white;
+		font-weight: bold;
+		font-size: 12px;
+		text-align:left;
+		background-color:red;
+	}
+
+	.header_title
+	{
+		color:#003E98;
+		font-weight: bold;
+		font-size: 14px;
+		text-align:center;
+		margin-bottom:20px;
+	}
+
+	.validationButton
+	{
+		background: #ED0116;
+		background: -moz-linear-gradient(top, #003E98 0%, #3768AD 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#003E98), color-stop(100%,#3768AD));
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#003E98', endColorstr='#3768AD',GradientType=0 );
+		border:1px solid black;
+		border-radius:5px;
+		-moz-border-radius:5px;
+		-webkit-border-radius:5px;
+		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+		-moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+		-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+		color:#fff;
+		cursor:pointer;
+		display:inline-block;
+		font:12px bold arial,sans-serif;
+		font-weight:bold;
+		margin:0 auto 10px;
+		padding:5px 20px;
+		text-shadow: 1px 1px 2px #444444;
+		
+		margin-right:5px;
+		margin-top:15px;
+	}
+	.validationButton em
+	{
+		font-style:normal;
+	}
+	.para_marge
+	{
+		margin-bottom:8px;
+	}
+	</style>
+
+	<script>
+	function ReplaceEsp(sChaine){
+		return sChaine.replace("%20"," ");
+	}
+
+	function getQueryVariable(variable)
+	{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return("");
+	}
+
+	function ChargeValeurs() {
+		var affiche;
+		document.getElementById("prenom").value = getQueryVariable("prenom");
+		document.getElementById("nom").value = getQueryVariable("nom");
+		document.getElementById("email").value = getQueryVariable("email");
+		document.getElementById("adresse").value = decodeURI(getQueryVariable("adresse"));
+		document.getElementById("cp").value = getQueryVariable("cp");
+		document.getElementById("ville").value = getQueryVariable("ville");
+		document.getElementById("pays").value = getQueryVariable("pays");
+		document.getElementById("tel").value = getQueryVariable("tel");
+		document.getElementById("montant").value = getQueryVariable("montant");
+		document.getElementById("motif").value = decodeURI(getQueryVariable("motif"));
+		document.getElementById("orderinfo").value = getQueryVariable("orderinfo");
+		if (getQueryVariable("admin")=="1"){
+			affiche="visible";
+		}
+		else{
+			affiche="none";
+		};
+		document.getElementById("divDebug").style.display = affiche;
+	}
+	</script>
+
+</head>
+<body onload="ChargeValeurs()">
+
+<table border="0" cellpadding="0" cellspacing="0"
+width="100%">
+<tbody>
+<tr>
+<td width="20">&nbsp;</td>
+<!-- le logo pointe vers le site asnexter.fr --> 
+<td align="center">
+<a href="https://www.asnexter.fr" target="_blank"><img alt="Logo AS NEXTER" src="http://asnexter.fr/joomla/_documents_ajoutes/docs_mails/gabarits_phplist/gabarit_base/images/logo.jpg" style="display: block;" border="0" height="102" width="137"> </a>
+</td>
+<!-- marge à droite du logo --> <td width="50">&nbsp;</td>
+<!-- Titre principal AS NEXTER --> 
+<td
+style="font-family: Verdana,Arial,Gotham,sans-serif; font-size: 25px; line-height: 25px; color: rgb(153, 155, 158);" valign="middle"><strong><span style="color: rgb(237, 33, 35);" valign="middle">A</span>rts et <span style="color: rgb(237, 33, 35);">S</span>ports Ne<span style="color: rgb(237, 33, 35);">X</span>ter</strong>
+</td>
+<td width="20">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td style="line-height: 15px;" height="15">&nbsp;</td>
+</tr>
+<tr>
+<td>
+<table border="0" cellpadding="0" cellspacing="0"
+width="100%">
+<tbody>
+<tr>
+<!-- marge --> <td width="20">&nbsp;</td>
+<!-- Objet du mail, nom de la section, sous titre --> <td
+style="font-family: Verdana,Arial,Gotham,sans-serif; font-size: 24px; text-align: center; line-height: 28px; color: rgb(153, 155, 158); font-weight: bold;"
+align="center" valign="middle">Paiement en ligne AS Nexter</td>
+<!-- marge --> <td width="20">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+	<form name="pay_form" method="POST" action="https://asnexter.fr/systempay_as/sp_form_paiement.php">
+	<p class="para_marge"><label for="vads_cust_first_name">Prénom : </label>
+	<input type="visible" id="prenom" name="vads_cust_first_name" value="" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_last_name">Nom : </label>
+	<input type="visible" id="nom" name="vads_cust_last_name" value="" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_email">Email : </label>
+	<input type="visible" id="email" name="vads_cust_email" value="" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_address">Address : </label>
+	<input type="visible" id="adresse" name="vads_cust_address" value="" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_zip">Code postal : </label>
+	<input type="visible" id="cp" name="vads_cust_zip" value="" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_city">Ville : </label>
+	<input type="visible" id="ville" name="vads_cust_city" value="" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_country">Pays : </label>
+	<input type="visible" id="pays" name="vads_cust_country" value="FR" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_cust_phone">Téléphone : </label>
+	<input type="visible" id="tel" name="vads_cust_phone" value="" style="width:200px; "/></p>
+	<p class="para_marge"><label for="vads_amount">Montant : </label>
+	<input type="visible" readonly class="field_mandatory" id="montant" name="vads_amount" value="0,00" style="width:200px; "/><BR></p>
+	<p class="para_marge"><label for="motif">Motif : </label>
+	<input type="visible" readonly class="field_readonly" id="motif" name="motif" value="" style="width:500px; "/></p>
+	<div id="divDebug" > <!-- style="display: visible;" ou style="display: none;" -->
+		<p class="para_marge"><label for="vads_order_info">Order info : </label>
+		<input type="visible" readonly class="field_readonly" id="orderinfo" name="vads_order_info" value="" style="width:500px; "/></p>
+		<p class="para_marge"><label for="vads_cust_id">Numéro client : </label>
+		<input type="visible" readonly class="field_readonly" id="id_client" name="vads_cust_id" value="654321" style="width:200px; "/></p>
+		<p class="para_marge"><label for="vads_order_id">Numéro commande : </label>
+		<input type="visible" readonly class="field_readonly" id="id_cmde" name="vads_order_id" value="123456" style="width:200px; "/></p>
+		<p class="para_marge"><label for="vads_url_return">vads_url_return : </label>
+		<input type="text" readonly class="field_readonly" name="vads_url_return" value="https://asnexter.fr/systempay_as/sp_retour_boutique.php" style="width:500px; "/></p>
+		<p class="para_marge"><label for="vads_url_check">vads_url_check : </label>
+		<input type="text" readonly class="field_readonly" name="vads_url_check" value="https://asnexter.fr/systempay_as/exemple_notif_joomla/sp_notif_joomla.php" style="width:500px; "/></p>
+		<p class="para_marge"><label for="vads_language">Langue : </label>
+		<input type="visible" readonly class="field_readonly" name="vads_language" value="de" style="width:200px; "/></p>
+		<p class="para_marge"><label for="vads_ctx_mode">Mode : </label>
+		<input type="visible" readonly class="field_readonly" name="vads_ctx_mode" value="TEST" style="width:200px; "/></p>
+		<p class="para_marge"><label for="EuroCts">Montant Euro ou Cts : </label>
+		<select readonly name="EuroCts">
+		  <option disabled value="Centimes">Centimes</option>
+		  <option selected value="Euro">Euro</option>
+		</select> 
+	</div>
+	<p class="para_marge"><INPUT TYPE="submit" class="validationButton" NAME="nom" VALUE="Envoyer"> <INPUT type="reset" class="validationButton" VALUE="Valeur par défaut"></p>
+	</form>
+<!-- <script language="JavaScript">document.pay_form.submit();</script> -->
+</body>
+</html>

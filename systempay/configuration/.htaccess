@@ -1,0 +1,2 @@
+#Ajout Amaury 13/12/15 personne ne doit avoir accès à ce répertoire autrement que par ftp
+deny from all
