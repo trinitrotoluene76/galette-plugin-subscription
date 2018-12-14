@@ -13,14 +13,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: ../config_systempay.php:87
+#: ../config_systempay.php:93
 msgid "Configuration of Systempay"
 msgstr "Configuration de Systempay"
-
-#: ../templates/default/config_systempay.tpl:65
-#: ../templates/default/config_systempay.tpl:68
-msgid "URL of the web page to notify at the end of the payment."
-msgstr "URL de la page web de notification à la fin du paiement"
 
 #: ../new_subscription.php:34
 #, fuzzy
@@ -112,6 +107,11 @@ msgstr "Horaires"
 msgid "Management of groups"
 msgstr "Gestion des groupes"
 
+#: ../templates/default/config_systempay.tpl:73
+#: ../templates/default/config_systempay.tpl:76
+msgid "Absolute URL of the web page to pay"
+msgstr "URL absolue de la page web de paiement"
+
 #: ../templates/default/send_files.tpl:272
 #: ../templates/default/send_files_standalone.tpl:357
 msgid "uploaded"
@@ -132,10 +132,6 @@ msgstr "2. Ajoutez une description"
 #: ../templates/default/subs_confirmation.tpl:2
 msgid "Validation"
 msgstr "Validation"
-
-#: ../templates/default/management_subs2.tpl:168
-msgid "View transactions"
-msgstr "Voir les transactions"
 
 #: ../templates/default/follow_up_subs.tpl:57
 #: ../templates/default/management_subs2.tpl:155
@@ -255,9 +251,9 @@ msgstr ""
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../templates/default/management_subs.tpl:1
-msgid "Activity selected"
-msgstr "Activité sélectionnée"
+#: ../templates/default/management_subs2.tpl:168
+msgid "View transactions"
+msgstr "Voir les transactions"
 
 #: ../templates/default/follow_up_subs.tpl:48
 #: ../templates/default/management_subs2.tpl:149
@@ -321,6 +317,11 @@ msgstr "Id"
 #: ../templates/default/send_files_standalone.tpl:46
 msgid "no"
 msgstr "non"
+
+#: ../templates/default/config_systempay.tpl:81
+#: ../templates/default/config_systempay.tpl:84
+msgid "Relative URL of the folder systempay"
+msgstr ""
 
 #: ../templates/default/management_subs.tpl:9
 msgid ""
@@ -495,7 +496,7 @@ msgstr "Renseignements sur les groupes"
 msgid "Refused"
 msgstr "Refusé"
 
-#: ../templates/default/config_systempay.tpl:82
+#: ../templates/default/config_systempay.tpl:90
 #: ../templates/default/management_groups.tpl:124
 #: ../templates/default/management_subs2.tpl:170
 #: ../templates/default/send_files_standalone.tpl:57
@@ -558,10 +559,9 @@ msgstr ""
 "Vous n'avez pas de photo dans votre profil. Nous en avons besoin pour la "
 "licence"
 
-#: ../templates/default/config_systempay.tpl:73
-#: ../templates/default/config_systempay.tpl:76
-msgid "URL of the web page to pay"
-msgstr "URL de la page web de paiement"
+#: ../templates/default/management_subs.tpl:1
+msgid "Activity selected"
+msgstr "Activité sélectionnée"
 
 #: ../templates/default/management_subs2.tpl:53
 msgid "Activity subscriber message"
@@ -767,12 +767,17 @@ msgstr "Cartes"
 msgid "Folder not find"
 msgstr "Répertoire inaccessible"
 
+#: ../templates/default/config_systempay.tpl:65
+#: ../templates/default/config_systempay.tpl:68
+msgid "Absolute URL of the web page to notify at the end of the payment."
+msgstr "URL absolue de la page web de notification à la fin du paiement"
+
 #: ../templates/default/send_files.tpl:328
 #: ../templates/default/subs_confirmation.tpl:38
 msgid "Estimated TOTAL:"
 msgstr "TOTAL estimé:"
 
-#: ../templates/default/export_subs.tpl:9
+#: ../templates/default/export_subs.tpl:11
 #: ../templates/default/view_activity.tpl:94
 #: ../templates/default/view_files.tpl:67
 msgid "Close"
@@ -879,7 +884,7 @@ msgstr "valeur"
 msgid "feedback off"
 msgstr "Feedback de l'activité (off)"
 
-#: ../export_subs.php:199
+#: ../export_subs.php:247
 msgid "Export"
 msgstr "Export"
 
