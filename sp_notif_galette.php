@@ -61,7 +61,7 @@ include_once($path_module_commun.'sp_retour_notification.php');
 		if ($bSignatureOk)
 			{
 			//	Faire le nécessaire dans les tables Galette si transaction valide et concerne Galette
-			if($_POST['vads_trans_status']=="AUTHORISED" && substr($_POST["vads_order_info"],0,2)=="GA")
+			if((($_POST['vads_trans_status']=="AUTHORISED") || ($_POST['vads_trans_status']=="CAPTURED") )&& substr($_POST["vads_order_info"],0,2)=="GA")
 				{
 				//recopie de management_subs2.php pour la partie "payé"
 				//récupération des données liées à l'abonnement:
